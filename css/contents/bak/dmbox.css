@@ -1,0 +1,53 @@
+/* dmbox */
+div.contents.dmbox {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+/* テキストエリア＋ツイートボタン */
+#dmbox_box {
+	width: 100%;
+	height: 120px;
+	padding: 4px;
+}
+
+/* テキストエリア */
+#dmbox_text {
+	height: 60px;
+	background: #c7e7d7 !important;
+}
+
+#dmbox_box > div {
+	display: table;
+	padding-top: 4px;
+	box-sizing: border-box;
+}
+
+#dmbox_cnt {
+	display: table-cell;
+	width: 30%;
+	text-align: left;
+	color: #88ccff;
+	font-size: 1.4rem;
+	padding-left: 8px;
+	vertical-align: middle;
+}
+
+#dmbox_cnt.ng {
+	color: #ff88cc;
+}
+
+#dmbox_btn {
+	display: table-cell;
+	width: 70%;
+	text-align: right;
+	vertical-align: middle;
+}
+
+#dmbox_btn #dmsend {
+	padding: 8px 16px;
+}

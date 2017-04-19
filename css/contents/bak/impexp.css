@@ -1,0 +1,66 @@
+/* インポート/エクスポート */
+div.contents.impexp {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+#impexp {
+	width: 100%;
+}
+
+#impexp .group {
+	padding: 8px;
+}
+
+#impexp .group .groupname {
+	font-weight: bold;
+}
+
+#impexp .group .item {
+	display: table;
+	width: 100%;
+	margin: 0 4px;
+	vertical-align: middle;
+	border-bottom: 1px solid #202020;
+}
+
+#impexp .group .item > div {
+	display: table-cell;
+	padding: 2px 0;
+}
+
+#impexp .group .item .itemname {
+	white-space: normal;
+}
+
+#impexp .group .item .buttons {
+	text-align: right;
+	padding-right: 4px;
+}
+
+#importfile_select {
+	display: table;
+	width: 100%;
+	white-space: normal;
+	margin-left: 8px;
+	margin-top: 4px;
+	vertical-align: middle;
+}
+
+#importfile_select > div {
+	display: table-cell;
+	padding: 2px 0;
+}
+
+#importfile_select > div:last-child {
+	padding-left: 4px;
+	white-space: nowrap;
+}
+
+#importfile_input {
+	visibility: hidden;
+}

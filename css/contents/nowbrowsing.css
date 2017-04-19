@@ -1,0 +1,41 @@
+/* Now Browsing */
+div.contents.nowbrowsing {
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+/* リスト部 */
+#nowbrowsing_list {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+#nowbrowsing_list div.item {
+	display: table;
+	width: 100%;
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
+	padding: 2px 6px 2px 4px;
+	box-sizing: border-box;
+}
+
+#nowbrowsing_list div.item > div {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#nowbrowsing_list .title {
+	white-space: normal;
+	font-weight: bold;
+	color: #ffffff;
+	padding: 4px;
+}
+
+#nowbrowsing_list .title > span:hover {
+	cursor: pointer;
+	color: #dddddd;
+}

@@ -1,0 +1,1160 @@
+/* 全体設定 */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	line-height: 1.2rem;
+	overflow: auto;
+	-webkit-user-select: none;
+
+	background-color: #303434;	/* color set: 全体のBG */
+	color: #ffffff;	/* color set: 全体のフォント */
+}
+
+input[type='checkbox'], input[type='radio'] {
+	position: relative;
+	top: 2px;
+}
+
+input[type='radio'] {
+	margin-right: 4px;
+}
+
+img {
+	border: 0;
+}
+
+/* アンカー */
+.anchor {
+	cursor: pointer;
+	text-decoration: none;
+
+	color: #ffffff;	/* color set: 全体のフォント */
+}
+
+/* 絵文字 */
+img.emoji {
+	height: 1rem;
+	width: 1rem;
+	margin: 0 .05rem 0 .1rem;
+	vertical-align: -0.1rem;
+}
+
+/* URL展開中 */
+.expand {
+	cursor: default;
+	opacity: 0.6;
+	text-decoration: none;
+
+	color: #ffffff;	/* color set: 全体のフォント */
+}
+
+/* Loading... */
+#loading {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	padding: 6px;
+	margin: 4px;
+	z-index: 8000;
+
+	color: #ffffff;	/* color set: 固定(loading) */
+	background-color: #3da4c2;	/* color set: 固定(loading) */
+}
+
+/* ヘッダ */
+#head {
+	display: table;
+	box-sizing: border-box;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	z-index: 1000;
+}
+
+.rich #head {
+	box-shadow: 2px 2px 4px rgba( 0, 0, 0, 0.5 );
+}
+
+#head > div {
+	display: table-cell;
+	text-align: right;
+	vertical-align: middle;
+	border-width: 1px 0;
+	border-style: solid;
+
+	border-color: #101010;	/* color set: 固定(toolbar) */
+	background-color: #242424;	/* color set: ツールバーのBG */
+	color: #ffffff;	/* color set: ツールバーのフォント */
+}
+
+/* パネルリスト表示ボタン */
+#head > div:first-child {
+	text-align: left;
+}
+
+#head_panellist {
+	padding-left: 8px;
+	opacity: 0.5;
+}
+
+#head_panellist:hover {
+	cursor: pointer;
+	opacity: 1.0;
+}
+
+#head .subcontainer {
+	position: relative;
+}
+
+#head .header_sub {
+	position: absolute;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	z-index: 8900;
+
+	border: 1px solid #101010;	/* color set: 固定(popup-menu) */
+	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );	/* color set: 固定(popup-menu) */
+	background-color: #3e3e3e;	/* color set: 固定(popup-menu) */
+	color: #ffffff;			/* color set: 固定(popup-menu) */
+}
+
+#head .header_sub span {
+	display: block;
+	padding: 6px 12px;
+	text-align: left;
+}
+
+#head .header_sub span:hover {
+	cursor: pointer;
+
+	background-color: #4e4e4e;	/* color set: 固定(popup-menu) */
+}
+
+/* ツールバーユーザ */
+#head_users > div {
+	display: inline-block;
+	width: 2.4rem;
+	height: 2.4rem;
+	margin: 2px 0px;
+	vertical-align: middle;
+	text-align: center;
+	padding-left: 1px;
+	position: relative;
+
+	border-left: 2px solid rgba( 255, 255, 255, 0 );	/* color set: 固定(toolbar-user) */
+}
+
+#head_users > div.dmy {
+	width: 3px;
+}
+
+#head_users > div.iconover {
+	border-left-color: rgba( 255, 255, 255, 1 );	/* color set: 固定(toolbar-user) */
+}
+
+#head_users > div > span > img {
+	width: 2.4rem;
+	height: 2.4rem;
+	z-index: 2000;
+}
+
+#head_users > div > span > img:hover {
+	cursor: pointer;
+	opacity: 0.8;
+}
+
+#head_users > div > .streamsts {
+	position: absolute;
+	left: -2px;
+	bottom: 0px;
+}
+
+/* ストリームの状態 */
+.streamsts > div {
+	width: 6px;
+	height: 6px;
+
+	border: 1px inset #808080;	/* color set: 固定(US-base) */
+	box-shadow: 1px 1px 2px rgba( 0, 0, 0, 0.5 ) inset;	/* color set: 固定(US-base) */
+}
+
+.streamsts > div.try {
+	background-color: #ffcc60;	/* color set: 固定(US-try) */
+}
+
+.rich .streamsts > div.try {
+	box-shadow: 0 0 4px #ffcc60;
+}
+
+.streamsts > div.on {
+	background-color: #60ffa0;	/* color set: 固定(US-on) */
+}
+
+.rich .streamsts > div.on {
+	box-shadow: 0 0 8px #60ffa0;
+}
+
+.streamsts > div.off {
+	background-color: #303030;	/* color set: 固定(US-off) */
+}
+
+.rich .streamsts > div.off {
+	box-shadow: none;
+}
+
+.streamsts > div.on:hover,
+.streamsts > div.try:hover,
+.streamsts > div.off:hover {
+	cursor: pointer;
+}
+
+/* ツールバー小アイコン */
+#head_users > div > div.listicon {
+	position: absolute;
+	left: 0px;
+	bottom: -4px;
+	pointer-events: none;
+}
+
+#head_users > div > div.listicon:hover {
+	cursor: pointer;
+}
+
+/* メイン */
+#main {
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+}
+
+/* バージョン表示 */
+#version {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	padding: 4px;
+	font-weight: bold;
+}
+
+/* ツールチップ */
+#tooltip {
+	position: absolute;
+	max-width: 300px;
+	width: auto;
+	height: auto;
+	padding: 4px;
+	overflow: hidden;
+	word-break:break-all;
+	word-wrap: break-word;
+	left: 0px;
+	top: 0px;
+	z-index: 9500;
+	margin-left: 4px;
+	-webkit-animation-name:tooltip;
+	-webkit-animation-duration: 0.4s;
+	-webkit-animation-iteration-count:1;
+	-webkit-animation-direction: normal;
+	-webkit-animation-play-state: running;
+	-webkit-animation-delay:0;
+	pointer-events: none;
+	box-sizing: border-box;
+
+	border: 1px solid #101010;	/* color set: 固定(tooltip) */
+	background-color: #202424;	/* color set: 固定(tooltip) */
+}
+
+@-webkit-keyframes tooltip{
+	0%{
+		opacity:0;
+	}
+	100%{
+		opacity:1;
+	}
+}
+
+/* ブラックアウト */
+#blackout {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9900;
+
+	background: rgba( 0, 0, 0, 0.5 );	/* color set: 固定(blackout) */
+}
+
+#blackout > div.info {
+	display: block;
+	margin: 8px 16px;
+}
+
+/* パネル */
+panel {
+	display: block;
+	z-index: 100;
+
+	border: 2px solid #101010;	/* color set: 固定(panel) */
+	background-color: #282828;	/* color set: パネルのBG */
+	color: #ffffff;	/* color set:パネルのフォント */
+}
+
+.rich panel {
+	box-shadow: 2px 2px 4px rgba( 0, 0, 0, 0.5 );
+}
+
+/* パネルのタイトルバー */
+panel div.titlebar {
+	display: table;
+	width: 100%;
+	height: 2rem;
+	box-sizing: border-box;
+
+	border-bottom: 1px solid #101010;	/* color set: 固定(titlebar) */
+	background-color: #606060;	/* color set: タイトルバーのBG */
+	color: #ffffff;			/* color set: タイトルバーのフォント */
+}
+
+.rich panel div.titlebar {
+	background-image: -webkit-gradient( linear, left top, left bottom, from( rgba( 255, 255, 255, 0.25 ) ), color-stop( 0.4, rgba( 255, 255, 255, 0 ) ) );
+}
+
+/* タイトルバーのアイコン＋文字列 */
+panel div.titlebar .titlecontainer {
+	position: relative;
+	display: table-cell;
+	width: 100%;
+	height: 2rem;
+	cursor: move;
+	vertical-align: middle;
+}
+
+/* タイトルバーの文字列 */
+panel div.titlebar .title {
+	display: table-cell;
+	font-weight: bold;
+	vertical-align: middle;
+	word-break: break-all;
+	word-wrap: break-word;
+	padding-left: 2px;
+
+}
+
+panel div.titlebar .title div {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	height: 1.5rem;
+	font-size: 1rem;
+	line-height: 1.5rem;
+}
+
+/* タイトルアイコン */
+panel div.titlebar .titleicon {
+	display: table-cell;
+	font-size: 1.2rem;
+	vertical-align: middle;
+	padding: 0 2px;
+}
+
+panel div.titlebar .titleicon:hover {
+	cursor: pointer;
+}
+
+/* タイトルバーのボタン */
+panel div.titlebar > span:not(.badge) {
+	display: table-cell;
+	vertical-align: middle;
+	box-sizing: border-box;
+	opacity: 0.5;
+	padding: 0 6px;
+	vertical-align: middle;
+}
+
+panel div.titlebar > span:not(.badge):hover {
+	cursor: pointer;
+	opacity: 1.0;
+}
+
+.rich panel div.titlebar > span:not(.badge):hover {
+	text-shadow: 0 0 4px #ffffff;
+}
+
+panel div.titlebar > span:not(.badge):active {
+	opacity: 0.3;
+}
+
+/* 位置固定パネル */
+panel.fixed div.titlebar {
+	background-color: #404040;	/* color set: タイトルバー(位置固定)のBG */
+}
+
+/* パネルを開いているアカウント */
+panel div.titlebar .title .titlename:hover {
+	opacity: 0.7;
+	cursor: pointer;
+}
+
+/* パネルを開いているアカウント選択 */
+/* 位置固定メニュー */
+panel div.titlebar .titlecontainer .titlename_list,
+panel div.titlebar .titlecontainer .titlesetting {
+	position: absolute;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	z-index: 8900;
+
+	border: 1px solid #101010;	/* color set: 固定(popup-menu) */
+	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );	/* color set: 固定(popup-menu) */
+	background-color: #3e3e3e;	/* color set: 固定(popup-menu) */
+	color: #ffffff;			/* color set: 固定(popup-menu) */
+}
+
+panel div.titlebar .titlecontainer .titlename_list span
+{
+	display: block;
+	padding: 6px 12px;
+	text-align: left;
+}
+
+panel div.titlebar .titlecontainer .titlesetting span
+{
+	display: block;
+	padding: 3px 6px;
+	text-align: left;
+}
+
+panel div.titlebar .titlecontainer .titlename_list span:hover {
+	cursor: pointer;
+
+	background: #4e4e4e;	/* color set: 固定(popup-menu) */
+}
+
+/* パネル-コンテンツ */
+panel div.contents {
+	display: block;
+}
+
+/* パネル-コンテンツ-タイムライン表示 */
+panel div.contents > .lines {
+	width: 100%;
+	height: 100%;
+}
+
+/* パネル-コンテンツ-設定表示 */
+panel div.contents > .setting {
+	width: 100%;
+	height: 100%;
+}
+
+/* ボタン */
+.btn {
+	display: inline-block;
+	vertical-align: middle;
+	width: auto;
+	height: auto;
+	text-align: center;
+	box-sizing: border-box;
+	padding: 8px;
+	font-size: 1.0rem;
+
+	border: 1px solid #101010;	/* color set:固定(button) */
+	color: #ffffff;	/* color set:ボタンのフォント */
+	background-color: #404040;	/* color set:ボタンのBG */
+}
+
+.btn.img {
+	font-size: 1.2rem;
+}
+
+.btn:not(.disabled):hover {
+	cursor: pointer;
+
+	background-color: #4db4d2;	/* color set:ボタンのBG(hover) */
+}
+
+.btn:not(.disabled):active {
+	background-color: #2d94b2;	/* color set:ボタンのBG(active) */
+}
+
+.btn.disabled {
+	opacity: 0.3;
+}
+
+.panel_btns {
+	display: table;
+	width: 100%;
+	height: 37px;
+	box-sizing: border-box;
+
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );	/* color set:固定(panel-buttons) */
+}
+
+.panel_btns > div {
+	display: table-cell;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.btn.panel_btn {
+	padding: 6px 8px;
+	margin: 2px;
+}
+
+/* ボタンの個別設定 */
+.btn.headerbtn {
+	margin: 2px;
+	font-size: 1.2rem;
+}
+
+/* テキストボックス */
+input[type=text], input[type=password] {
+	display: inline-block;
+	padding: 7px 6px 5px 6px;
+	border: 1px solid #101010;
+	height: 1.4em;
+	box-shadow: 1px 1px 2px rgba( 0, 0, 0, 0.5 ) inset;
+	color: #000000;
+	background-color: #e7e7d4;
+	outline: none;
+}
+
+/* テキストエリア */
+textarea {
+	display: block;
+	padding: 7px 6px 5px 6px;
+	border: 1px solid #101010;
+	box-shadow: 1px 1px 2px rgba( 0, 0, 0, 0.5 ) inset;
+	color: #000000;
+	background-color: #e7e7d4;
+	outline: none;
+	resize: none;
+}
+
+/* ファイル選択 */
+input[type=file] {
+}
+
+/* アカウントセレクト */
+.account_select {
+	width: 100%;
+	height: 50px;
+}
+
+/* 選択されたアカウント */
+.selectitem {
+	display: table;
+	width: 100%;
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
+	padding: 4px;
+	box-sizing: border-box;
+}
+
+.selectitem:hover {
+	cursor: pointer;
+}
+
+.selectitem > div.icon img {
+	width: 32px;
+	height: 32px;
+	margin-right: 4px;
+}
+
+.selectitem > div {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.selectitem > div.icon {
+	width: 38px;
+	min-width: 38px;
+}
+
+.selectitem > div.name {
+	width: 100%;
+	font-weight: bold;
+}
+
+.selectitem > div:last-child {
+	display: table-cell;
+	text-align: right;
+	padding: 0 4px;
+	font-size: 0.8rem;
+}
+
+/* アカウントセレクト-アカウント一覧 */
+
+.selectlist {
+	background: #2e2e2e;
+	width: 90%;
+	overflow-y: auto;
+	overflow-x: hidden;
+	border-right: 1px solid #101010;
+	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
+	position: absolute;
+	z-index: 9002;
+	max-height: 240px;
+}
+
+.selectlist .item {
+	display: table;
+	width: 100%;
+	padding: 4px;
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
+	box-sizing: border-box;
+}
+
+.selectlist .item:hover {
+	cursor: pointer;
+}
+
+.selectlist .item > div img {
+	width: 32px;
+	height: 32px;
+}
+
+.selectlist .item > div {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.selectlist .item > div.icon {
+	width: 38px;
+	min-width: 38px;
+}
+
+.selectlist .item > div.name {
+	width: 100%;
+	font-weight: bold;
+}
+
+.selectlist .item.select {
+	background-color: #204060;
+	cursor: pointer;
+}
+
+/* スライダー */
+.ui-slider {
+	display: inline-block;
+	border: 1px solid #101010;
+	background: -webkit-gradient(linear, left top, left bottom, from(#000404), to(#202424));
+	margin: 0 4px 0 4px;
+}
+
+.ui-slider .ui-slider-handle {
+	border: 1px solid #101010;
+	box-shadow: 1px 1px 2px #505050 inset;
+	background: -webkit-gradient(linear, left top, left bottom, from(#383838), to(#242424));
+	cursor: pointer;
+}
+
+.ui-slider .ui-slider-handle:focus {
+	outline: 0;
+}
+
+.slidercontainer {
+	display: table;
+	width: 100%;
+	margin: 0 0;
+	vertical-align: top;
+	box-sizing: border-box;
+}
+
+.slidercontainer .slidestr {
+	font-size: 0.8rem;
+}
+
+.slidercontainer .value_disp {
+	margin-left: 8px;
+	font-size: 0.8rem;
+}
+
+.checkboxcontainer {
+	display: table;
+	width: 100%;
+	margin: 0 0;
+	vertical-align: top;
+	box-sizing: border-box;
+}
+
+.checkboxcontainer > span {
+	display: table-cell;
+}
+
+.checkboxcontainer > span:first-child {
+	width: 18px;
+}
+
+.radiocontainer {
+	display: table;
+	width: 100%;
+	margin: 0 0;
+	vertical-align: top;
+	box-sizing: border-box;
+}
+
+.radiocontainer > div {
+	margin: 2px 4px;
+}
+
+/* 新着件数 */
+panel div.titlebar .titlecontainer .badge {
+	padding: 0px 2px;
+	font-weight: bold;
+	display: table-cell;
+	font-size: 0.8rem;
+	width: 0.8rem;
+	text-align: center;
+
+	color: #ffffff;
+	background-color: #dc2d2d;
+}
+
+panel div.titlebar .titlecontainer .badge:hover {
+	cursor: pointer;
+}
+
+/* メッセージボックス */
+#messagebox {
+	position: absolute;
+	width: 400px;
+	height: auto;
+	padding: 4px;
+	border: 4px solid #101010;
+	word-break:break-all;
+	word-wrap: break-word;
+	left: -1000px;
+	top: 0;
+	z-index: 10000;
+	background-color: #2e2e2e;
+}
+
+#messagebox_body {
+	text-align: left;
+	padding: 4px;
+}
+
+#messagebox_body > div {
+	margin: 4px;
+}
+
+#messagebox_body > div .msg {
+}
+
+#messagebox_foot {
+	text-align: center;
+	margin-top: 4px;
+}
+
+/* プルダウンメニュー */
+.pulldown {
+	display: none;
+	position: absolute;
+	border: 1px solid #101010;
+	color: #000000;
+	background-color: #e7e7d4;
+	z-index: 9001;
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 180px;
+}
+
+.pulldown > .item {
+	padding: 4px 6px;
+}
+
+.pulldown > .item:hover {
+	cursor: pointer;
+	background: #afaf9c;
+}
+
+.pulldown > .item.disabled {
+	color: #808080;
+}
+
+.pulldown > .item.disabled:hover {
+	cursor: default;
+	background: none;
+}
+
+/* スクロールバー */
+::-webkit-scrollbar {
+	background: #242424;
+}
+
+::-webkit-scrollbar:vertical {
+	width: 12px;
+	border-left: 1px solid #101010;
+}
+
+::-webkit-scrollbar:horizontal {
+	height: 12px;
+	border-top: 1px solid #101010;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+	background: #777777;
+	border-left: 1px solid #101010;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+	background: #777777;
+	border-top: 1px solid #101010;
+}
+
+::-webkit-scrollbar-thumb:active:vertical {
+	background: #666666;
+}
+
+::-webkit-scrollbar-thumb:active:horizontal {
+	background: #666666;
+}
+
+::-webkit-scrollbar-corner {
+	background: #242424;
+	border: solid #101010;
+	border-width: 1px 0 0 1px;
+}
+
+/* 注意書き等 */
+span.info {
+	font-size: 0.8rem;
+	color: #c0c0c0;
+}
+
+/* 一番上、一番下 */
+.sctbl {
+	width: 18px;
+}
+
+.sctbl > a {
+	display: block;
+	opacity: 0.5;
+	font-size: 0.8rem;
+	padding: 4px;
+}
+
+.sctbl > a:hover {
+	cursor: pointer;
+	opacity: 1.0;
+}
+
+.sctbl > a:active {
+	opacity: 0.3;
+}
+
+/* セレクトボックス */
+div.selectbox {
+	width: 100%;
+}
+
+div.selectbox:hover {
+	cursor: pointer;
+}
+
+div.selectbox > div {
+	display: table;
+	box-sizing: border-box;
+}
+
+div.selectbox > div > .selitem {
+	display: table-cell;
+	width: 100%;
+	padding: 0 4px;
+}
+
+div.selectbox > div > div:last-child {
+	display: table-cell;
+	text-align: right;
+	padding: 0 4px;
+	font-size: 0.8rem;
+}
+
+div.selectbox .selectitems {
+	display: block;
+	position: absolute;
+	border: 1px solid #101010;
+	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
+	background: #2e2e2e;
+	z-index: 9001;
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+	max-height: 150px;
+	left: -1px;
+	width: 80%;
+}
+
+div.selectbox .selectitems .selectitem {
+	padding: 4px;
+}
+
+div.selectbox .selectitems .selectitem.bold {
+	font-weight: bold;
+}
+
+div.selectbox .selectitems .selectitem.selected {
+	background-color: #204060;
+}
+
+div.mapdiv {
+	width: 100%;
+	height: 100%;
+}
+
+/* パネルリスト */
+#panellist {
+	display: none;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 0px;
+	height: 100%;
+	z-index: 1000;
+	border-width: 1px 2px 1px 1px;
+	border-style: solid;
+
+	border-color: #101010;	/* color set: 固定(panellist) */
+	background-color: #242424;	/* color set: パネルリストのBG */
+	color: #ffffff;	/* color set: パネルリストのフォント */
+}
+
+#panellist:hover {
+	background-color: rgba( 36, 36, 36, 1.0 );
+}
+
+#panellist > div.lists {
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+#panellist > div.lists > div {
+	padding: 8px 4px;
+	overflow-x: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	display: table;
+	width: 100%;
+
+	border-bottom: 1px solid #101010;	/* color set: 固定(panellist) */
+}
+
+#panellist > div.lists > div > span {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: left;
+}
+
+#panellist > div.lists > div:hover {
+	cursor: pointer;
+
+	background-color: #4db4d2;	/* color set:パネルリストのBG(hover) */
+}
+
+#panellist > div.lists > div:active {
+	cursor: pointer;
+
+	background-color: #2d94b2;	/* color set:パネルリストのBG(hover) */
+}
+
+#panellist > div.lists > div > .icon {
+	padding-right: 4px;
+	font-size: 1.5rem;
+	width: 1.5rem;
+}
+
+#panellist > div.lists > div > .badge {
+	padding: 0px 2px;
+	font-weight: bold;
+	font-size: 0.8rem;
+	width: 0.8rem;
+	text-align: center;
+
+	color: #ffffff;
+	background-color: #dc2d2d;
+}
+
+.rich #panellist {
+	box-shadow: 2px 2px 4px rgba( 0, 0, 0, 0.5 );
+}
+
+/* ツイ消し */
+.twd_pop {
+	z-index: 12000;
+	position: absolute;
+	text-align: center;
+}
+
+.twd {
+	position: relative;
+	display: inline-block;
+	text-align: center;
+	padding: 4px;
+	line-height: normal;
+	background: #222222;
+	box-shadow: 4px 4px 4px #000000;
+	border-radius: 6%;
+	border: 2px solid;
+	text-shadow: 1px 1px 4px #000000;
+	overflow: hidden;
+}
+
+.twd > span {
+	display: block;
+	font-weight: bold;
+	font-size: 0.8rem;
+}
+
+.twd > .twd_icon > img {
+	border-radius: 100%;
+	width: 4rem;
+	height: 4rem;
+	border: 4px solid;
+}
+
+.twd_pop > div:first-child {
+	margin: 8px 4px;
+}
+
+.twd_pop .twd_title {
+	font-size: 3rem;
+	font-weight: bold;
+	text-shadow: 4px 4px 4px #000000;
+}
+
+.twd > .twd_time .twd_num {
+	font-size: 1.2rem;
+}
+
+.twd > .twd_time.non_best {
+	color: #cccccc;
+}
+
+.twd > .twd_time .twd_num.best {
+	color: #ffff44;
+}
+
+.twd > .twd_rarity {
+	display: block;
+	color: #222222;
+	-webkit-transform: translate( 2.4rem, 2.0rem ) rotate( 45deg );
+	text-shadow: none;
+	text-align: center;
+	font-size: 1.3rem;
+	width: 10rem;
+	line-height: 1.3rem;
+}
+
+.twd > .twd_date {
+	font-weight: normal;
+	color: #888888;
+}
+
+.twd > .twd_name {
+	-webkit-user-select: auto;
+}
+
+.twd.rarity1 {
+	border-color: #808080;
+}
+
+.twd.rarity1 > .twd_icon > img {
+	border-color: #808080;
+}
+
+.twd.rarity1 .twd_rarity {
+	background: #606060;
+	border: 2px solid #808080;
+}
+
+.twd.rarity2 {
+	border-color: #ffffff;
+}
+
+.twd.rarity2 > .twd_icon > img {
+	border-color: #ffffff;
+}
+
+.twd.rarity2 .twd_rarity {
+	background: #dddddd;
+	border: 2px solid #ffffff;
+}
+
+.twd.rarity3 {
+	border-color: #4477ff;
+}
+
+.twd.rarity3 > .twd_icon > img {
+	border-color: #4477ff;
+}
+
+.twd.rarity3 .twd_rarity {
+	background: #2255dd;
+	border: 2px solid #4477ff;
+}
+
+.twd.rarity4 {
+	border-color: #ffff44;
+}
+
+.twd.rarity4 > .twd_icon > img {
+	border-color: #ffff44;
+}
+
+.twd.rarity4 .twd_rarity {
+	background: #dddd22;
+	border: 2px solid #ffff44;
+}
+
+.twd.rarity5 {
+	background: -webkit-linear-gradient(-45deg, #ff7744 0%, #000000 100%);
+	border-color: #ff7744;
+}
+
+.twd.rarity5 > .twd_icon > img {
+	border-color: #ff7744;
+}
+
+.twd.rarity5 .twd_rarity {
+	background: #dd5522;
+	border: 2px solid #ff7744;
+}
+
+.twd.rarity6 {
+	background: -webkit-linear-gradient(-45deg, #aa44ff 0%, #000000 100%);
+	border-color: #aa44ff;
+}
+
+.twd.rarity6 > .twd_icon > img {
+	border-color: #aa44ff;
+}
+
+.twd.rarity6 .twd_rarity {
+	background: #8822dd;
+	border: 2px solid #aa44ff;
+}
+
+.twd > .twd_del {
+	position: absolute;
+	display: none;
+	right: 4px;
+	top: 4px;
+	font-size: 1.5rem;
+	font-weight: normal;
+	text-shadow: none;
+}
+
+.twd > .twd_del:hover {
+	cursor: pointer;
+}

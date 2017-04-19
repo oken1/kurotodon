@@ -1,0 +1,172 @@
+/* RSS */
+div.contents.rss {
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: normal;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+/* リスト部 */
+div.contents.rss .rss_list {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+div.contents.rss .rss_list .item {
+	display: table;
+	width: 100%;
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
+	padding: 2px 6px 2px 4px;
+	box-sizing: border-box;
+}
+
+div.contents.rss .rss_list .item.feed {
+	background-color: #4e4e4e;
+}
+
+div.contents.rss .rss_list .item:hover {
+	cursor: default;
+}
+
+div.contents.rss .rss_list .item .container {
+	display: table-cell;
+	vertical-align: top;
+	padding: 4px;
+}
+
+div.contents.rss .rss_list .item .title {
+	padding: 2px 4px;
+}
+
+div.contents.rss .rss_list .item .title .anchor {
+	font-weight: bold;
+	-webkit-user-select: auto;
+	color: #ffffff;	/* color set: 全体のフォント */
+}
+
+div.contents.rss .rss_list .item .title .anchor:hover {
+	opacity: 0.8;
+}
+
+div.contents.rss .rss_list .item .desc {
+	font-size: 0.8rem;
+	color: #c0c0c0;
+	padding: 2px 4px;
+}
+
+/* タイムライン設定 */
+div.contents.rss .setting {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+/* 設定項目部 */
+div.contents.rss .setting .rsssetting_items {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+div.contents.rss .setting .rsssetting_items .kind {
+	display: table-cell;
+	padding: 4px 8px;
+	font-weight: bold;
+}
+
+div.contents.rss .setting .rsssetting_items .kind {
+	padding: 4px 8px;
+	font-weight: bold;
+}
+
+div.contents.rss .setting .rsssetting_items .kind:hover {
+	cursor: pointer;
+}
+
+div.contents.rss .setting .rsssetting_items .kind > span {
+	padding-right: 2px;
+}
+
+div.contents.rss .setting .rsssetting_items .kinditems {
+	min-width: 240px;
+	margin: 2px;
+	padding: 4px;
+	border: 1px solid #101010;
+	white-space: normal;
+}
+
+div.contents.rss .setting .rsssetting_items .group {
+	margin: 2px;
+	padding: 4px;
+}
+
+div.contents.rss .setting .rsssetting_items .group > .title {
+	width: 100%;
+	margin: 2px;
+}
+
+/* 新着読み込み設定 */
+div.contents.rss .setting .set_reload_time {
+	width: 50%;
+}
+
+/* フィードごとの取得エントリ設定 */
+div.contents.rss .setting .set_count {
+	width: 50%;
+}
+
+/* タイトル設定 */
+div.contents.rss .setting .set_title {
+	width: 50%;
+}
+
+/* URL設定 */
+div.contents.rss .setting .set_feed {
+	width: 50%;
+}
+
+div.contents.rss .setting .feed_list .item {
+	display: table;
+	padding: 2px;
+	background: #1e1e1e;
+	box-sizing: border-box;
+}
+
+div.contents.rss .setting .feed_list .item .title {
+	display: table-cell;
+	width: 100%;
+	vertical-align: middle;
+	padding-left: 2px;
+}
+
+div.contents.rss .setting .feed_list .item .title:hover {
+	cursor: default;
+}
+
+div.contents.rss .setting .feed_list .item .del {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+div.contents.rss .setting .feed_list .item .del:hover {
+	cursor: pointer;
+}
+
+div.contents.rss .setting .feed_list .item .del span {
+	width: 12px;
+	height: 12px;
+	margin: 2px;
+	vertical-align: middle;
+}
+
+div.contents.rss iframe {
+	position: absolute;
+	width: 0;
+	height: 0;
+}

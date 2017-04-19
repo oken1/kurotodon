@@ -1,0 +1,68 @@
+/* ツイ消しコレクション */
+div.contents.twdelete_collection {
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+/* ヘッダ部 */
+#twdelete_collection_head {
+	width: 100%;
+	padding: 6px 0;
+	background: #202020;
+}
+
+#twdelete_collection_head > span {
+	font-size: 1.2rem;
+	font-weight: bold;
+	text-shadow: 4px 4px 8px #444444;
+	margin: 0 8px;
+}
+
+#twdelete_collection_head > span > span {
+	font-size: 1.5rem;
+}
+
+/* リスト部 */
+#twdelete_collection_list {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+	white-space: normal;
+}
+
+#twdelete_collection_list > .twd {
+	margin: 4px 2px;
+}
+
+/* 一括削除ダイアログ */
+#twdelete_collection_batchdialog {
+	border: 1px solid #101010;
+	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
+	background: #2e2e2e;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 1;
+	margin: 6px 12px;
+	padding: 4px;
+}
+
+#twdelete_collection_batchdialog > div {
+	margin: 4px;
+}
+
+#twdelete_collection_batchdialog > div:first-child {
+	margin-bottom: 8px;
+}
+
+#twdelete_collection_batchdialog > div > span:first-child {
+	margin-right: 4px;
+}
+
+#twdelete_collection_batchdialog > div:last-child {
+	text-align: right;
+}

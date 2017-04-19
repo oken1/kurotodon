@@ -1,0 +1,21 @@
+/* searchbox */
+div.contents.searchbox {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+/* テキストボックス＋検索ボタン */
+#searchbox_box {
+	width: 100%;
+	height: 50px;
+	padding: 4px;
+}
+
+#searchbox_text {
+	width: auto;
+}
+

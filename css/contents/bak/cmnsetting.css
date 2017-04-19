@@ -1,0 +1,205 @@
+/* 設定 */
+div.contents.cmnsetting {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+/* 設定項目部 */
+#cmnsetting_items {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+#cmnsetting_items .kind {
+	padding: 4px 8px;
+}
+
+#cmnsetting_items .kind:hover {
+	cursor: pointer;
+}
+
+#cmnsetting_items .kind > span {
+	padding-right: 2px;
+}
+
+#cmnsetting_items .kinditems {
+	min-width: 240px;
+	margin: 2px;
+	padding: 4px;
+	border: 1px solid #101010;
+	white-space: normal;
+}
+
+#cmnsetting_items .group {
+	margin: 2px;
+	padding: 4px;
+}
+
+#cmnsetting_items .group > .title {
+	width: 100%;
+	margin: 2px;
+}
+
+#cmnsetting_items .name_large {
+	color: #ffffff;
+	font-weight: bold;
+}
+
+#cmnsetting_items .name_small {
+	color: #c0c0c0;
+	font-size: 0.8rem;
+}
+
+/* フォントサイズ設定 */
+#cset_font_size {
+	width: 50%;
+}
+
+/* 新着読み込み設定 */
+#cset_reload_time {
+	width: 50%;
+}
+
+/* 一度に取得するツイート数設定 */
+#cset_get_count {
+	width: 50%;
+}
+
+/* タイムラインに表示する最大ツイート数設定 */
+#cset_max_count {
+	width: 50%;
+}
+
+/* アイコンサイズ設定 */
+#cset_iconsize {
+	width: 50%;
+}
+
+/* 通知の表示時間 */
+#cset_notify_time {
+	width: 50%;
+}
+
+/* 通知音の音量 */
+#cset_notify_sound_volume {
+	width: 30%;
+}
+
+/* 試聴ボタン */
+#cset_audition {
+	padding: 4px 8px 2px 8px;
+	margin-right: 4px;
+}
+
+/* Now Browsing */
+#cset_nowbrowsing_text {
+	width: 90%;
+}
+
+/* リプライのみ */
+#reponly_str {
+	display: inline;
+}
+
+#reponly_str.disabled {
+	color: #808080;
+}
+
+/* NG設定 */
+#csetng_list {
+	overflow-y: auto;
+	height: 180px;
+	border: 1px solid #101010;
+}
+
+#csetng_list > .ngitem {
+	display: table;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+#csetng_list > .ngitem > div {
+	display: table-cell;
+	padding: 3px 0;
+	vertical-align: middle;
+	text-align: center;
+}
+
+#csetng_list > .ngitem > .ngenable {
+	width: auto;
+}
+
+#csetng_list > .ngitem > .ngtype {
+	width: 4em;
+}
+
+#csetng_list > .ngitem > .ngword {
+	width: auto;
+}
+
+#csetng_list > .ngitem > .ngdel {
+	width: 24px;
+}
+
+#csetng_list > .ngitem > .ngdel > span  {
+	text-align: center;
+	margin: 2px 4px;
+}
+
+#csetng_list > .ngitem > .ngdel > span:hover {
+	cursor: pointer;
+}
+
+#csetng_list > .ngitem > .ngword > input[type='text'] {
+	width: 90%;
+}
+
+/* ハッシュタグ設定 */
+#csethash_list {
+	overflow-y: auto;
+	height: 180px;
+	border: 1px solid #101010;
+}
+
+#csethash_list > .hashitem {
+	display: table;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+#csethash_list > .hashitem > div {
+	display: table-cell;
+	padding: 3px 0;
+	vertical-align: middle;
+	text-align: center;
+}
+
+#csethash_list > .hashitem > .hashword {
+	width: auto;
+}
+
+#csethash_list > .hashitem > .hashdel {
+	width: 24px;
+}
+
+#csethash_list > .hashitem > .hashdel > span  {
+	text-align: center;
+	margin: 2px 4px;
+}
+
+#csethash_list > .hashitem > .hashdel > span:hover {
+	cursor: pointer;
+}
+
+#csethash_list > .hashitem > .hashword > input[type='text'] {
+	width: 90%;
+}
+
+#csethash_list > .hashitem > .hashword > input[type='text'].ngchar {
+	background: #a0a0a0;
+}

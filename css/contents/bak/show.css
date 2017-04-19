@@ -1,0 +1,197 @@
+/* show */
+div.contents.show {
+	overflow-y: auto;
+	overflow-x: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: normal;
+}
+
+div.contents.show .showcontainer {
+	display: table;
+	padding: 4px;
+	margin: 2px auto;
+	width: 98%;
+	box-sizing: border-box;
+}
+
+div.contents.show .showcontainer .icon {
+	display: table-cell;
+	vertical-align: top;
+	text-align: center;
+}
+
+div.contents.show .showcontainer .icon img {
+	max-width: 48px;
+	max-height: 48px;
+}
+
+div.contents.show .showcontainer .icon img.exp:hover {
+	cursor: pointer;
+}
+
+div.contents.show .showcontainer .desc {
+	display: table-cell;
+	vertical-align: top;
+	padding: 4px;
+}
+
+div.contents.show .showcontainer .desc > div {
+	padding: 2px 0;
+}
+
+div.contents.show .showcontainer .desc .name img {
+	vertical-align: bottom;
+}
+
+div.contents.show .showcontainer .desc .name {
+	display: table;
+	font-size: 1.2rem;
+	font-weight: bold;
+	box-sizing: border-box;
+	-webkit-user-select: auto;
+}
+
+div.contents.show .showcontainer .desc .screen_name {
+	display: table;
+	font-weight: bold;
+	box-sizing: border-box;
+	-webkit-user-select: auto;
+}
+
+div.contents.show .showcontainer .desc .screen_name a {
+	cursor: pointer;
+}
+
+div.contents.show .showcontainer .desc .name span.icon-lock {
+	vertical-align: bottom;
+	font-weight: normal;
+	font-size: 1rem;
+	color: #a4a396;
+}
+
+div.contents.show .showcontainer .desc .desctbl {
+	display: table;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+div.contents.show .showcontainer .desc .desctbl > div {
+	display: table-cell;
+}
+
+div.contents.show .showcontainer .desc .desctbl > .desctitle {
+	width: 110px;
+}
+
+div.contents.show .showcontainer .desc .desctbl > .desccont {
+	-webkit-user-select: auto;
+}
+
+div.contents.show .followcontainer {
+	display: table;
+	padding: 4px;
+	margin: 0 auto;
+	box-sizing: border-box;
+}
+
+div.contents.show .followcontainer > div {
+	display: table-cell;
+	text-align: center;
+	padding: 0 8px;
+}
+
+div.contents.show .followcontainer > div > div:last-child {
+	font-weight: bold;
+}
+
+div.contents.show .buttons {
+	display: block;
+	width: 100%;
+	padding: 4px;
+}
+
+div.contents.show .header {
+	position: relative;
+	display: table;
+	margin: 2px auto;
+	width: 512px;
+	height: 256px;
+	box-sizing: border-box;
+}
+
+div.contents.show .header > div {
+	display: table;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+div.contents.show .header .overlay {
+	position: absolute;
+	left: 0px;
+	top: 96px;
+	width: 512px;
+	height: 160px;
+	background: -webkit-linear-gradient(top,transparent 0,rgba(0, 0, 0, 0.55) 100%);
+}
+
+div.contents.show .header .icon {
+	display: table-cell;
+	vertical-align: top;
+	text-align: center;
+	padding-top: 20px;
+	padding-left: 8px;
+}
+
+div.contents.show .header .icon img {
+	border: 4px solid white;
+	width: 73px;
+	height: 73px;
+}
+
+div.contents.show .header .icon img.exp:hover {
+	cursor: pointer;
+}
+
+div.contents.show .header .desc {
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+	width: 512px;
+	-webkit-user-select: auto;
+}
+
+div.contents.show .header .desc > div {
+	margin: 2px;
+	display: table;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+div.contents.show .header .desc > div > div {
+	display: table-cell;
+	text-align: center;
+}
+
+div.contents.show .header .name {
+	font-weight: bold;
+	font-size: 1.2rem;
+}
+
+div.contents.show .header .name > span.icon-lock {
+	font-weight: normal;
+	font-size: 1rem;
+	color: #a4a396;
+}
+
+div.contents.show .header .screen_name a {
+	font-weight: bold;
+	cursor: pointer;
+}
+
+div.contents.show .header .description {
+	padding: 0 20px;
+}
+
+div.contents.show .header .locurl {
+}

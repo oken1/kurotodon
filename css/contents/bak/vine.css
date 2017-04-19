@@ -1,0 +1,13 @@
+/* vine */
+div.contents.vine {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+}
+
+div.contents.vine iframe {
+	width: 100%;
+	height: 100%;
+}

@@ -1,0 +1,119 @@
+/* ユーザ検索一覧 */
+div.contents.usersearch {
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: normal;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+/* リスト部 */
+div.contents.usersearch .usersearch_list {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+div.contents.usersearch .usersearch_list div.item {
+	display: table;
+	width: 100%;
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
+	padding: 2px 6px 2px 4px;
+	box-sizing: border-box;
+}
+
+div.contents.usersearch .usersearch_list div.item:hover {
+	cursor: default;
+}
+
+/* アイコン */
+div.contents.usersearch .usersearch_list div.item > .icon {
+	display: table-cell;
+	width: 38px;
+	padding-top: 4px;
+	vertical-align: top;
+	text-align: center;
+}
+
+div.contents.usersearch .usersearch_list div.item .icon > img {
+	width: 32px;
+	height: 32px;
+}
+
+div.contents.usersearch .usersearch_list div.item .icon > img:hover {
+	cursor: pointer;
+}
+
+div.contents.usersearch .usersearch_list div.item .container {
+	display: table-cell;
+	vertical-align: top;
+	padding: 4px;
+}
+
+div.contents.usersearch .usersearch_list div.item .container .names {
+	font-size: 0.8rem;
+}
+
+div.contents.usersearch .usersearch_list div.item .container .names .screen_name,
+div.contents.usersearch .usersearch_list div.item .container .names .name {
+	-webkit-user-select: auto;
+}
+
+div.contents.usersearch .usersearch_list div.item .container .names .screen_name {
+	font-weight: bold;
+	font-size: 1rem;
+}
+
+div.contents.usersearch .usersearch_list div.item .container .names .screen_name:hover {
+	cursor: pointer;
+	opacity: 0.8;
+}
+
+/* 名前 */
+div.contents.usersearch .usersearch_list div.item .container .names .name {
+	opacity: 0.6;
+}
+
+/* verified */
+div.contents.usersearch .usersearch_list div.item .container .names > img {
+	vertical-align: middle;
+	width: 0.8rem;
+	height: 0.8rem;
+	padding: 0 2px;
+}
+
+div.contents.usersearch .usersearch_list div.item .container .names > span.icon-lock {
+	padding: 0 2px;
+	color: #a4a396;
+}
+
+div.contents.usersearch .usersearch_list div.item .container .names > span.icon-arrow-left {
+	padding: 0 2px;
+	color: #4bb3d3;
+}
+
+div.contents.usersearch .usersearch_list div.item .container .names > span.icon-arrow-right {
+	padding: 0 2px;
+	color: #db4d4c;
+}
+
+/* ツイート数、フォロー数 */
+div.contents.usersearch .usersearch_list div.item .container .counts {
+	opacity: 0.6;
+	font-size: 0.8rem;
+	padding: 2px 0px;
+}
+
+/* description */
+div.contents.usersearch .usersearch_list div.item .container .desc {
+	padding: 2px 0px;
+	-webkit-user-select: auto;
+}
+
+div.contents.usersearch .usersearch_list .readmore {
+	display: block;
+	width: 50%;
+	margin: 8px auto;
+	text-align: center;
+}

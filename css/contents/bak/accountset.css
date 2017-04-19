@@ -1,0 +1,69 @@
+/* アカウント設定 */
+div.contents.accountset {
+	overflow-x: hidden;
+	overflow-y: auto;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+#iconchange, #profedit, #reauth {
+	padding: 8px;
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
+}
+
+/* 再認証は保留 */
+#reauth {
+	display: none;
+}
+
+#profedit {
+	border-bottom: none;
+}
+
+div.contents.accountset > div > span {
+	display: block;
+	margin-bottom: 6px;
+}
+
+#iconimg {
+	max-width: 48px;
+	max-height: 48px;
+}
+
+#iconchange > div > div {
+	display: inline-block;
+	vertical-align: top;
+}
+
+#iconupload_input {
+	visibility: hidden;
+}
+
+#iconuploadbox_select {
+	padding: 0 0 2px 4px;
+}
+
+#iconuploadbox_btn {
+	padding: 0 4px;
+}
+
+#profedit > div {
+	margin: 4px 0;
+}
+
+#profedit > div > span {
+	display: inline-block;
+	width: 50px;
+}
+
+#profedit > div > input[type=text] {
+	width: 180px;
+}
+
+#profedit > div > textarea {
+	margin: 4px 0;
+	width: 320px;
+	height: 50px;
+}

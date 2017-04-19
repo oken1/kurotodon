@@ -1,0 +1,42 @@
+/* saved_search */
+div.contents.saved_search {
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+/* リスト部 */
+div.contents.saved_search .saved_search_list {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+div.contents.saved_search .saved_search_list div.item {
+	display: table;
+	width: 100%;
+	padding: 8px 4px 8px 4px;
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
+	box-sizing: border-box;
+}
+
+div.contents.saved_search .saved_search_list div.item > div {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+div.contents.saved_search .saved_search_list div.item > .query {
+	width: 100%;
+	white-space: normal;
+}
+
+div.contents.saved_search .saved_search_list div.item > .query:hover {
+	cursor: default;
+}
+
+div.contents.saved_search .saved_search_list div.item > .buttons {
+	width: 100%;
+}

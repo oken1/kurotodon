@@ -1,0 +1,80 @@
+/* account */
+div.contents.account {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+/* リスト部 */
+#account_list {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+#account_list div.item {
+	display: table;
+	width: 100%;
+	padding: 4px;
+	border-bottom: 1px solid  rgba( 0, 0, 0, 0.4 );
+	box-sizing: border-box;
+}
+
+#account_list div.item > .icon img {
+	width: 32px;
+	height: 32px;
+}
+
+#account_list div.item > div {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+/* ストリームの状態 */
+#account_list div.item > .streamsts {
+	width: 16px;
+	padding-right: 2px;
+}
+
+#account_list div.item > div.icon {
+	width: 38px;
+	min-width: 38px;
+}
+
+#account_list div.item > div.icon:hover {
+	cursor: pointer;
+}
+
+#account_list div.item > div.name {
+	white-space: normal;
+}
+
+#account_list div.item > div.name > div:first-child > span {
+	font-weight: bold;
+}
+
+#account_list div.item > div.name > div:first-child > span:hover {
+	cursor: pointer;
+	opacity: 0.8;
+}
+
+#account_list div.item > div.name .apilimit {
+	color: #c0c0c0;
+	font-size: 0.8rem;
+}
+
+#account_list div.item > div.name .apilimit:hover {
+	cursor: pointer;
+}
+
+#account_list div.item > div.buttons {
+	text-align: right;
+	padding-right: 12px;
+}
+
+#account_list div.item.select {
+	background: #204060;
+}

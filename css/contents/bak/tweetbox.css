@@ -1,0 +1,221 @@
+/* tweetbox */
+div.contents.tweetbox {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+/* テキストエリア＋ツイートボタン */
+#tweetbox_box {
+	width: 100%;
+	height: 120px;
+	padding: 4px;
+}
+
+/* テキストエリア */
+#tweetbox_text {
+	height: 60px;
+}
+
+#tweetbox_box > div {
+	display: table;
+	padding-top: 4px;
+	box-sizing: border-box;
+}
+
+#tweetbox_cnt {
+	display: table-cell;
+	width: 30%;
+	text-align: left;
+	color: #88ccff;
+	font-size: 1.4rem;
+	padding-left: 8px;
+	vertical-align: middle;
+}
+
+#tweetbox_cnt.ng {
+	color: #ff88cc;
+}
+
+#tweetbox_btn {
+	display: table-cell;
+	width: 70%;
+	text-align: right;
+	vertical-align: middle;
+}
+
+#tweetbox_btn #tweet {
+	padding: 8px 16px;
+}
+
+#imageattach_input {
+	visibility: hidden;
+}
+
+/* 返信ツイート */
+#tweetbox_reply {
+}
+
+/* 位置情報 */
+#tweetbox_geo {
+}
+
+/* 添付画像 */
+#tweetbox_image {
+	display: block;
+}
+
+.replyitem, .geoitem {
+	display: table;
+	width: 95%;
+	border: 1px solid rgba( 0, 0, 0, 0.4 );
+	padding: 2px;
+	margin: 0 auto;
+	margin-bottom: 4px;
+	box-sizing: border-box;
+}
+
+.imageitem {
+	display: inline-block;
+	padding: 2px;
+	margin: 0 auto;
+	margin-bottom: 4px;
+	box-sizing: border-box;
+	text-align: left;
+}
+
+.replyitem > div, .geoitem > div {
+	display: table-cell;
+	vertical-align: middle;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: normal;
+}
+
+.imageitem > div {
+	display: inline-block;
+	vertical-align: middle;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: normal;
+}
+
+.imageitem > div.del {
+	vertical-align: top;
+}
+
+/* アイコン */
+.replyitem > div.icon img, .geoitem > div.icon span {
+	width: 24px;
+	height: 24px;
+	margin: 2px;
+	font-size: 24px;
+}
+
+.imageitem > div.icon img {
+	width: 40px;
+	height: 40px;
+	margin: 2px 0px 0px 4px;
+	font-size: 24px;
+}
+
+.replyitem > div.icon {
+	vertical-align: top;
+}
+
+/* 削除ボタン */
+.replyitem > div.del span, .geoitem > div.del span, .imageitem > div.del span {
+	width: 12px;
+	height: 12px;
+	padding-right: 4px;
+	font-size: 8px;
+}
+
+.replyitem > div.del span:hover, .geoitem > div.del span:hover, .imageitem > div.del span:hover {
+	cursor: pointer;
+}
+
+/* 位置情報 */
+.geoitem > div.geopos {
+	padding-left: 4px;
+	width: 100%;
+}
+
+.geoitem > div.geopos > span {
+	font-size: 0.8rem;
+}
+
+/* 添付画像 */
+.imageitem > div.filename {
+	padding-left: 4px;
+	width: 100%;
+}
+
+.imageitem > div.filename > span {
+	font-size: 0.8rem;
+}
+
+/* 返信 */
+.replyitem > div.reply {
+	width: 100%;
+	padding: 4px;
+}
+
+.replyitem > div.reply:hover,
+.geoitem > div.geopos:hover,
+.imageitem > div.geopos:hover {
+	cursor: default;
+}
+
+.replyitem > div.reply > div.screen_name {
+	font-weight: bold;
+	padding-bottom: 2px;
+}
+
+.replyitem > div.reply > div.status > span {
+	font-weight: normal;
+	font-size: 0.8rem;
+	color: #c0c0c0;
+}
+
+.replyitem > div.reply > div.date {
+	font-size: 0.8rem;
+	color: #c0c0c0;
+}
+
+div.contents.tweetbox #hash_select .item {
+	text-align: left;
+}
+
+div.contents.tweetbox #hash_select .item input[type=checkbox] {
+	margin-right: 4px;
+}
+
+div.contents.tweetbox #hash_select .item.tlhash {
+	font-size: 0.8rem;
+	color: #404040;
+}
+
+div.contents.tweetbox #draft_select .item {
+	text-align: left;
+}
+
+div.contents.tweetbox #draft_select .item span:first-child {
+	vertical-align: top;
+	margin-right: 4px;
+}
+
+div.contents.tweetbox #draft_select .item span:first-child.on {
+	color: #9d1e1e;
+}
+
+div.contents.tweetbox #draft_select .item span:first-child.off {
+	color: #101010;
+}
+
+div.contents.tweetbox #draft_select #savedraft {
+	border-bottom: 1px dotted rgba( 0, 0, 0, 0.4 );
+}

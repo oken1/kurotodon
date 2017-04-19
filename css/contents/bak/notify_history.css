@@ -1,0 +1,50 @@
+/* デスクトップ通知履歴 */
+div.contents.notify_history {
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+/* リスト部 */
+#notify_history_list {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+#notify_history_list .notify {
+/*	border-width: 0 0 1px 0 !important;*/
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
+	background: none !important;
+	padding: 6px 0 2px 0 !important;
+}
+
+#notify_history_list .notify:hover {
+	cursor: default;
+}
+
+#notify_history_list .notify .notify_username {
+	color: red;
+	font-weight: bold;
+}
+
+#notify_history_list .notify .notify_username,
+#notify_history_list .notify .notify_dmname,
+#notify_history_list .notify .notify_followname,
+#notify_history_list .notify .notify_listname
+{
+	color: #ffffff;
+	font-weight: bold;
+}
+
+#notify_history_list .notify .notify_username:hover,
+#notify_history_list .notify .notify_dmname:hover,
+#notify_history_list .notify .notify_followname:hover,
+#notify_history_list .notify .notify_listname:hover
+{
+	cursor: pointer;
+	color: #dddddd;
+}

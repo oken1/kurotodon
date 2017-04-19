@@ -1,0 +1,41 @@
+/* imageupload */
+div.contents.imageupload {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+#imageupload_box {
+	width: 100%;
+	height: 120px;
+	padding: 4px;
+}
+
+#imageuploadbox_service {
+	padding-left: 16px;
+}
+
+#imageuploadbox_service > div {
+	padding: 4px;
+}
+
+#imageuploadbox_select {
+}
+
+#imageupload_input {
+	padding: 8px;
+	visibility: hidden;
+}
+
+#imageuploadbox_btn {
+	display: table-cell;
+	text-align: right;
+	vertical-align: middle;
+}
+
+#selectfile {
+	padding-left: 16px;
+}
