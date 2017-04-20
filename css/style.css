@@ -356,6 +356,8 @@ panel div.titlebar .title div {
 	height: 1.5rem;
 	font-size: 1rem;
 	line-height: 1.5rem;
+	margin: 2px 0;
+	padding: 4px 0 2px 0;
 }
 
 /* タイトルアイコン */
@@ -715,9 +717,10 @@ panel div.titlebar .titlecontainer .badge {
 	font-size: 0.8rem;
 	width: 0.8rem;
 	text-align: center;
-
+	vertical-align: middle;
 	color: #ffffff;
 	background-color: #dc2d2d;
+	border: 4px #606060 solid;
 }
 
 panel div.titlebar .titlecontainer .badge:hover {

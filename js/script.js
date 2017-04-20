@@ -39,6 +39,8 @@ var g_loaded = false;
 // 終了時データ保存
 var g_saveend = true;
 
+var g_testmode = true;
+
 ////////////////////////////////////////////////////////////////////////////////
 // 初期化処理
 ////////////////////////////////////////////////////////////////////////////////
@@ -308,9 +310,9 @@ function Init()
 
 							$( '#blackout' ).append( OutputTPL( 'blackoutinfo', {
 								id: 'info0_' + _comp,
-								msg: chrome.i18n.getMessage( 'i18n_0046' ) + '(' + g_cmn.account[account_id]['display_name'] +
+								msg: i18nGetMessage( 'i18n_0046' ) + '(' + g_cmn.account[account_id]['display_name'] +
 									 '@' + g_cmn.account[account_id]['instance'] + ')' } ) );
-
+if( !g_testmode ) {
 							SendRequest(
 								{
 									action: 'api_call',
@@ -358,6 +360,35 @@ function Init()
 									}
 								}
 							);
+}else
+{
+							$( '#info0_' + _comp ).append( ' ... completed' ).fadeOut( 'slow', function() { $( this ).remove() } );
+							_comp++;
+
+							if ( _comp >= _cnt )
+							{
+								var _next = function() {
+									if ( $( '#blackout' ).find( 'div.info' ).length == 0 )
+									{
+										Blackout( false );
+										$( '#blackout' ).activity( false );
+										Subsequent();
+										$( '#head' ).trigger( 'account_update' );
+									}
+									else
+									{
+										setTimeout( function() { _next(); }, 100 );
+									}
+								};
+
+								_next();
+							}
+							else
+							{
+								GetAccountInfo();
+							}
+}
+
 						}
 						
 						GetAccountInfo();
@@ -1095,6 +1126,66 @@ function SetFront( p )
 ////////////////////////////////////////////////////////////////////////////////
 function MakeTimeline( json, account_id )
 {
+	var text = json.content;
+	var user_instance;
+
+	var bt_flg = ( json.reblog );
+	var bt_user_id = json.account.id;
+	var bt_user_instance = '仮';
+	var bt_user_display_name = json.account.display_name;
+	var bt_avatar = json.account.avatar;
+
+	if ( bt_flg )
+	{
+		var _json = json.reblog;
+		json = _json;
+	}
+
+	user_instance = GetInstanceFromAcct( json.account.acct, account_id );
+
+	// 相互、一方フォローマーク
+	var isfriend = IsFriend( account_id, json.account.id, user_instance );
+	var isfollower = IsFollower( account_id, json.account.id, user_instance );
+console.log('-----' );
+console.log( json.reblogs_count );
+console.log('----' );
+	var assign = {
+		user_id: json.account.id,
+		user_instance: '仮',
+		status_id: json.id,
+		created_at: json.created_at,
+
+		user_avatar: json.account.avatar,
+		statuses_count: json.account.statuses_count,
+		following: json.account.following_count,
+		followers: json.account.followers_count,
+
+		bt_flg: bt_flg,
+
+		bt_user_id: bt_user_id,
+		bt_user_instance: bt_user_instance,
+		bt_user_display_name: bt_user_display_name,
+		bt_avatar: bt_avatar,
+
+		user_display_name: json.account.display_name,
+		user_username: json.account.username,
+		user_instance: user_instance,
+
+		isfriend: isfriend,
+		isfollower: isfollower,
+
+		btcnt: json.reblogs_count,
+		favcnt: json.favourites_count,
+		
+		date: DateConv( json.created_at, 0 ),
+		dispdate: DateConv( json.created_at, 3 ),
+
+		source: ( user_instance == g_cmn.account[account_id].instance ) ? '' : '@' + user_instance,
+		
+		text: json.content,
+	};
+
+	return OutputTPL( 'timeline_tweet', assign );
 }
 
 
@@ -1750,6 +1841,76 @@ function i18nGetMessage( id, options )
 	{
 		return '';
 	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// acctからインスタンス名を取得する
+////////////////////////////////////////////////////////////////////////////////
+function GetInstanceFromAcct( acct, account_id ) {
+	var _data = acct.split( /@/ );
+
+	if ( _data.length <= 1 )
+	{
+		return g_cmn.account[account_id].instance;
+	}
+	else
+	{
+		return _data[_data.length - 1];
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// フレンドかチェック
+////////////////////////////////////////////////////////////////////////////////
+function IsFriend( account_id, user_id, user_instance )
+{
+/*
+	var account = g_cmn.account[account_id];
+
+	if ( account.notsave.friends == undefined )
+	{
+		return false;
+	}
+
+	for ( var i = 0, _len = account.notsave.friends.length ; i < _len ; i++ )
+	{
+		if ( user_id == account.notsave.friends[i] )
+		{
+			return true;
+		}
+	}
+
+	return false;
+*/
+	return true; // 仮
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// フォロワーかチェック
+////////////////////////////////////////////////////////////////////////////////
+function IsFollower( account_id, user_id, user_instance )
+{
+/*
+	var account = g_cmn.account[account_id];
+
+	if ( account.notsave.followers == undefined )
+	{
+		return false;
+	}
+
+	for ( var i = 0, _len = account.notsave.followers.length ; i < _len ; i++ )
+	{
+		if ( user_id == account.notsave.followers[i] )
+		{
+			return true;
+		}
+	}
+
+	return false;
+*/
+	return true; // 仮
 }
 
 

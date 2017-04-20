@@ -1,0 +1,495 @@
+/* タイムライン */
+div.contents.timeline .lines {
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: normal;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+/* 検索専用ボタン群 */
+div.contents.timeline .lines .panel_btns > div .search_btns {
+	position: absolute;
+	z-index: 8900;
+	border: 1px solid #101010;
+	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
+	background: #2e2e2e;
+	padding: 8px;
+	left: 8px;
+}
+
+/* 再検索テキスト */
+div.contents.timeline .lines .panel_btns > div .searchagain_text {
+	vertical-align: bottom;
+}
+
+/* UserStream */
+div.contents.timeline .lines .panel_btns .ustbl {
+	text-align: right;
+}
+
+div.contents.timeline .lines .panel_btns .streamuse {
+	display: inline-block;
+	color: #30cf70;
+	margin-right: 4px;
+	vertical-align: middle;
+	font-size: 1.1rem;
+}
+
+div.contents.timeline .lines .panel_btns .streamuse.reconnect {
+	color: #dc4d4d;
+}
+
+/* リスト部 */
+div.contents.timeline .lines .timeline_list {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+div.contents.timeline .lines div.item {
+	display: table;
+	width: 100%;
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
+	padding: 2px;
+	box-sizing: border-box;
+	background: #282828;	/* color set:ツイートのBG */
+	color: #ffffff;
+}
+
+/* 新着 */
+div.contents.timeline .lines div.item.new {
+	background: #204060;	/* color set:新着ツイートのBG */
+}
+
+div.contents.timeline .lines div.item.resopen {
+	border-bottom: none;
+}
+
+div.contents.timeline .lines div.item.res {
+	padding-left: 22px;
+}
+
+/* アイコン */
+div.contents.timeline .lines div.item > .avatar {
+	display: table-cell;
+	width: 38px;
+	padding-top: 4px;
+	padding-right: 4px;
+	vertical-align: top;
+	text-align: right;
+}
+
+div.contents.timeline .lines div.item > .avatar > img {
+	width: 32px;
+	height: 32px;
+}
+
+div.contents.timeline .lines div.item > .avatar img:hover {
+	cursor: pointer;
+}
+
+/* 名前・日付・お気に入り～ツイート～ボタン */
+div.contents.timeline .lines div.item > .toot {
+	position: relative;
+	display: table-cell;
+	vertical-align: top;
+	padding: 4px;
+}
+
+div.contents.timeline .lines div.item.deleted {
+	opacity: 0.5;
+}
+
+div.contents.timeline .lines div.item.res > .toot {
+	border-radius: 6px;
+	background: #202020;	/* color set:返信元ツイートのBG */
+}
+
+div.contents.timeline .lines div.item.res > .tail {
+	display: block;
+	border-top: 8px solid #202020;
+	width: 8px;
+	-webkit-transform:rotate( 45deg );
+	margin-top: 16px;
+	margin-left: -4px;
+}
+
+/* 名前・日付・お気に入り */
+div.contents.timeline .lines div.item > .toot .headcontainer {
+	display: table;
+	width: 100%;
+	padding-bottom: 2px;
+	box-sizing: border-box;
+}
+
+/* 名前・日付 */
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate {
+	display: table-cell;
+	font-size: 0.8rem;
+	padding-right: 2rem;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .anchor {
+	opacity: 0.6;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .anchor:hover {
+	opacity: 0.8;
+}
+
+/* フォロー矢印 */
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .icon-arrow-right {
+	padding: 0 2px;
+	color: #db4d4c;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .icon-arrow-left {
+	padding: 0 2px;
+	color: #4bb3d3;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .display_name,
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .username
+{
+	-webkit-user-select: auto;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .username:hover {
+	cursor: pointer;
+	opacity: 0.8;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .username
+{
+	opacity: 0.6;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .display_name:hover {
+	cursor: pointer;
+	opacity: 0.8;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .display_name {
+	font-weight: bold;
+	font-size: 1rem;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .source {
+	opacity: 0.4;
+}
+
+/* 日付 */
+div.contents.timeline .lines div.item > .toot .headcontainer .date {
+	padding-right: 8px;
+}
+
+/* カウント数表示 */
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .btfav_cnt > .icon-loop {
+	color: #86aa65;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .btfav_cnt > .icon-star {
+	color: #eda637;
+}
+
+/* オプション */
+div.contents.timeline .lines div.item > .toot .headcontainer .options {
+	display: table-cell;
+	text-align: right;
+	vertical-align: top;
+	width: auto;
+	white-space: nowrap;
+	font-size: 1.3rem;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 4px;
+	border-radius: 0 6px 0 0;
+
+	background: #282828;	/* color set:ツイートのBG */
+}
+
+div.contents.timeline .lines div.item.new > .toot .headcontainer .options {
+	background: #204060;	/* color set:新着ツイートのBG */
+}
+
+div.contents.timeline .lines div.item.res > .toot .headcontainer .options {
+	background: #202020;	/* color set:返信元ツイートのBG */
+}
+
+/* アカウント選択 */
+div.contents.timeline .lines div.item > .toot .headcontainer .options .accsel {
+	min-width: 90px;
+	display: none;
+	position: absolute;
+	right: 0;
+	word-break: break-all;
+	word-wrap: break-word;
+	z-index: 8900;
+	border: 1px solid #101010;
+	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
+	background: #2e2e2e;
+	white-space: normal;
+}
+
+/* ボタン群 */
+div.contents.timeline .lines div.item > .toot .headcontainer .options .btns {
+	display: inline-block;
+	cursor: pointer;
+	opacity: 0.4;
+	padding-right: 0 2px;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .options .btns:hover {
+	opacity: 0.8;
+}
+
+/* お気に入り */
+div.contents.timeline .lines div.item > .toot .headcontainer .options .fav {
+	cursor: pointer;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .options .fav.on {
+	color: #dd2e44;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .options .fav.off {
+	color: #a4a396;
+	display: none;
+}
+
+/* ブースト */
+div.contents.timeline .lines div.item > .avatar .boost {
+	display: block;
+	margin-top: -6px;
+	margin-right: -6px;
+}
+
+div.contents.timeline .lines div.item > .avatar .boost img {
+	width: 16px;
+	height: 16px;
+}
+
+div.contents.timeline .lines div.item > .avatar .boost img:hover {
+	cursor: pointer;
+}
+
+/* トゥート */
+div.contents.timeline .lines div.item > .toot > .toot_text {
+	line-height: 1.4rem;
+	padding: 2px 0;
+	-webkit-user-select: auto;
+	word-break: break-word;
+	white-space: pre-wrap;
+}
+
+/* トゥート内リンク */
+div.contents.timeline .lines div.item > .toot > .toot_text .anchor {
+	color: #add4f2;
+}
+
+div.contents.timeline .lines div.item > .toot > .toot_text .anchor:hover {
+	opacity: 0.8;
+}
+
+/* 警告表示 */
+div.contents.timeline .lines div.item > .toot > .toot_text .warning {
+	color: #add4f2;
+	background: #900010;
+}
+
+/* 返信元・ボタン */
+div.contents.timeline .lines div.item > .toot .bottomcontainer {
+	display: table;
+	width: 100%;
+	position: relative;
+	box-sizing: border-box;
+}
+
+/* 付加情報 */
+div.contents.timeline .lines div.item > .toot .bottomcontainer .additional {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+/* サムネイル */
+div.contents.timeline .lines div.item > .toot .bottomcontainer .additional > img {
+	width: 75px;
+	height: 75px;
+}
+
+/* 動画サムネイル */
+div.contents.timeline .lines div.item > .toot .bottomcontainer .additional > img.thumb_mov {
+	width: 100px;
+	height: 75px;
+}
+
+div.contents.timeline .lines div.item > .toot .bottomcontainer .additional img.link:hover {
+	cursor: pointer;
+}
+
+/* メニューボックス */
+div.contents.timeline .lines div.item > .toot .menubox {
+	display: none;
+	position: relative;
+	margin: 2px 0;
+	padding: 2px 2px 0;
+}
+
+div.contents.timeline .lines div.item > .toot .menubox .btn {
+	padding: 6px 8px;
+	margin: 2px;
+}
+
+div.contents.timeline .lines .readmore {
+	display: block;
+	width: 50%;
+	margin: 8px auto;
+	text-align: center;
+}
+
+
+
+/* タイムライン設定 */
+div.contents.timeline .setting {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+/* 設定項目部 */
+div.contents.timeline .setting .tlsetting_items {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+div.contents.timeline .setting .tlsetting_items .kind {
+	padding: 4px 8px;
+}
+
+div.contents.timeline .setting .tlsetting_items .kind:hover {
+	cursor: pointer;
+}
+
+div.contents.timeline .setting .tlsetting_items .kind > span {
+	padding-right: 2px;
+}
+
+div.contents.timeline .setting .tlsetting_items .kinditems {
+	min-width: 240px;
+	margin: 2px;
+	padding: 4px;
+	border: 1px solid #101010;
+	white-space: normal;
+}
+
+div.contents.timeline .setting .tlsetting_items .group {
+	margin: 2px;
+	padding: 4px;
+}
+
+div.contents.timeline .setting .tlsetting_items .group > .title {
+	width: 100%;
+	margin: 2px;
+}
+
+/* 新着読み込み設定 */
+div.contents.timeline .setting .set_reload_time {
+	width: 50%;
+}
+
+/* 一度に取得するツイート数設定 */
+div.contents.timeline .setting .set_get_count {
+	width: 50%;
+}
+
+/* タイムラインに表示する最大ツイート数設定 */
+div.contents.timeline .setting .set_max_count {
+	width: 50%;
+}
+
+/* メンバー数 */
+div.contents.timeline .setting .member {
+	display: table;
+	width: 100%;
+	margin-bottom: 4px;
+	box-sizing: border-box;
+}
+
+div.contents.timeline .setting .member div:first-child {
+	display: table-cell;
+	text-align: left;
+}
+
+div.contents.timeline .setting .member div:last-child {
+	display: table-cell;
+	text-align: right;
+}
+
+/* メンバーリスト */
+div.contents.timeline .setting .member_list {
+	overflow-y: auto;
+	height: 180px;
+	border: 1px solid #101010;
+}
+
+div.contents.timeline .setting .member_list > span {
+	display: inline-block;
+	color: #c0c0c0;
+	margin: 4px;
+}
+
+div.contents.timeline .setting .member_list > div {
+	display: inline-block;
+	text-align: center;
+	vertical-align: middle;
+	padding: 2px;
+}
+
+div.contents.timeline .setting .member_list > div img {
+	width: 32px;
+	height: 32px;
+}
+
+div.contents.timeline .setting .member_list > div:hover {
+	cursor: pointer;
+}
+
+
+/* アカウント選択 */
+div.contents.timeline .setting .accsel {
+	margin-bottom: 4px;
+}
+
+div.contents.timeline .setting .acclist {
+	overflow-y: auto;
+	padding: 2px;
+	height: 39px;
+	border: 1px solid #101010;
+}
+
+div.contents.timeline .setting .acclist > div {
+	display: inline-block;
+	text-align: center;
+	vertical-align: middle;
+	padding: 2px;
+}
+
+div.contents.timeline .setting .acclist > div img {
+	width: 32px;
+	height: 32px;
+}
+
+div.contents.timeline .setting .acclist > div.selected {
+	background: #204060;
+}
+
+div.contents.timeline .setting .acclist > div:hover {
+	cursor: pointer;
+}

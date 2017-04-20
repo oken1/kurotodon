@@ -23,12 +23,12 @@
 				<br>
 				<span class='date tooltip' absdate='{$absdate}' tooltip='{$date}'><a href='https://twitter.com/{$screen_name}/status/{$status_id}' target='_blank' class='anchor'>{$dispdate}</a></span><span class='source'>{$source}</span>
 				<br>
-				{if $rtcnt + 1 > 0 || $favcnt > 0}
-				<span class='rtfav_cnt'>{if $rtcnt + 1 > 0}<span class='icon-loop'></span>:{$rtcnt + 1}{/if} {if $favcnt > 0}<span class='icon-heart'></span>:{$favcnt}{/if}</span>
+				{if $btcnt > 0 || $favcnt > 0}
+				<span class='btfav_cnt'>{if $btcnt > 0}<span class='icon-loop'></span>:{$btcnt}{/if} {if $favcnt > 0}<span class='icon-star'></span>:{$favcnt}{/if}</span>
 				{/if}
 			</div>
 			<div class='options' mytweet='{$mytweet}' protected='{$protected}'>
-				<span class='fav tooltip icon-heart {if $favorited}on{else}off{/if}' tooltip='(i18n_0054)'></span>
+				<span class='fav tooltip icon-star {if $favorited}on{else}off{/if}' tooltip='(i18n_0054)'></span>
 			</div>
 		</div>
 

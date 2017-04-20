@@ -135,15 +135,19 @@ Contents.account = function( cp )
 
 		////////////////////////////////////////
 		// ホームボタンクリック
+		// ローカルボタンクリック
+		// 連合ボタンクリック
 		////////////////////////////////////////
-		$( '#account_list' ).find( 'div.item' ).find( '.buttons' ).find( '.home' ).click( function( e ) {
+		$( '#account_list' ).find( 'div.item' ).find( '.buttons' ).find( '.home,.local,.federated' ).click( function( e ) {
 			var account_id = $( this ).parent().parent().attr( 'account_id' );
+
+			var timeline_type = $( this ).hasClass( 'home' ) ? 'home' : $( this ).hasClass( 'local' ) ? 'local' : 'federated';
 
 			var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
 			_cp.SetType( 'timeline' );
 			_cp.SetParam( {
 				account_id: account_id,
-				timeline_type: 'home',
+				timeline_type: timeline_type,
 				reload_time: g_cmn.cmn_param['reload_time'],
 			} );
 			_cp.Start();
@@ -245,7 +249,7 @@ Contents.account = function( cp )
 				return;
 			}
 
-			if ( confirm( chrome.i18n.getMessage( 'i18n_0185', [g_cmn.account[$( this ).attr( 'delid' )].display_name] ) ) )
+			if ( confirm( i18nGetMessage( 'i18n_0185', [g_cmn.account[$( this ).attr( 'delid' )].display_name] ) ) )
 			{
 				delete g_cmn.account[$( this ).attr( 'delid' )];
 
@@ -279,7 +283,7 @@ Contents.account = function( cp )
 				return;
 			}
 
-			if ( confirm( chrome.i18n.getMessage( 'i18n_0073' ) ) )
+			if ( confirm( i18nGetMessage( 'i18n_0073' ) ) )
 			{
 				g_cmn.account = {};
 				g_cmn.account_order = [];
@@ -306,7 +310,7 @@ Contents.account = function( cp )
 			{
 				var _cp = new CPanel( null, null, 360, 420 );
 				_cp.SetType( 'accountset' );
-				_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0047' ) + '(' + g_cmn.account[$( '#account_del' ).attr( 'delid' )].display_name + ')', false );
+				_cp.SetTitle( i18nGetMessage( 'i18n_0047' ) + '(' + g_cmn.account[$( '#account_del' ).attr( 'delid' )].display_name + ')', false );
 				_cp.SetParam( {
 					account_id: $( '#account_del' ).attr( 'delid' ),
 				} );
@@ -316,7 +320,7 @@ Contents.account = function( cp )
 			{
 				var _cp = GetPanel( pid );
 				_cp.SetType( 'accountset' );
-				_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0047' ) + '(' + g_cmn.account[$( '#account_del' ).attr( 'delid' )].display_name + ')', false );
+				_cp.SetTitle( i18nGetMessage( 'i18n_0047' ) + '(' + g_cmn.account[$( '#account_del' ).attr( 'delid' )].display_name + ')', false );
 				_cp.SetParam( {
 					account_id: $( '#account_del' ).attr( 'delid' ),
 				} );
