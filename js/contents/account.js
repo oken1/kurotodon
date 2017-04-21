@@ -58,10 +58,13 @@ Contents.account = function( cp )
 			var id = g_cmn.account_order[i];
 
 			items.push( {
-				id: g_cmn.account[id]['id'],
-				instance: g_cmn.account[id]['instance'],
-				display_name: g_cmn.account[id]['display_name'],
-				avatar: g_cmn.account[id]['avatar'],
+				id: g_cmn.account[id].id,
+				instance: g_cmn.account[id].instance,
+				display_name: g_cmn.account[id].display_name,
+				avatar: g_cmn.account[id].avatar,
+				statuses_count: g_cmn.account[id].notsave.statuses_count,
+				following_count: g_cmn.account[id].notsave.following_count,
+				followers_count: g_cmn.account[id].notsave.followers_count,
 			} );
 
 			cnt++;
@@ -546,13 +549,16 @@ Contents.account = function( cp )
 								},
 								function( res )
 								{
-									if ( res.id && res.username && res.display_name && res.avatar )
+									if ( !res.status )
 									{
 										_account.instance = instance;
 										_account.id = res.id;
 										_account.username = res.username;
 										_account.display_name = res.display_name;
 										_account.avatar = res.avatar;
+										_account.notsave.statuses_count = res.statuses_count;
+										_account.notsave.following_count = res.following_count;
+										_account.notsave.followers_count = res.followers_count;
 
 										g_cmn.account[res.id + '@' + instance] = $.extend( true, {}, _account );
 

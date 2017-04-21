@@ -12,7 +12,7 @@
 			<a class='btn img icon-earth tooltip' id='geoset' tooltip='(i18n_0190)'></a>
 			<a class='btn img icon-image tooltip' id='imageattach' tooltip='(i18n_0201)'></a>
 			<a class='btn img icon-hash tooltip' id='hashtag' tooltip='(i18n_0108)'></a>
-			<a class='btn img icon-pencil tooltip disabled' id='tweet' tooltip='(i18n_0083)(Ctrl+Enter)'></a>
+			<a class='btn img icon-pencil tooltip disabled' id='tweet' tooltip='(i18n_0367)(Ctrl+Enter)'></a>
 			<div id='hash_select' class='pulldown'></div>
 			<div id='draft_select' class='pulldown'></div>
 		</div>

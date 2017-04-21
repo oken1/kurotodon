@@ -66,7 +66,7 @@ Contents.nowbrowsing = function( cp )
 				{
 					var _cp = new CPanel( left, top, width, 240 );
 					_cp.SetType( 'tweetbox' );
-					_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0083' ), false );
+					_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0367' ), false );
 					_cp.SetParam( { account_id: '', rep_user: null, hashtag: null, maxlen: 140, } );
 					_cp.Start( function() {
 						SetText();

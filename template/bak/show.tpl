@@ -98,7 +98,7 @@
 {/if}
 <div class='followcontainer'>
 	<div>
-		<div>(i18n_0083)</div>
+		<div>(i18n_0367)</div>
 		<div><a class='anchor tweets'>{$statuses_count}</a></div>
 	</div>
 	<div>

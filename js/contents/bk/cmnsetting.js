@@ -757,7 +757,7 @@ Contents.cmnsetting = function( cp )
 
 			// ツイートボタンのツールチップを設定に合わせる
 			var _tips = new Array( 'Ctrl+Enter', 'Shift+Enter', 'Enter' );
-			$( '#tweet' ).attr( 'tooltip', chrome.i18n.getMessage( 'i18n_0083' ) + '(' + _tips[g_cmn.cmn_param.tweetkey] + ')' );
+			$( '#tweet' ).attr( 'tooltip', chrome.i18n.getMessage( 'i18n_0367' ) + '(' + _tips[g_cmn.cmn_param.tweetkey] + ')' );
 			$( '#dmsend' ).attr( 'tooltip', chrome.i18n.getMessage( 'i18n_0250' ) + '(' + _tips[g_cmn.cmn_param.tweetkey] + ')' );
 
 			// ハッシュタグプルダウンを更新

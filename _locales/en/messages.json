@@ -264,10 +264,6 @@
 		"message": "Twipple photo"
 	},
 
-	"i18n_0083": {
-		"message": "Tweet"
-	},
-
 	"i18n_0086": {
 		"message": "Tweet shortcut key"
 	},
@@ -1453,6 +1449,10 @@
 
 	"i18n_0366": {
 		"message": "Federated"
+	},
+
+	"i18n_0367": {
+		"message": "Toot"
 	},
 
 

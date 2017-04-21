@@ -312,7 +312,7 @@ function Init()
 								id: 'info0_' + _comp,
 								msg: i18nGetMessage( 'i18n_0046' ) + '(' + g_cmn.account[account_id]['display_name'] +
 									 '@' + g_cmn.account[account_id]['instance'] + ')' } ) );
-if( !g_testmode ) {
+
 							SendRequest(
 								{
 									action: 'api_call',
@@ -322,11 +322,14 @@ if( !g_testmode ) {
 								},
 								function( res )
 								{
-									if ( res.id && res.username && res.display_name && res.avatar )
+									if ( !res.status )
 									{
 										g_cmn.account[account_id].username = res.username;
 										g_cmn.account[account_id].display_name = res.display_name;
 										g_cmn.account[account_id].avatar = res.avatar;
+										g_cmn.account[account_id].notsave.statuses_count = res.statuses_count;
+										g_cmn.account[account_id].notsave.following_count = res.following_count;
+										g_cmn.account[account_id].notsave.followers_count = res.followers_count;
 									}
 									else
 									{
@@ -360,35 +363,6 @@ if( !g_testmode ) {
 									}
 								}
 							);
-}else
-{
-							$( '#info0_' + _comp ).append( ' ... completed' ).fadeOut( 'slow', function() { $( this ).remove() } );
-							_comp++;
-
-							if ( _comp >= _cnt )
-							{
-								var _next = function() {
-									if ( $( '#blackout' ).find( 'div.info' ).length == 0 )
-									{
-										Blackout( false );
-										$( '#blackout' ).activity( false );
-										Subsequent();
-										$( '#head' ).trigger( 'account_update' );
-									}
-									else
-									{
-										setTimeout( function() { _next(); }, 100 );
-									}
-								};
-
-								_next();
-							}
-							else
-							{
-								GetAccountInfo();
-							}
-}
-
 						}
 						
 						GetAccountInfo();
@@ -640,7 +614,7 @@ if( !g_testmode ) {
 		{
 			var _cp = new CPanel( left, top, width, 240 );
 			_cp.SetType( 'tweetbox' );
-			_cp.SetTitle( i18nGetMessage( 'i18n_0083' ), false );
+			_cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
 			_cp.SetParam( { account_id: '', rep_user: null, hashtag: null, maxlen: 140, } );
 			_cp.Start();
 		}
@@ -1088,7 +1062,7 @@ function AccountSelectMake( cp )
 function SetFont( formflg )
 {
 g_cmn.cmn_param.font_family ='Meiryo';
-g_cmn.cmn_param.font_size =12;
+g_cmn.cmn_param.font_size =14;
 	if ( !formflg )
 	{
 		$( 'html,body' ).css( { fontSize: g_cmn.cmn_param.font_size + 'px', fontFamily: g_cmn.cmn_param.font_family } );
@@ -1127,13 +1101,13 @@ function SetFront( p )
 function MakeTimeline( json, account_id )
 {
 	var text = json.content;
-	var user_instance;
+	var user_instance = GetInstanceFromAcct( json.account.acct, account_id );
 
 	var bt_flg = ( json.reblog );
 	var bt_user_id = json.account.id;
 	var bt_user_instance = '仮';
 	var bt_user_display_name = json.account.display_name;
-	var bt_avatar = json.account.avatar;
+	var bt_avatar = AvatarURLConvert( json.account, account_id );
 
 	if ( bt_flg )
 	{
@@ -1141,21 +1115,17 @@ function MakeTimeline( json, account_id )
 		json = _json;
 	}
 
-	user_instance = GetInstanceFromAcct( json.account.acct, account_id );
-
 	// 相互、一方フォローマーク
 	var isfriend = IsFriend( account_id, json.account.id, user_instance );
 	var isfollower = IsFollower( account_id, json.account.id, user_instance );
-console.log('-----' );
-console.log( json.reblogs_count );
-console.log('----' );
+
 	var assign = {
 		user_id: json.account.id,
 		user_instance: '仮',
 		status_id: json.id,
 		created_at: json.created_at,
 
-		user_avatar: json.account.avatar,
+		user_avatar: AvatarURLConvert( json.account, account_id ),
 		statuses_count: json.account.statuses_count,
 		following: json.account.following_count,
 		followers: json.account.followers_count,
@@ -1176,13 +1146,13 @@ console.log('----' );
 
 		btcnt: json.reblogs_count,
 		favcnt: json.favourites_count,
-		
+
 		date: DateConv( json.created_at, 0 ),
 		dispdate: DateConv( json.created_at, 3 ),
 
 		source: ( user_instance == g_cmn.account[account_id].instance ) ? '' : '@' + user_instance,
 		
-		text: json.content,
+		text: ConvertText( json.content ),
 	};
 
 	return OutputTPL( 'timeline_tweet', assign );
@@ -1845,6 +1815,41 @@ function i18nGetMessage( id, options )
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// contentを表示用に整形する
+////////////////////////////////////////////////////////////////////////////////
+function ConvertText( content )
+{
+	var _jq = $( content );
+
+	_jq.find( 'a' ).each( function( e ) {
+		var anchor = $( this );
+
+		// @user
+		if ( anchor.hasClass( 'mention' ) && anchor.hasClass( 'u-url' ) )
+		{
+			$( this ).replaceWith( $( '<span class="user anchor">@' + anchor.find( 'span' ).text() + '</span>' ) );
+		}
+		// hashtag
+		else if ( anchor.hasClass( 'mention' ) && anchor.hasClass( 'hashtag' ) )
+		{
+			$( this ).replaceWith( $( '<span class="hashtag anchor">#' + anchor.find( 'span' ).text() + '</span>' ) );
+		}
+		// url
+		else
+		{
+			$( this ).replaceWith( $( '<a href="' + anchor.attr( 'href' ) + 
+				'" rel="nofollow noopener" target="_blank" class="url anchor">' + 
+				anchor.find( 'span.ellipsis' ).text() + '</span></a>' ) );
+		}
+
+	} );
+
+	return _jq.html();
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // acctからインスタンス名を取得する
 ////////////////////////////////////////////////////////////////////////////////
 function GetInstanceFromAcct( acct, account_id ) {
@@ -1860,6 +1865,21 @@ function GetInstanceFromAcct( acct, account_id ) {
 	}
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// 初期アイコンのURL変換
+////////////////////////////////////////////////////////////////////////////////
+function AvatarURLConvert( account, account_id )
+{
+	if ( account.avatar == "/avatars/original/missing.png" )
+	{
+		return 'https://' + GetInstanceFromAcct( account.acct, account_id ) + account.avatar;
+	}
+	else
+	{
+		return account.avatar;
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // フレンドかチェック

@@ -129,9 +129,11 @@ chrome.extension.onMessage.addListener(
 
 					for ( var i in req.param )
 					{
-						query += i + '=' + req.param[i];
+						query += i + '=' + req.param[i] + '&';
 					}
 				}
+
+				console.log( 'https://' + req.instance + '/api/v1/' + req.api + query );
 
 				$.ajax( {
 					url: 'https://' + req.instance + '/api/v1/' + req.api + query,

@@ -146,7 +146,7 @@ Contents.timeline = function( cp )
 		{
 			var _cp = new CPanel( null, null, 324, 240 );
 			_cp.SetType( 'tweetbox' );
-			_cp.SetTitle( i18nGetMessage( 'i18n_0083' ), false );
+			_cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
 			_cp.SetParam( { account_id: cp.param['account_id'], maxlen: 140, } );
 			_cp.Start( function() {
 				pid = IsUnique( 'tweetbox' );
@@ -268,8 +268,7 @@ console.log( res );
 					for ( var i = 0 ; i < len ; i++ )
 					{
 						var instance = GetInstanceFromAcct( res[i].account.acct, cp.param['account_id'] );
-						
-						// 既に読み込み済みのツイート/非表示ユーザは無視
+
 						if ( status_ids[res[i].id + '@' + instance] == undefined )
 						{
 							s += MakeTimeline( res[i], cp.param['account_id'] );
@@ -816,20 +815,6 @@ console.log( res );
 		} );
 
 		////////////////////////////////////////
-		// クリアボタンクリック
-		////////////////////////////////////////
-		lines.find( '.panel_btns' ).find( '.timeline_clear' ).click( function() {
-			lines.find( '.panel_btns' ).find( '.streamuse' ).removeClass( 'reconnect tooltip' ).attr( 'tooltip', '' );
-
-			status_ids = {};
-			timeline_list.html( '' );
-			timeline_list.scrollTop( 0 );
-
-			badge.hide().html( '' );
-			$( '#panellist' ).find( '> .lists > div[panel_id=' + cp.id + ']' ).find( 'span.badge' ).hide().html( '' );
-		} );
-
-		////////////////////////////////////////
 		// 一番上へ
 		////////////////////////////////////////
 		lines.find( '.sctbl' ).find( 'a:first' ).click( function( e ) {
@@ -842,81 +827,6 @@ console.log( res );
 		lines.find( '.sctbl' ).find( 'a:last' ).click( function( e ) {
 			timeline_list.scrollTop( timeline_list.prop( 'scrollHeight' ) );
 		} );
-
-		////////////////////////////////////////
-		// 引用
-		////////////////////////////////////////
-		var QuoteText = function( item ) {
-			var url = item.find( 'span.date > a' ).attr( 'href' );
-
-			var pid = IsUnique( 'tweetbox' );
-
-			var SetText = function() {
-				$( '#tweetbox_text' ).val( $( '#tweetbox_text' ).val() + ' ' + url )
-					.focus()
-					.trigger( 'keyup' )
-					.SetPos( 'end' );
-			};
-
-			// ツイートパネルが開いていない場合は開く
-			if ( pid == null )
-			{
-				var _cp = new CPanel( null, null, 324, 240 );
-				_cp.SetType( 'tweetbox' );
-				_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0083' ), false );
-				_cp.SetParam( { account_id: cp.param['account_id'], maxlen: 140, } );
-				_cp.Start( function() {
-					SetText();
-				} );
-			}
-			else
-			{
-				SetText();
-
-				var _cp = GetPanel( pid );
-				_cp.param.account_id = cp.param['account_id'];
-				$( '#' + pid ).find( 'div.contents' ).trigger( 'account_update' );
-			}
-		}
-
-		////////////////////////////////////////
-		// DMを書く
-		////////////////////////////////////////
-		var DMWrite = function( item ) {
-			var screen_name = item.attr( 'screen_name' );
-
-			// パネルのパラメータ
-			var param = {
-				account_id: cp.param['account_id'],
-				screen_name: screen_name,
-				maxlen: g_cmn.twconfig['dm_text_character_limit'],
-/*				maxlen: 140,*/
-			};
-
-			var pid = IsUnique( 'dmbox' );
-			var left = null;
-			var top = null;
-			var width = 324;
-
-			// DMパネルが開いている場合は閉じる
-			if ( pid != null )
-			{
-				// 位置とサイズを保存
-				$( '#' + pid ).each( function() {
-					left = $( this ).position().left;
-					top = $( this ).position().top;
-					width = $( this ).width();
-				} );
-
-				$( '#' + pid ).find( '.close' ).trigger( 'click', [false] );
-			}
-
-			var _cp = new CPanel( left, top, width, 200 );
-			_cp.SetType( 'dmbox' );
-			_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0149', [screen_name] ), false );
-			_cp.SetParam( param );
-			_cp.Start();
-		};
 
 		////////////////////////////////////////
 		// リツイート
@@ -1109,7 +1019,7 @@ console.log( res );
 
 					var _cp = new CPanel( null, null, 324, 240 );
 					_cp.SetType( 'tweetbox' );
-					_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0083' ), false );
+					_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0367' ), false );
 					_cp.SetParam( param );
 					_cp.Start( function() {
 						pid = IsUnique( 'tweetbox' );
@@ -1137,12 +1047,11 @@ console.log( res );
 				// 最初にクリックされたときにメニューボックス部を作成
 				if ( item.find( '.menubox' ).length == 0 )
 				{
-					item.find( '.tweet' ).append( OutputTPL( 'timeline_menu', {
-						protected: item.attr( 'protected' ),
+					item.find( '.toot' ).append( OutputTPL( 'timeline_menu', {
 						toolbaruser: ( IsToolbarUser( item.attr( 'user_id' ) ) != -1 ) ? true : false,
 					} ) );
 
-					var menubox = item.find( 'div.tweet' ).find( 'div.menubox' );
+					var menubox = item.find( 'div.toot' ).find( 'div.menubox' );
 
 					// ツールバーに登録ボタンクリック処理
 					menubox.find( '> a.toolbaruser' ).on( 'click', function( e ) {

@@ -103,7 +103,7 @@ Contents.tweetbox = function( cp )
 
 		// ツイートボタンのツールチップを設定に合わせる
 		var _tips = new Array( 'Ctrl+Enter', 'Shift+Enter', 'Enter' );
-		$( '#tweet' ).attr( 'tooltip', chrome.i18n.getMessage( 'i18n_0083' ) + '(' + _tips[g_cmn.cmn_param.tweetkey] + ')' );
+		$( '#tweet' ).attr( 'tooltip', chrome.i18n.getMessage( 'i18n_0367' ) + '(' + _tips[g_cmn.cmn_param.tweetkey] + ')' );
 
 		////////////////////////////////////////
 		// ファイルドロップ時の処理

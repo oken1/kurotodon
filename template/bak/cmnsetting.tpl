@@ -152,7 +152,7 @@
 		</div>
 	</div>
 
-	<div class='kind'><span class='icon-arrow_down'></span>(i18n_0083)</div>
+	<div class='kind'><span class='icon-arrow_down'></span>(i18n_0367)</div>
 	<div class='kinditems'>
 		<div class='group'>
 			<div class='checkboxcontainer'>

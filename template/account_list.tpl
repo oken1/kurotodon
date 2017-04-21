@@ -1,6 +1,6 @@
 	{foreach item=item from=$items}
 	<div class='item' account_id='{$item->id}@{$item->instance}'>
-		<div class='icon tooltip' tooltip=''>
+		<div class='icon tooltip' tooltip='(i18n_0367):{$item->statuses_count} (i18n_0125):{$item->following_count} (i18n_0122):{$item->followers_count}'>
 			<img src='{$item->avatar}'>
 		</div>
 		<div class='name'>
