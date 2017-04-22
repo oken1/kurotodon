@@ -129,10 +129,22 @@ Contents.account = function( cp )
 		////////////////////////////////////////
 		// 名前クリック
 		////////////////////////////////////////
-		$( '#account_list' ).find( 'div.item' ).find( '.display_name' ).find( 'div:first-child' ).find( 'span:first-child' ).click( function( e ) {
+		$( '#account_list' ).find( 'div.item' ).find( '.account_display_name' ).click( function( e ) {
 			var account_id = $( this ).parent().parent().parent().attr( 'account_id' );
 
-			OpenUserTimeline( g_cmn.account[account_id].id, g_cmn.account[account_id].instance, account_id );
+			var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+			_cp.SetType( 'timeline' );
+			_cp.SetParam( {
+				account_id: account_id,
+				timeline_type: 'user',
+				user_id: g_cmn.account[account_id].id,
+				user_username: g_cmn.account[account_id].username,
+				user_display_name: g_cmn.account[account_id].display_name,
+				user_instance: g_cmn.account[account_id].instance,
+				reload_time: g_cmn.cmn_param['reload_time'],
+			} );
+			_cp.Start();
+
 			e.stopPropagation();
 		} );
 
@@ -441,7 +453,7 @@ Contents.account = function( cp )
 		////////////////////////////////////////
 		// プルダウン選択
 		////////////////////////////////////////
-		 $( '#login_instance' ).parent().parent().find( '.pulldown' ).on( 'click', $( '> div.item' ).selector, function( e ) {
+		 $( '#login_instance' ).parent().parent().find( '.pulldown' ).on( 'click', '> div.item', function( e ) {
 			$( '#login_instance' ).val( $( this ).text() )
 				.trigger( 'keyup' )
 				.focus();

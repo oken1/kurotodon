@@ -202,6 +202,16 @@ Contents.timeline = function( cp )
 				};
 
 				break;
+			// ユーザ
+			case 'user':
+				param = {
+					api: 'accounts/' + cp.param['user_id'] + '/statuses',
+					data: {
+						count: count
+					}
+				};
+
+				break;
 		}
 
 		switch ( type )
@@ -646,6 +656,20 @@ console.log( res );
 				cp.SetTitle( chrome.i18n.getMessage( 'i18n_0366' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-earth' );
 				break;
+			case 'user':
+				cp.param['user_display_name'] = ( cp.param['user_display_name'] == '' ) ? cp.param['user_username'] : cp.param['user_display_name'];
+				
+				if ( cp.param['user_instance'] == account.instance )
+				{
+					cp.SetTitle( cp.param['user_display_name'] + ' (' + account.display_name + '@' + account.instance + ')', true );
+				}
+				else
+				{
+					cp.SetTitle( cp.param['user_display_name'] + '@' + cp.param['user_instance'] + ' (' + account.display_name + '@' + account.instance + ')', true );
+				}
+
+				cp.SetIcon( 'icon-user' );
+				break;
 		}
 
 		// タイトルバーに新着件数表示用のバッジを追加
@@ -892,18 +916,24 @@ console.log( res );
 			var ptarg = targ.parent();
 
 			////////////////////////////////////////
-			// ユーザ名クリック
+			// 名前クリック
 			////////////////////////////////////////
-			if ( targ.hasClass( 'name' ) )
+			if ( targ.hasClass( 'username' ) || targ.hasClass( 'display_name' ) )
 			{
-				OpenUserTimeline( targ.parent().find( '.screen_name' ).text(), cp.param['account_id'] );
-			}
-			////////////////////////////////////////
-			// スクリーン名クリック
-			////////////////////////////////////////
-			else if ( targ.hasClass( 'screen_name' ) )
-			{
-				OpenUserTimeline( targ.parent().find( '.screen_name' ).text(), cp.param['account_id'] );
+				var item = targ.parent().parent().parent().parent();
+
+				var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+				_cp.SetType( 'timeline' );
+				_cp.SetParam( {
+					account_id: cp.param['account_id'],
+					timeline_type: 'user',
+					user_id: item.attr( 'user_id' ),
+					user_username: targ.parent().find( '.username' ).text(),
+					user_display_name: targ.parent().find( '.display_name' ).text(),
+					user_instance: item.attr( 'user_instance' ),
+					reload_time: g_cmn.cmn_param['reload_time'],
+				} );
+				_cp.Start();
 			}
 			////////////////////////////////////////
 			// アイコンクリック
@@ -926,7 +956,7 @@ console.log( res );
 			////////////////////////////////////////
 			// リンククリック処理
 			////////////////////////////////////////
-			else if ( ptarg.hasClass( 'tweet_text' ) )
+			else if ( ptarg.hasClass( 'toot_text' ) )
 			{
 				if ( targ.hasClass( 'anchor' ) )
 				{
@@ -960,7 +990,19 @@ console.log( res );
 
 					if ( targ.hasClass( 'user' ) )
 					{
-						OpenUserTimeline( targ.text().replace( /^@/, '' ), cp.param['account_id'] );
+						var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+						_cp.SetType( 'timeline' );
+						_cp.SetParam( {
+							account_id: cp.param['account_id'],
+							timeline_type: 'user',
+							
+							user_id: targ.attr( 'id' ),
+							user_username: targ.attr( 'username' ),
+							user_display_name: '',
+							user_instance: GetInstanceFromAcct( targ.attr( 'acct' ), cp.param['account_id'] ),
+							reload_time: g_cmn.cmn_param['reload_time'],
+						} );
+						_cp.Start();
 					}
 
 					if ( targ.hasClass( 'hashtag' ) )
@@ -1370,7 +1412,7 @@ console.log( res );
 		////////////////////////////////////////
 		// RTアイコン右クリック
 		////////////////////////////////////////
-		timeline_list.on( 'contextmenu', $( '> div.item' ).find( 'div.icon' ).find( 'img.rt_icon' ).selector, function( e ) {
+		timeline_list.on( 'contextmenu', '> div.item div.icon img.rt_icon', function( e ) {
 			OpenUserTimeline( $( this ).parent().attr( 'rt_screen_name' ), cp.param['account_id'] );
 
 			return false;
@@ -1379,7 +1421,7 @@ console.log( res );
 		////////////////////////////////////////
 		// アイコンにカーソルを乗せたとき
 		////////////////////////////////////////
-		timeline_list.on( 'mouseenter mouseleave', $( '> div.item' ).find( 'div.icon' ).find( '> img' ).selector, function( e ) {
+		timeline_list.on( 'mouseenter mouseleave', '> div.item div.icon > img', function( e ) {
 			if ( e.type == 'mouseenter' )
 			{
 				// Draggableの設定をする
@@ -1395,551 +1437,9 @@ console.log( res );
 		} );
 
 		////////////////////////////////////////
-		// リンクにカーソルを乗せたとき
-		////////////////////////////////////////
-		var onURL = false;
-
-		timeline_list.on( 'mouseenter mouseleave', $( '> div.item' ).find( 'div.tweet_text' ).find( 'a.anchor.url' ).selector, function( e, noloading, stream ) {
-			var anchor = $( this );
-			var item = anchor.parent().parent().parent();
-			var url = anchor.attr( 'href' );
-
-			if ( e.type == 'mouseenter' )
-			{
-				onURL = true;
-
-				setTimeout( function() {
-					if ( onURL == false )
-					{
-						return;
-					}
-
-					// 短縮URLの場合、URL展開を行う
-					if ( isShortURL( url ) && g_cmn.cmn_param['urlexpand'] == 1 )
-					{
-						anchor.removeClass( 'anchor' )
-							.addClass( 'expand' )
-							.removeAttr( 'href' );
-
-						if ( !noloading )
-						{
-							item.find( '.tweet' ).activity( { color: '#ffffff' } );
-						}
-
-						var org = url;
-
-						// URL展開
-						SendRequest(
-							{
-								action: 'url_expand',
-								url: url,
-							},
-							function( res )
-							{
-								var durl;
-
-								try {
-									durl = escapeHTML( decodeURI( res ) );
-								}
-								catch ( e )
-								{
-									console.log( 'decode error [' + res + ']' );
-									durl = res;
-								}
-
-								if ( res != '' )
-								{
-									anchor.attr( 'href', res );
-									anchor.html( res );
-								}
-								else
-								{
-									anchor.attr( 'href', org );
-									anchor.html( org );
-								}
-
-								anchor.removeClass( 'expand' )
-									.addClass( 'anchor' );
-
-								if ( !noloading )
-								{
-									item.find( '.tweet' ).activity( false );
-								}
-							}
-						);
-					}
-					else if ( g_cmn.cmn_param['thumbnail'] )
-					{
-						var add = item.find( '.additional' );
-						var id;
-
-						if ( add.length == 0 )
-						{
-							item.find( '.tweet' ).append( "<div class='bottomcontainer'><div class='additional'></div></div>" );
-							add = item.find( '.additional' );
-						}
-
-						////////////////////////////////////////
-						// サムネイル表示＆
-						// 原寸サイズ表示処理作成
-						////////////////////////////////////////
-						var MakeImgLink = function( thumb, original, mov, img_count, isvideo, contenttype ) {
-							if ( add.find( 'img[loaded="' + url + '"]' ).length < img_count )
-							{
-								if ( !noloading )
-								{
-									item.find( '.tweet' ).activity( { color: '#ffffff' } );
-								}
-
-								add.append( OutputTPL( ( mov ) ? 'thumbnail_movie' : 'thumbnail', {
-									url: thumb,
-									tooltip: url
-								} ) );
-
-								// ロード失敗
-								add.find( 'img:last-child' ).error( function( e ) {
-									if ( !noloading )
-									{
-										item.find( '.tweet' ).activity( false );
-									}
-									$( this ).remove();
-								} );
-
-								// ロード成功
-								add.find( 'img:last-child' ).load( function( e ) {
-									if ( !noloading )
-									{
-										item.find( '.tweet' ).activity( false );
-									}
-
-									if ( original != '' )
-									{
-										if ( mov )
-										{
-											$( this ).addClass( 'link' );
-
-											$( this ).click( function( e ) {
-												chrome.tabs.create( { url: original }, function( tab ) {
-												} );
-
-												e.stopPropagation();
-											} );
-										}
-										else
-										{
-											$( this ).addClass( 'link' );
-
-											$( this ).click( function( e ) {
-												var _cp = new CPanel( null, null, 320, 320 );
-												_cp.SetType( 'image' );
-												_cp.SetParam( {
-													url: original,
-													video: isvideo,
-													contenttype: contenttype,
-												} );
-												_cp.Start();
-
-												e.stopPropagation();
-											} );
-										}
-									}
-									else
-									{
-										$( this ).removeClass( 'tooltip' );
-									}
-								} );
-							}
-						};
-
-						// twitpic
-						if ( url.match( /^http:\/\/twitpic\.com\/(\w+)/ ) )
-						{
-							id = RegExp.$1;
-
-							MakeImgLink( 'http://twitpic.com/show/mini/' + id,
-										 'http://twitpic.com/show/full/' + id,
-										 false, 1 );
-						}
-						// ow.ly/i
-						else if ( url.match( /^http:\/\/ow\.ly\/i\/(\w+)/ ) )
-						{
-							id = RegExp.$1;
-
-							MakeImgLink( 'http://static.ow.ly/photos/thumb/' + id + '.jpg',
-										 'http://static.ow.ly/photos/original/' + id + '.jpg',
-										 false, 1 );
-						}
-						// yfrog
-						else if ( url.match( /^http:\/\/yfrog\.com\/(\w+)/ ) )
-						{
-							id = RegExp.$1;
-
-							if ( add.find( 'img[loaded="' + url + '"]' ).length == 0 )
-							{
-								if ( !noloading )
-								{
-									item.find( '.tweet' ).activity( { color: '#ffffff' } );
-								}
-
-								SendRequest(
-									{
-										action: 'yfrog_url',
-										imgid: id,
-									},
-									function( res )
-									{
-										MakeImgLink( 'http://yfrog.com/' + id + ':small', res, false, 1 );
-
-										if ( !noloading )
-										{
-											item.find( '.tweet' ).activity( false );
-										}
-									}
-								);
-							}
-						}
-						// tweetphoto/plixi
-						else if ( url.match( /^(http:\/\/tweetphoto\.com\/\d+)/ ) ||
-								  url.match( /^(http:\/\/plixi\.com\/p\/\d+)/ ) ||
-								  url.match( /^(http:\/\/lockerz\.com\/s\/\d+)/ ) )
-						{
-							var purl = RegExp.$1;
-
-							if ( add.find( 'img[loaded="' + url + '"]' ).length == 0 )
-							{
-								if ( !noloading )
-								{
-									item.find( '.tweet' ).activity( { color: '#ffffff' } );
-								}
-
-								SendRequest(
-									{
-										action: 'plixi_url',
-										imgurl: purl,
-									},
-									function( res )
-									{
-										if ( res != '' )
-										{
-											MakeImgLink( res.thumb, res.original, false, 1 );
-										}
-
-										if ( !noloading )
-										{
-											item.find( '.tweet' ).activity( false );
-										}
-									}
-								);
-							}
-						}
-						// twipple
-						else if ( url.match( /http:\/\/p\.twipple\.jp\/(\w+)/ ) )
-						{
-							id = RegExp.$1;
-
-							MakeImgLink( 'http://p.twipple.jp/show/thumb/' + id,
-										 'http://p.twipple.jp/show/orig/' + id, false, 1 );
-						}
-						// movapic
-						else if ( url.match( /http:\/\/movapic\.com\/pic\/(\w+)/ ) )
-						{
-							id = RegExp.$1;
-
-							MakeImgLink( 'http://image.movapic.com/pic/t_' + id + '.jpeg',
-										 'http://image.movapic.com/pic/m_' + id + '.jpeg', false, 1 );
-						}
-						// フォト蔵
-						else if ( url.match( /http:\/\/photozou\.jp\/photo\/show\/\d+\/(\d+)/ ) )
-						{
-							id = RegExp.$1;
-
-							if ( add.find( 'img[loaded="' + url + '"]' ).length == 0 )
-							{
-								if ( !noloading )
-								{
-									item.find( '.tweet' ).activity( { color: '#ffffff' } );
-								}
-
-								SendRequest(
-									{
-										action: 'photozou_url',
-										imgid: id,
-									},
-									function( res )
-									{
-										if ( res != '' )
-										{
-											MakeImgLink( res.thumb, res.original, false, 1 );
-										}
-
-										if ( !noloading )
-										{
-											item.find( '.tweet' ).activity( false );
-										}
-									}
-								);
-							}
-						}
-						// instagram
-						else if ( url.match( /https?:\/\/((www\.)?instagram\.com|instagram\.com|instagr\.am)\/p\/([\w\-]+)/ ) )
-						{
-							id = RegExp.$3;
-
-							MakeImgLink( 'http://instagram.com/p/' + id + '/media/?size=t',
-										 'http://instagram.com/p/' + id + '/media/?size=l',
-										 false, 1 );
-						}
-						// 公式
-						else if ( url.match( /https?:\/\/twitter\.com.*\/(photo|video)\/1$/ ) )
-						{
-							if ( anchor.attr( 'mediaurl' ) )
-							{
-								var mediaurls = anchor.attr( 'mediaurl' ).split( ',' );
-								var videourls = anchor.attr( 'videourl' ).split( ',' );
-								var contenttypes = anchor.attr( 'contenttype' ).split( ',' );
-
-								for ( var i = 0, _len = mediaurls.length ; i < _len ; i++ )
-								{
-									if ( videourls[i] == '' )
-									{
-										MakeImgLink( mediaurls[i] + ':thumb',
-													 mediaurls[i] + ':orig', false, mediaurls.length );
-									}
-									else
-									{
-										MakeImgLink( mediaurls[i],
-													 videourls[i], false, mediaurls.length, true, contenttypes[i] );
-									}
-								}
-							}
-						}
-						// 公式(DM)
-						else if ( url.match( /https?:\/\/twitter\.com.*\/messages\/media\/\d+$/ ) )
-						{
-							if ( anchor.attr( 'mediaurl' ) )
-							{
-								var mediaurls = anchor.attr( 'mediaurl' ).split( ',' );
-
-								for ( var i = 0, _len = mediaurls.length ; i < _len ; i++ )
-								{
-									MakeImgLink( mediaurls[i] + ':thumb',
-												 mediaurls[i], false, mediaurls.length );
-								}
-							}
-						}
-						// youtube
-						else if ( url.match( /^https?:\/\/(?:(?:www|m)\.youtube\.com\/watch\?.*v=|youtu\.be\/)([\w-]+)/ ) )
-						{
-							var id = RegExp.$1;
-
-							if ( add.find( 'img[loaded="' + url + '"]' ).length == 0 )
-							{
-								if ( !noloading )
-								{
-									item.find( '.tweet' ).activity( { color: '#ffffff' } );
-								}
-
-								add.append( OutputTPL( 'thumbnail_movie', {
-									url: 'http://i.ytimg.com/vi/' + id + '/default.jpg',
-									tooltip: url
-								} ) );
-
-								// ロード失敗
-								add.find( 'img:last-child' ).error( function( e ) {
-									if ( !noloading )
-									{
-										item.find( '.tweet' ).activity( false );
-									}
-									$( this ).remove();
-								} );
-
-								// ロード成功
-								add.find( 'img:last-child' ).load( function( e ) {
-									if ( !noloading )
-									{
-										item.find( '.tweet' ).activity( false );
-									}
-
-									$( this ).addClass( 'link' );
-
-									$( this ).click( function( e ) {
-										var _cp = new CPanel( null, null, 480, 360 );
-										_cp.SetType( 'youtube' );
-										_cp.SetParam( {
-											url: url,
-										} );
-										_cp.Start();
-
-										e.stopPropagation();
-									} );
-								} );
-							}
-						}
-						// Vine
-						else if ( url.match( /^https?:\/\/vine\.co\/v\/(\w+)/ ) )
-						{
-							var id = RegExp.$1;
-
-							if ( add.find( 'img[loaded="' + url + '"]' ).length == 0 )
-							{
-								if ( !noloading )
-								{
-									item.find( '.tweet' ).activity( { color: '#ffffff' } );
-								}
-
-								SendRequest(
-									{
-										action: 'vine_url',
-										imgurl: url,
-									},
-									function( res )
-									{
-										if ( res != '' )
-										{
-											add.append( OutputTPL( 'thumbnail_movie', {
-												url: res.thumb,
-												tooltip: url
-											} ) );
-										}
-
-										// ロード失敗
-										add.find( 'img:last-child' ).error( function( e ) {
-											if ( !noloading )
-											{
-												item.find( '.tweet' ).activity( false );
-											}
-											$( this ).remove();
-										} );
-
-										// ロード成功
-										add.find( 'img:last-child' ).load( function( e ) {
-											if ( !noloading )
-											{
-												item.find( '.tweet' ).activity( false );
-											}
-
-											$( this ).addClass( 'link' );
-
-											$( this ).click( function( e ) {
-												var _cp = new CPanel( null, null, 480, 510 );
-												_cp.SetType( 'vine' );
-												_cp.SetParam( {
-													url: url,
-													screen_name: item.attr( 'screen_name' ),
-												} );
-												_cp.Start();
-
-												e.stopPropagation();
-											} );
-										} );
-									}
-								);
-							}
-						}
-						// TINAMI
-						else if ( url.match( /http:\/\/tinami\.jp\/(\w+)$/ ) )
-						{
-							id = RegExp.$1;
-
-							if ( add.find( 'img[loaded="' + url + '"]' ).length == 0 )
-							{
-								if ( !noloading )
-								{
-									item.find( '.tweet' ).activity( { color: '#ffffff' } );
-								}
-
-								SendRequest(
-									{
-										action: 'tinami_url',
-										imgid: id,
-									},
-									function( res )
-									{
-										if ( res != '' )
-										{
-											MakeImgLink( res.thumb, res.original, false, 1 );
-										}
-
-										if ( !noloading )
-										{
-											item.find( '.tweet' ).activity( false );
-										}
-									}
-								);
-							}
-						}
-						// ニコニコ動画
-						else if ( url.match( /http:\/\/(www\.nicovideo\.jp\/watch|nico\.ms)\/sm(\d+)(\?.+)?$/ ) )
-						{
-							id = RegExp.$2;
-
-							MakeImgLink( 'http://tn-skr' + ( parseInt( id ) % 4 + 1 ) + '.smilevideo.jp/smile?i=' + id, '', true, 1 );
-						}
-						// img.ly
-						else if ( url.match( /^http:\/\/img\.ly\/(\w+)/ ) )
-						{
-							id = RegExp.$1;
-
-							MakeImgLink( 'http://img.ly/show/thumb/' + id,
-										 'http://img.ly/show/full/' + id,
-										 false, 1 );
-						}
-						// Streamスクリーンショット
-						else if ( url.match( /(http:\/\/cloud(-\d)?\.steampowered\.com\/ugc\/\d+\/\w+\/)(\d+x\d+\.resizedimage)?$/ ) )
-						{
-							MakeImgLink( RegExp.$1 + '150x150.resizedimage', url, false, 1 );
-						}
-						// gyazo
-						else if ( url.match( /https?:\/\/gyazo\.com\/\w+$/ ) )
-						{
-							if ( add.find( 'img[loaded="' + url + '"]' ).length == 0 )
-							{
-								if ( !noloading )
-								{
-									item.find( '.tweet' ).activity( { color: '#ffffff' } );
-								}
-
-								SendRequest(
-									{
-										action: 'gyazo_url',
-										imgurl: url,
-									},
-									function( res )
-									{
-										if ( res != '' )
-										{
-											MakeImgLink( res.thumb, res.original, false, 1 );
-										}
-
-										if ( !noloading )
-										{
-											item.find( '.tweet' ).activity( false );
-										}
-									}
-								);
-							}
-						}
-						// 画像直リンク
-						else if ( url.match( /https?:\/\/.*\.(png|jpg|jpeg|gif)$/i ) )
-						{
-							MakeImgLink( url, url, false, 1 );
-						}
-					}
-				}, 100 );
-			}
-			else
-			{
-				onURL = false;
-				$( '#tooltip' ).hide();
-			}
-
-			e.stopPropagation();
-		} );
-
-		////////////////////////////////////////
 		// カーソルを乗せたとき（ボタン群表示）
 		////////////////////////////////////////
-		timeline_list.on( 'mouseenter mouseleave', $( '> div.item' ).selector, function( e ) {
+		timeline_list.on( 'mouseenter mouseleave', '> div.item', function( e ) {
 			var options = $( this ).find( 'div.options' );
 
 			if ( e.type == 'mouseenter' )
@@ -1976,14 +1476,12 @@ console.log( res );
 				options.find( 'span.btns, span.fav.off' ).css( { display: 'none' } );
 				$( '#tooltip' ).hide();
 			}
-
-			$( this ).find( 'div.accsel' ).hide();
 		} );
 
 		////////////////////////////////////////
 		// スクロール抑止
 		////////////////////////////////////////
-		timeline_list.on( 'mouseenter mouseleave', $( '> div.item div.options span' ).selector, function( e ) {
+		timeline_list.on( 'mouseenter mouseleave', '> div.item div.options span', function( e ) {
 			if ( e.type == 'mouseenter' )
 			{
 				cursor_on_option = true;
@@ -1999,7 +1497,7 @@ console.log( res );
 		////////////////////////////////////////
 		// もっと読むクリック処理
 		////////////////////////////////////////
-		timeline_list.on( 'click', $( '> div.readmore' ).selector, function( e ) {
+		timeline_list.on( 'click', '> div.readmore', function( e ) {
 			// disabledなら処理しない
 			if ( $( this ).hasClass( 'disabled' ) )
 			{
@@ -2232,21 +1730,14 @@ console.log( res );
 
 		// 現行値設定(スライダー)
 
-		// 検索、ユーザーTL、リストは最小30秒(devモードは10秒)にできるようにする
+		// 検索、ユーザーTL、リストは最小30秒にできるようにする
 		var min = 60;
 
 		if ( cp.param['timeline_type'] == 'user' ||
 			 cp.param['timeline_type'] == 'list' ||
 			 cp.param['timeline_type'] == 'search' )
 		{
-			if ( g_devmode )
-			{
-				min = 10;
-			}
-			else
-			{
 				min = 30;
-			}
 		}
 
 		setting.find( '.set_reload_time' ).slider( {

@@ -412,35 +412,6 @@ function clearUserInfo( key )
 	localStorage.removeItem( key );
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// 短縮URLかチェック
-////////////////////////////////////////////////////////////////////////////////
-function isShortURL( url )
-{
-	if ( url.match( /^https?:\/\/(bit\.ly|j\.mp|tinyurl\.com|goo\.gl|ow\.ly\/[^i][^\/]|p\.tl|htn\.to|t\.co|ht\.ly|dlvr\.it|ux\.nu|fb\.me|lb\.to|is\.gd)/ ) )
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// 画像URLかチェック
-////////////////////////////////////////////////////////////////////////////////
-function isImageURL( url )
-{
-	if ( url.match( /^https?:\/\/(twitpic\.com\/(\w+)|ow\.ly\/i\/(\w+)|yfrog\.com\/(\w+)$|tweetphoto\.com\/\d+|plixi\.com\/p\/\d+|lockerz\.com\/s\/\d+|p\.twipple\.jp\/(\w+)|movapic\.com\/pic\/(\w+)|photozou\.jp\/photo\/show\/\d+\/(\d+)|((www\.)?instagram\.com|instagr\.am)\/p\/([\w\-]+)|twitter\.com.*\/(photo|video)\/1$|twitter\.com.*\/messages\/media\/\d+|(?:(www|m)\.youtube\.com\/watch\?.*v=|youtu\.be\/)([\w-]+)|vine\.co\/v\/\w+$|tinami\.jp\/(\w+)$|(www\.nicovideo\.jp\/watch|nico\.ms)\/sm\d+(\?.+)?$|img\.ly\/(\w+)$|cloud(-\d)?\.steampowered\.com\/ugc\/\d+\/\w+\/(\d+x\d+\.resizedimage)?$|gyazo\.com\/\w+$|.*\.(png|jpg|jpeg|gif)$)/i ) )
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // htmlエスケープ

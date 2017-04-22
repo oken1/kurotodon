@@ -4,7 +4,7 @@
 var g_cmn = {
 	cmn_param:	{											// 共通パラメータ
 		font_family:		'',								// - フォント名
-		font_size:			12,								// - フォントサイズ
+		font_size:			13,								// - フォントサイズ
 		scroll_vertical:	1,								// - ページ全体のスクロールバー(縦)
 		scroll_horizontal:	1,								// - ページ全体のスクロールバー(横)
 		locale:				'ja',							// - 言語
@@ -13,12 +13,12 @@ var g_cmn = {
 
 		tootkey:			0,								// - トゥートショートカットキー
 
-		reload_time:		600,							// - 新着読み込み
-		get_count:			20,								// - 一度に取得する件数
-		max_count:			100,							// - タイムラインに表示する最大件数
+		reload_time:		60,								// - 新着読み込み
+		get_count:			40,								// - 一度に取得する件数
+		max_count:			120,							// - タイムラインに表示する最大件数
 		newscroll:			1,								// - 新着ツイートにスクロール
 		follow_mark:		1,								// - 相互フォロー表示
-		iconsize:			32,								// - アイコンサイズ
+		iconsize:			48,								// - アイコンサイズ
 	},
 	panel:			null,			// パネル
 	account:		null,			// アカウント
@@ -831,7 +831,7 @@ $( document ).on( 'mouseenter mouseleave', '.tooltip', function( e ) {
 		w = $( '#tooltip' ).outerWidth( true );
 
 		// 画面外にでないように調整
-		if ( l + $( '#tooltip' ).outerWidth( true ) > $( window ).width() + $( document ).scrollLeft() )
+		if ( l + $( '#tooltip' ).outerWidth( true ) + 8 > $( window ).width() + $( document ).scrollLeft() )
 		{
 			l = $( window ).width() - $( '#tooltip' ).outerWidth( true ) - 8 + $( document ).scrollLeft();
 			t = $( this ).offset().top + $( this ).outerHeight() + 2;
@@ -1062,7 +1062,7 @@ function AccountSelectMake( cp )
 function SetFont( formflg )
 {
 g_cmn.cmn_param.font_family ='Meiryo';
-g_cmn.cmn_param.font_size =14;
+g_cmn.cmn_param.font_size =12;
 	if ( !formflg )
 	{
 		$( 'html,body' ).css( { fontSize: g_cmn.cmn_param.font_size + 'px', fontFamily: g_cmn.cmn_param.font_family } );
@@ -1152,7 +1152,7 @@ function MakeTimeline( json, account_id )
 
 		source: ( user_instance == g_cmn.account[account_id].instance ) ? '' : '@' + user_instance,
 		
-		text: ConvertText( json.content ),
+		text: ConvertContent( json.content, json ),
 	};
 
 	return OutputTPL( 'timeline_tweet', assign );
@@ -1815,11 +1815,12 @@ function i18nGetMessage( id, options )
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// contentを表示用に整形する
+// Tootのタグを表示用に変換する
 ////////////////////////////////////////////////////////////////////////////////
-function ConvertText( content )
+function ConvertContent( content, json )
 {
 	var _jq = $( content );
+	var mention_cnt = json.mentions.length - 1; // mention情報の順序が逆？
 
 	_jq.find( 'a' ).each( function( e ) {
 		var anchor = $( this );
@@ -1827,7 +1828,14 @@ function ConvertText( content )
 		// @user
 		if ( anchor.hasClass( 'mention' ) && anchor.hasClass( 'u-url' ) )
 		{
-			$( this ).replaceWith( $( '<span class="user anchor">@' + anchor.find( 'span' ).text() + '</span>' ) );
+			$( this ).unwrap();
+			var _user = $( '<span class="user anchor">@' + anchor.find( 'span' ).text() + '</span>' );
+			_user.attr( 'id', json.mentions[mention_cnt].id );
+			_user.attr( 'username', json.mentions[mention_cnt].username );
+			_user.attr( 'acct', json.mentions[mention_cnt].acct );
+
+			$( this ).replaceWith( _user );
+			mention_cnt--;
 		}
 		// hashtag
 		else if ( anchor.hasClass( 'mention' ) && anchor.hasClass( 'hashtag' ) )
@@ -1837,9 +1845,16 @@ function ConvertText( content )
 		// url
 		else
 		{
+			var ellipsis = '';
+
+			if ( anchor.find( 'span.invisible' ).length == 2 && anchor.find( 'span.invisible:last' ).text() != '' )
+			{
+				ellipsis = '…';
+			}
+
 			$( this ).replaceWith( $( '<a href="' + anchor.attr( 'href' ) + 
 				'" rel="nofollow noopener" target="_blank" class="url anchor">' + 
-				anchor.find( 'span.ellipsis' ).text() + '</span></a>' ) );
+				anchor.find( 'span.ellipsis' ).text() + ellipsis + '</span></a>' ) );
 		}
 
 	} );
