@@ -920,7 +920,7 @@ console.log( res );
 			////////////////////////////////////////
 			if ( targ.hasClass( 'username' ) || targ.hasClass( 'display_name' ) )
 			{
-				var item = targ.parent().parent().parent().parent();
+				var item = targ.closest( '.item' );
 
 				var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
 				_cp.SetType( 'timeline' );
@@ -928,149 +928,48 @@ console.log( res );
 					account_id: cp.param['account_id'],
 					timeline_type: 'user',
 					user_id: item.attr( 'user_id' ),
-					user_username: targ.parent().find( '.username' ).text(),
-					user_display_name: targ.parent().find( '.display_name' ).text(),
+					user_username: ptarg.find( '.username' ).text(),
+					user_display_name: ptarg.find( '.display_name' ).text(),
 					user_instance: item.attr( 'user_instance' ),
 					reload_time: g_cmn.cmn_param['reload_time'],
 				} );
 				_cp.Start();
 			}
 			////////////////////////////////////////
-			// アイコンクリック
-			////////////////////////////////////////
-			else if ( ptarg.hasClass( 'icon' ) )
-			{
-				var user_id = ptarg.parent().attr( 'user_id' );
-
-				OpenUserShow( ptarg.parent().attr( 'screen_name' ),
-					user_id,
-					cp.param['account_id'] );
-			}
-			////////////////////////////////////////
-			// RTユーザアイコンクリック
-			////////////////////////////////////////
-			else if ( targ.hasClass( 'rt_icon' ) )
-			{
-				OpenUserShow( targ.parent().attr( 'rt_screen_name' ), targ.parent().attr( 'rt_user_id' ), cp.param['account_id'] );
-			}
-			////////////////////////////////////////
 			// リンククリック処理
 			////////////////////////////////////////
-			else if ( ptarg.hasClass( 'toot_text' ) )
+			else if ( targ.hasClass( 'anchor' ) )
 			{
-				if ( targ.hasClass( 'anchor' ) )
+				if ( targ.hasClass( 'url' ) )
 				{
-					if ( targ.hasClass( 'url' ) )
-					{
-						var url = targ.attr( 'href' );
-
-						// ツイートへのパーマリンク
-						if ( url.match( /^https?:\/\/(mobile\.)*twitter\.com\/(#!\/)?(\w+)\/status(es)?\/(\d+)(\?.+)?$/ ) )
-						{
-							var screen_name = RegExp.$3;
-							var status_id = RegExp.$5;
-
-							var _cp = new CPanel( null, null, 360, 240 );
-							_cp.SetType( 'timeline' );
-							_cp.SetParam( {
-								account_id: cp.param['account_id'],
-								timeline_type: 'perma',
-								screen_name: screen_name,
-								status_id: status_id,
-								reload_time: g_cmn.cmn_param['reload_time'],
-							} );
-							_cp.Start();
-
-							return false;
-						}
-
-						window.open( url, '_blank' );
-						return false;
-					}
-
-					if ( targ.hasClass( 'user' ) )
-					{
-						var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
-						_cp.SetType( 'timeline' );
-						_cp.SetParam( {
-							account_id: cp.param['account_id'],
-							timeline_type: 'user',
-							
-							user_id: targ.attr( 'id' ),
-							user_username: targ.attr( 'username' ),
-							user_display_name: '',
-							user_instance: GetInstanceFromAcct( targ.attr( 'acct' ), cp.param['account_id'] ),
-							reload_time: g_cmn.cmn_param['reload_time'],
-						} );
-						_cp.Start();
-					}
-
-					if ( targ.hasClass( 'hashtag' ) )
-					{
-						OpenSearchResult( targ.text(), cp.param['account_id'] );
-					}
-				}
-			}
-			////////////////////////////////////////
-			// 返信ボタンクリック
-			////////////////////////////////////////
-			else if ( targ.hasClass( 'timeline_reply' ) )
-			{
-				var item = targ.parent().parent().parent().parent();
-
-				// DMの返信
-				if ( cp.param['timeline_type'] == 'dmrecv' )
-				{
-					DMWrite( item );
-
-					e.stopPropagation();
-					return;
+					var url = targ.attr( 'href' );
+					window.open( url, '_blank' );
+					return false;
 				}
 
-				// 返信ツイート情報
-				var reply = {
-					status_id: ( item.attr( 'rt_id' ) ) ? item.attr( 'rt_id' ) : item.attr( 'status_id' ),
-					icon: item.find( '.icon' ).find( 'img' ).attr( 'src' ),
-					screen_name: item.attr( 'screen_name' ),
-					date: item.find( '.date' ).text(),
-					status: escapeHTML( item.find( '.tweet' ).find( '.tweet_text' ).text() ),
-				};
-
-				// 返信ツイート＆宛先設定処理
-				var SetParameters = function() {
-					$( '#' + pid ).find( 'div.contents' ).trigger( 'repset', [reply] );
-
-					GetPanel( pid ).param.account_id = cp.param['account_id'];
-					$( '#' + pid ).find( 'div.contents' ).trigger( 'account_update' );
-
-					// 本文中のユーザーを宛先に設定する
-					ExtractReplyUser( item );
-
-					SetFront( $( '#' + pid ) );
-				}
-
-				var pid = IsUnique( 'tweetbox' );
-
-				if ( pid == null )
+				if ( targ.hasClass( 'user' ) )
 				{
-					// パネルのパラメータ
-					var param = {
+					var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+					_cp.SetType( 'timeline' );
+					_cp.SetParam( {
 						account_id: cp.param['account_id'],
-						maxlen: 140,
-					};
-
-					var _cp = new CPanel( null, null, 324, 240 );
-					_cp.SetType( 'tweetbox' );
-					_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0367' ), false );
-					_cp.SetParam( param );
-					_cp.Start( function() {
-						pid = IsUnique( 'tweetbox' );
-						SetParameters();
+						timeline_type: 'user',
+						
+						user_id: targ.attr( 'id' ),
+						user_username: targ.attr( 'username' ),
+						user_display_name: '',
+						user_instance: GetInstanceFromAcct( targ.attr( 'acct' ), cp.param['account_id'] ),
+						reload_time: g_cmn.cmn_param['reload_time'],
 					} );
+					_cp.Start();
 				}
-				else
+
+				if ( targ.hasClass( 'hashtag' ) )
 				{
-					SetParameters();
+
+
+
+
 				}
 			}
 			////////////////////////////////////////
@@ -1084,7 +983,7 @@ console.log( res );
 					return;
 				}
 
-				var item = targ.parent().parent().parent().parent();
+				var item = targ.closest( '.item' );
 
 				// 最初にクリックされたときにメニューボックス部を作成
 				if ( item.find( '.menubox' ).length == 0 )
@@ -1146,260 +1045,6 @@ console.log( res );
 				}
 
 				item.find( '.menubox' ).toggle();
-			}
-			////////////////////////////////////////
-			// RTボタンクリック
-			////////////////////////////////////////
-			else if ( targ.hasClass( 'timeline_retweet' ) )
-			{
-				// disabledなら処理しない
-				if ( targ.hasClass( 'disabled' ) )
-				{
-					return;
-				}
-
-				var item = targ.parent().parent().parent().parent();
-
-				// Ctrl+RTボタンで引用
-				if ( e.ctrlKey )
-				{
-					QuoteText( item );
-				}
-				else
-				{
-					if ( AccountCount() > 1 && g_cmn.cmn_param['rt_accsel'] == 1 )
-					{
-						var s = '';
-						var accsel = item.find( '.accsel' );
-
-						accsel.html( '' );
-
-						var account_id;
-
-						for ( var i = 0, _len = g_cmn.account_order.length ; i < _len ; i++ )
-						{
-							account_id = g_cmn.account_order[i];
-							accsel.append( OutputTPL( 'timeline_accsel', { item: g_cmn.account[account_id], account_id: account_id } ) );
-						}
-
-						accsel.find( 'img' ).click( function( e ) {
-							Retweet( item, $( this ).attr( 'account_id' ) );
-							$( this ).parent().toggle();
-						} );
-
-						accsel.toggle();
-						return;
-					}
-					else
-					{
-						Retweet( item, cp.param['account_id'] );
-					}
-				}
-			}
-			////////////////////////////////////////
-			// 削除ボタンクリック
-			////////////////////////////////////////
-			else if ( targ.hasClass( 'timeline_del' ) )
-			{
-				var item = targ.parent().parent().parent().parent();
-
-				if ( confirm( chrome.i18n.getMessage( 'i18n_0224' ) ) )
-				{
-					// DM以外
-					if ( cp.param['timeline_type'] != 'dmrecv' && cp.param['timeline_type'] != 'dmsent' )
-					{
-						var param = {
-							type: 'POST',
-							url: ApiUrl( '1.1' ) + 'statuses/destroy/' + item.attr( 'status_id' ) + '.json',
-							data: {},
-						};
-					}
-					// DM
-					else
-					{
-						var param = {
-							type: 'POST',
-							url: ApiUrl( '1.1' ) + 'direct_messages/destroy.json',
-							data: {
-								id: item.attr( 'status_id' )
-							},
-						};
-					}
-
-					Blackout( true );
-					$( '#blackout' ).activity( { color: '#808080', width: 8, length: 14 } );
-
-					SendRequest(
-						{
-							action: 'oauth_send',
-							acsToken: g_cmn.account[cp.param['account_id']]['accessToken'],
-							acsSecret: g_cmn.account[cp.param['account_id']]['accessSecret'],
-							param: param,
-							id: cp.param['account_id']
-						},
-						function( res )
-						{
-							if ( res.status == 200 )
-							{
-								// タイムラインから削除
-								item.fadeOut( 'fast', function() {
-									// 返信元の表示を消す
-									while ( 1 )
-									{
-										var next = item.next();
-
-										if ( next.hasClass( 'res' ) )
-										{
-											next.remove();
-										}
-										else
-										{
-											break;
-										}
-									}
-
-									delete status_ids[$( this ).attr( 'status_id' )];
-									$( this ).remove();
-
-									if ( cp.param['timeline_type'] != 'dmrecv' && cp.param['timeline_type'] != 'dmsent' )
-									{
-										// ツイート数表示の更新
-										StatusesCountUpdate( cp.param['account_id'], 1 );
-									}
-								} );
-							}
-							else
-							{
-								ApiError( chrome.i18n.getMessage( 'i18n_0225' ), res );
-							}
-
-							Blackout( false );
-							$( '#blackout' ).activity( false );
-						}
-					);
-				}
-			}
-			////////////////////////////////////////
-			// ☆クリック処理
-			////////////////////////////////////////
-			else if ( targ.hasClass( 'fav' ) )
-			{
-				var item = targ.parent().parent().parent().parent();
-
-				// on→off
-				if ( targ.hasClass( 'on' ) )
-				{
-					var param = {
-						type: 'POST',
-						url: ApiUrl( '1.1' ) + 'favorites/destroy.json',
-						data: {
-							id: item.attr( 'status_id' )
-						},
-					};
-
-					Blackout( true, false );
-					$( '#blackout' ).activity( { color: '#808080', width: 8, length: 14 } );
-
-					SendRequest(
-						{
-							action: 'oauth_send',
-							acsToken: g_cmn.account[cp.param['account_id']]['accessToken'],
-							acsSecret: g_cmn.account[cp.param['account_id']]['accessSecret'],
-							param: param,
-							id: cp.param['account_id']
-						},
-						function( res )
-						{
-							if ( res.status == 200 )
-							{
-								targ.removeClass( 'on' ).addClass( 'off' );
-							}
-							else
-							{
-								ApiError( chrome.i18n.getMessage( 'i18n_0225' ), res );
-							}
-
-							Blackout( false, false );
-							$( '#blackout' ).activity( false );
-						}
-					);
-				}
-				// off→on
-				else
-				{
-					// animate
-					var _star = targ.clone();
-
-					$( '#main' ).append( _star );
-
-					targ.css( {
-						visibility: 'hidden',
-					} );
-
-					_star.css( {
-						position: 'absolute',
-						left: targ.offset().left,
-						top: targ.offset().top,
-						zIndex: targ.zIndex() + 1,
-						fontSize: '1.3rem',
-						color: '#a4a396'
-					} );
-
-					var _mag = 4;
-
-					_star.animate(
-						{
-							fontSize: targ.outerWidth() * _mag + 'px',
-							left: targ.offset().left - targ.outerWidth() * ( _mag - 1 ) / 2 + 'px',
-							top: targ.offset().top - targ.outerHeight() * ( _mag - 1 ) / 2 + 'px',
-							opacity: 0.2,
-							color: '#dd2e44'
-						},
-						300,
-						function() {
-							targ.css( {
-								visibility: 'visible'
-							} )
-
-							_star.remove();
-						}
-					);
-
-					var param = {
-						type: 'POST',
-						url: ApiUrl( '1.1' ) + 'favorites/create.json',
-						data: {
-							id: item.attr( 'status_id' )
-						},
-					};
-
-					Blackout( true, false );
-					$( '#blackout' ).activity( { color: '#808080', width: 8, length: 14 } );
-
-					SendRequest(
-						{
-							action: 'oauth_send',
-							acsToken: g_cmn.account[cp.param['account_id']]['accessToken'],
-							acsSecret: g_cmn.account[cp.param['account_id']]['accessSecret'],
-							param: param,
-							id: cp.param['account_id']
-						},
-						function( res )
-						{
-							if ( res.status == 200 )
-							{
-								targ.removeClass( 'off' ).addClass( 'on' );
-							}
-							else
-							{
-								ApiError( chrome.i18n.getMessage( 'i18n_0057' ), res );
-							}
-
-							Blackout( false, false );
-							$( '#blackout' ).activity( false );
-						}
-					);
-				}
 			}
 			else
 			{

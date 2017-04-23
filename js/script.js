@@ -1101,11 +1101,10 @@ function SetFront( p )
 function MakeTimeline( json, account_id )
 {
 	var text = json.content;
-	var user_instance = GetInstanceFromAcct( json.account.acct, account_id );
 
 	var bt_flg = ( json.reblog );
 	var bt_user_id = json.account.id;
-	var bt_user_instance = '仮';
+	var bt_user_instance = GetInstanceFromAcct( json.account.acct, account_id );
 	var bt_user_display_name = json.account.display_name;
 	var bt_avatar = AvatarURLConvert( json.account, account_id );
 
@@ -1114,6 +1113,8 @@ function MakeTimeline( json, account_id )
 		var _json = json.reblog;
 		json = _json;
 	}
+
+	var user_instance = GetInstanceFromAcct( json.account.acct, account_id );
 
 	// 相互、一方フォローマーク
 	var isfriend = IsFriend( account_id, json.account.id, user_instance );
@@ -1819,8 +1820,9 @@ function i18nGetMessage( id, options )
 ////////////////////////////////////////////////////////////////////////////////
 function ConvertContent( content, json )
 {
-	var _jq = $( content );
-	var mention_cnt = json.mentions.length - 1; // mention情報の順序が逆？
+	var _jq;
+
+	_jq = $( '<div>' + content + '</div>' );
 
 	_jq.find( 'a' ).each( function( e ) {
 		var anchor = $( this );
@@ -1830,12 +1832,24 @@ function ConvertContent( content, json )
 		{
 			$( this ).unwrap();
 			var _user = $( '<span class="user anchor">@' + anchor.find( 'span' ).text() + '</span>' );
-			_user.attr( 'id', json.mentions[mention_cnt].id );
-			_user.attr( 'username', json.mentions[mention_cnt].username );
-			_user.attr( 'acct', json.mentions[mention_cnt].acct );
+			
+			for ( var i = 0, _len = json.mentions.length ; i < _len ; i++ )
+			{
+				if ( json.mentions[i].url == anchor.attr( 'href' ) )
+				{
+					_user.attr( 'id', json.mentions[i].id,
+								'username', json.mentions[i].username,
+								'acct', json.mentions[i].acct );
+					break;
+				}
+			}
 
+			if ( !_user.attr( 'id' ) )
+			{
+				console.log( '@user error' );
+			}
+			
 			$( this ).replaceWith( _user );
-			mention_cnt--;
 		}
 		// hashtag
 		else if ( anchor.hasClass( 'mention' ) && anchor.hasClass( 'hashtag' ) )
@@ -1846,15 +1860,25 @@ function ConvertContent( content, json )
 		else
 		{
 			var ellipsis = '';
+			var display_url = '';
 
-			if ( anchor.find( 'span.invisible' ).length == 2 && anchor.find( 'span.invisible:last' ).text() != '' )
+			if ( anchor.find( 'span.invisible' ).length && anchor.find( 'span.ellipsis' ).length )
 			{
-				ellipsis = '…';
+				if ( anchor.find( 'span.invisible' ).length == 2 && anchor.find( 'span.invisible:last' ).text() != '' )
+				{
+					ellipsis = '…';
+				}
+
+				display_url = anchor.find( 'span.ellipsis' ).text();
+			}
+			else
+			{
+				display_url = anchor.text();
 			}
 
 			$( this ).replaceWith( $( '<a href="' + anchor.attr( 'href' ) + 
 				'" rel="nofollow noopener" target="_blank" class="url anchor">' + 
-				anchor.find( 'span.ellipsis' ).text() + ellipsis + '</span></a>' ) );
+				display_url + ellipsis + '</span></a>' ) );
 		}
 
 	} );

@@ -290,6 +290,14 @@ div.contents.timeline .lines div.item > .toot > .toot_text .anchor {
 	color: #add4f2;
 }
 
+div.contents.timeline .lines div.item > .toot > .toot_text p {
+	padding-bottom: 1rem;
+}
+
+div.contents.timeline .lines div.item > .toot > .toot_text p:last-child {
+	padding-bottom: 0;
+}
+
 div.contents.timeline .lines div.item > .toot > .toot_text .anchor:hover {
 	opacity: 0.8;
 }
