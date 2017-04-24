@@ -1837,9 +1837,11 @@ function ConvertContent( content, json )
 			{
 				if ( json.mentions[i].url == anchor.attr( 'href' ) )
 				{
-					_user.attr( 'id', json.mentions[i].id,
-								'username', json.mentions[i].username,
-								'acct', json.mentions[i].acct );
+					_user.attr( {
+						'id': json.mentions[i].id,
+						'username': json.mentions[i].username,
+						'acct': json.mentions[i].acct
+					} );
 					break;
 				}
 			}
