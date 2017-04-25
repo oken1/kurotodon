@@ -1820,73 +1820,91 @@ function i18nGetMessage( id, options )
 ////////////////////////////////////////////////////////////////////////////////
 function ConvertContent( content, json )
 {
-	var _jq;
+	var _jq = $( '<div>' + content + '</div>' );
 
-	_jq = $( '<div>' + content + '</div>' );
+	// @userを置き換える
+	for ( var i = 0 ; i < json.mentions.length ; i++ )
+	{
+		_jq.find( 'a.mention.u-url[href="' + json.mentions[i].url + '"]' ).each( function( e ) {
+			var anchor = $( this );
 
+			$( this ).unwrap();
+			var _user = $( '<span class="user anchor">@' + anchor.find( 'span' ).text() + '</span>' );
+
+			_user.attr( {
+				'id': json.mentions[i].id,
+				'username': json.mentions[i].username,
+				'acct': json.mentions[i].acct
+			} );
+
+			$( this ).replaceWith( _user );
+		} )
+	}
+
+	// mediaをサムネイルに置き換える
+	var _thumbnails = $( '<div class="thumbnails" urls="">' );
+	var _index = 0;
+	var _urls = [];
+
+	for ( var i = 0 ; i < json.media_attachments.length ; i++ )
+	{
+		_jq.find( 'a[href="' + json.media_attachments[i].text_url + '"]' ).each( function( e ) {
+			var anchor = $( this );
+
+			$( this ).remove();
+
+			var _img = $( '<img class="thumbnail" src="' + json.media_attachments[i].preview_url + '" index="' + _index + '">' );
+
+			_urls[_index] = json.media_attachments[i].url;
+			_index++;
+
+			_thumbnails.append( _img );
+		} );
+	}
+
+	_thumbnails.attr( 'urls', _urls.join( ',' ) );
+	_jq.append( _thumbnails );
+
+	// #hashtagを置き換える
+	for ( var i = 0 ; i < json.tags.length ; i++ )
+	{
+		_jq.find( 'a.mention.hashtag[href="' + json.tags[i].url + '"]' ).each( function( e ) {
+			var anchor = $( this );
+			
+			$( this ).unwrap();
+			var _tag = $( '<span class="hashtag anchor">#' + json.tags[i].name + '</span' );
+			
+			$( this ).replaceWith( _tag );
+		} );
+	}
+
+	// その他
 	_jq.find( 'a' ).each( function( e ) {
 		var anchor = $( this );
 
-		// @user
-		if ( anchor.hasClass( 'mention' ) && anchor.hasClass( 'u-url' ) )
+		var ellipsis = '';
+		var display_url = '';
+
+		if ( anchor.find( 'span.invisible' ).length && anchor.find( 'span.ellipsis' ).length )
 		{
-			$( this ).unwrap();
-			var _user = $( '<span class="user anchor">@' + anchor.find( 'span' ).text() + '</span>' );
-			
-			for ( var i = 0, _len = json.mentions.length ; i < _len ; i++ )
+			if ( anchor.find( 'span.invisible' ).length == 2 && anchor.find( 'span.invisible:last' ).text() != '' )
 			{
-				if ( json.mentions[i].url == anchor.attr( 'href' ) )
-				{
-					_user.attr( {
-						'id': json.mentions[i].id,
-						'username': json.mentions[i].username,
-						'acct': json.mentions[i].acct
-					} );
-					break;
-				}
+				ellipsis = '…';
 			}
 
-			if ( !_user.attr( 'id' ) )
-			{
-				console.log( '@user error' );
-			}
-			
-			$( this ).replaceWith( _user );
+			display_url = anchor.find( 'span.ellipsis' ).text();
 		}
-		// hashtag
-		else if ( anchor.hasClass( 'mention' ) && anchor.hasClass( 'hashtag' ) )
-		{
-			$( this ).replaceWith( $( '<span class="hashtag anchor">#' + anchor.find( 'span' ).text() + '</span>' ) );
-		}
-		// url
 		else
 		{
-			var ellipsis = '';
-			var display_url = '';
-
-			if ( anchor.find( 'span.invisible' ).length && anchor.find( 'span.ellipsis' ).length )
-			{
-				if ( anchor.find( 'span.invisible' ).length == 2 && anchor.find( 'span.invisible:last' ).text() != '' )
-				{
-					ellipsis = '…';
-				}
-
-				display_url = anchor.find( 'span.ellipsis' ).text();
-			}
-			else
-			{
-				display_url = anchor.text();
-			}
-
-			$( this ).replaceWith( $( '<a href="' + anchor.attr( 'href' ) + 
-				'" rel="nofollow noopener" target="_blank" class="url anchor">' + 
-				display_url + ellipsis + '</span></a>' ) );
+			display_url = anchor.text();
 		}
 
+		$( this ).replaceWith( $( '<a href="' + anchor.attr( 'href' ) + 
+			'" rel="nofollow noopener" target="_blank" class="url anchor">' + 
+			display_url + ellipsis + '</span></a>' ) );
 	} );
 
 	return _jq.html();
-
 }
 
 

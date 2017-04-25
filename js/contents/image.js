@@ -8,6 +8,7 @@ Contents.image = function( cp )
 	var p = $( '#' + cp.id );
 	var cont = p.find( 'div.contents' );
 	var scaleX = 1, scaleY = 1, rotate = 0;
+	var urls = cp.param['urls'].split( /,/ );
 
 	cp.SetIcon( 'icon-image' );
 
@@ -15,48 +16,23 @@ Contents.image = function( cp )
 	// 開始処理
 	////////////////////////////////////////////////////////////
 	this.start = function() {
-		var title_url = cp.param['url'].replace( /api_key=\w+\&/, '' );
-
-		if ( title_url.match( /^data:image\// ) )
-		{
-			title_url = chrome.i18n.getMessage( 'i18n_0256' );
-		}
-
-		cp.SetTitle( chrome.i18n.getMessage( 'i18n_0199' ) + ' - ' + title_url, false );
+		cp.SetTitle( i18nGetMessage( 'i18n_0199' ), false );
 		setTimeout( function() { cont.activity( { color: '#ffffff' } ); }, 0 );
 
-		if ( cp.param['video'] )
-		{
-			cont.addClass( 'image' )
-				.html( OutputTPL( 'image', { url: cp.param['url'], video: true, contenttype: cp.param['contenttype'] } ) );
-		}
-		else
-		{
-			cont.addClass( 'image' )
-				.html( OutputTPL( 'image', { url: cp.param['url'] } ) );
-		}
+		cont.addClass( 'image' )
+			.html( OutputTPL( 'image', { url: urls[cp.param['index']] } ) );
 
 		cont.find( '.resizebtn' ).hide();
 
 		////////////////////////////////////////
 		// ロード完了
 		////////////////////////////////////////
-		var LoadedEvent = function() {
+		var LoadedEvent = function( e ) {
 			// 実サイズ
 			var nw, nh;
 
-			if ( cp.param['video'] )
-			{
-				nw = $( this ).get( 0 ).videoWidth;
-				nh = $( this ).get( 0 ).videoHeight;
-				cp.SetTitle( chrome.i18n.getMessage( 'i18n_0199' ) + ' - ' + cp.param['url'] + ' (' + nw + '×' + nh + ')', false );
-			}
-			else
-			{
-				nw = $( this ).get( 0 ).naturalWidth;
-				nh = $( this ).get( 0 ).naturalHeight;
-				cp.SetTitle( chrome.i18n.getMessage( 'i18n_0199' ) + ' - ' + title_url + ' (' + nw + '×' + nh + ')', false );
-			}
+			nw = $( e.target ).get( 0 ).naturalWidth;
+			nh = $( e.target ).get( 0 ).naturalHeight;
 
 			setTimeout( function() {cont.activity( false ); }, 0 );
 
@@ -92,7 +68,7 @@ Contents.image = function( cp )
 				.trigger( 'resize' );
 
 			// 画像ダブルクリックで閉じる
-			cont.find( 'img.image,video' ).dblclick( function( e ) {
+			cont.find( 'img.image' ).dblclick( function( e ) {
 				p.find( '.close' ).trigger( 'click', [false] );
 			} );
 
@@ -105,16 +81,8 @@ Contents.image = function( cp )
 
 				var nw, nh;
 
-				if ( cp.param['video'] )
-				{
-					nw = cont.find( 'video' ).get( 0 ).videoWidth;
-					nh = cont.find( 'video' ).get( 0 ).videoHeight;
-				}
-				else
-				{
-					nw = cont.find( 'img.image' ).get( 0 ).naturalWidth;
-					nh = cont.find( 'img.image' ).get( 0 ).naturalHeight;
-				}
+				nw = cont.find( 'img.image' ).get( 0 ).naturalWidth;
+				nh = cont.find( 'img.image' ).get( 0 ).naturalHeight;
 
 				var pnw = pw;
 				var pnh = pw / nw * nh;
@@ -125,7 +93,7 @@ Contents.image = function( cp )
 					pnw = ph / nh * nw;
 				}
 
-				cont.find( 'img.image, video' ).css( {
+				cont.find( 'img.image' ).css( {
 					width: pnw,
 					height: pnh,
 				} );
@@ -138,20 +106,10 @@ Contents.image = function( cp )
 			// 実サイズで表示
 			////////////////////////////////////////
 			cont.find( '.img_fullsize' ).click( function( e ) {
-				if ( cp.param['video'] )
-				{
-					var img = cont.find( 'video' );
+				var img = cont.find( 'img.image' );
 
-					img.width( img.get( 0 ).videoWidth )
-						.height( img.get( 0 ).videoHeight );
-				}
-				else
-				{
-					var img = cont.find( 'img.image' );
-
-					img.width( img.get( 0 ).naturalWidth )
-						.height( img.get( 0 ).naturalHeight );
-				}
+				img.width( img.get( 0 ).naturalWidth )
+					.height( img.get( 0 ).naturalHeight );
 
 				p.trigger( 'resize' );
 				e.stopPropagation();
@@ -163,7 +121,7 @@ Contents.image = function( cp )
 			cont.find( '.img_udreverse' ).click( function( e ) {
 				scaleY = ( scaleY == 1 ) ? -1 : 1;
 
-				cont.find( 'img.image, video' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
+				cont.find( 'img.image' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
 				e.stopPropagation();
 			} );
 
@@ -173,7 +131,7 @@ Contents.image = function( cp )
 			cont.find( '.img_lrreverse' ).click( function( e ) {
 				scaleX = ( scaleX == 1 ) ? -1 : 1;
 
-				cont.find( 'img.image, video' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
+				cont.find( 'img.image' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
 				e.stopPropagation();
 			} );
 
@@ -183,19 +141,16 @@ Contents.image = function( cp )
 			cont.find( '.img_rotate' ).click( function( e ) {
 				rotate = ( rotate == 270 ) ? 0 : rotate + 90;
 
-				cont.find( 'img.image, video' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
+				cont.find( 'img.image' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
 				e.stopPropagation();
 			} );
 
 			////////////////////////////////////////
 			// リサイズボタン群表示
 			////////////////////////////////////////
-			if ( !cp.param['video'] )
-			{
-				cont.mouseenter( function( e ) {
-					cont.find( '.resizebtn' ).show();
-				} );
-			}
+			cont.mouseenter( function( e ) {
+				cont.find( '.resizebtn' ).show();
+			} );
 
 			////////////////////////////////////////
 			// リサイズボタン群非表示
@@ -208,26 +163,20 @@ Contents.image = function( cp )
 			cont.find( '.img_panelsize' ).trigger( 'click' );
 		};
 
-		cont.find( 'img.image' ).load( LoadedEvent );
-		cont.find( 'video' ).on( 'loadedmetadata', LoadedEvent );
+		cont.find( 'img.image' ).on( 'load', function( e ) {
+			LoadedEvent( e );
+		} );
 
 		////////////////////////////////////////
 		// 読み込み失敗
 		////////////////////////////////////////
 		var ErrorEvent = function() {
-			if ( cp.param['video'] )
-			{
-				cp.SetTitle( chrome.i18n.getMessage( 'i18n_0199' ) + ' - ' + cp.param['url'] + ' (' + chrome.i18n.getMessage( 'i18n_0258' ) + ')', false );
-			}
-			else
-			{
-				cp.SetTitle( chrome.i18n.getMessage( 'i18n_0199' ) + ' - ' + title_url + ' (' + chrome.i18n.getMessage( 'i18n_0258' ) + ')', false );
-			}
-
 			setTimeout( function() { cont.activity( false ); }, 0 );
 		};
 
-		cont.find( 'img.image,video' ).error( ErrorEvent );
+		cont.find( 'img.image' ).on( 'error', function() {
+			ErrorEvent();
+		} );
 	};
 
 	////////////////////////////////////////////////////////////

@@ -302,39 +302,18 @@ div.contents.timeline .lines div.item > .toot > .toot_text .anchor:hover {
 	opacity: 0.8;
 }
 
-/* 警告表示 */
-div.contents.timeline .lines div.item > .toot > .toot_text .warning {
-	color: #add4f2;
-	background: #900010;
-}
-
-/* 返信元・ボタン */
-div.contents.timeline .lines div.item > .toot .bottomcontainer {
-	display: table;
-	width: 100%;
-	position: relative;
-	box-sizing: border-box;
-}
-
-/* 付加情報 */
-div.contents.timeline .lines div.item > .toot .bottomcontainer .additional {
-	display: table-cell;
-	vertical-align: middle;
-}
-
 /* サムネイル */
-div.contents.timeline .lines div.item > .toot .bottomcontainer .additional > img {
+div.contents.timeline .lines div.item > .toot > .toot_text .thumbnails > img {
 	width: 75px;
 	height: 75px;
+	margin: 2px;
 }
 
-/* 動画サムネイル */
-div.contents.timeline .lines div.item > .toot .bottomcontainer .additional > img.thumb_mov {
-	width: 100px;
-	height: 75px;
+div.contents.timeline .lines div.item > .toot > .toot_text .thumbnails > img.nsfw {
+	filter: blur( 8px );
 }
 
-div.contents.timeline .lines div.item > .toot .bottomcontainer .additional img.link:hover {
+div.contents.timeline .lines div.item > .toot > .toot_text .thumbnails > img:hover {
 	cursor: pointer;
 }
 

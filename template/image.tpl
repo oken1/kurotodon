@@ -1,9 +1,5 @@
 <div>
-{if $video}
-<video src='{$url}' type='{$contenttype}' controls loop></video>
-{else}
 <img class='image' src='{$url}'>
-{/if}
 </div>
 <div class='imgbtns'>
 <div class='resizebtn img_panelsize icon-expand tooltip' tooltip='(i18n_0113)'></div>

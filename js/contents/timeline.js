@@ -973,6 +973,19 @@ console.log( res );
 				}
 			}
 			////////////////////////////////////////
+			// サムネイルクリック
+			////////////////////////////////////////
+			else if ( targ.hasClass( 'thumbnail' ) )
+			{
+				var _cp = new CPanel( null, null, 320, 320 );
+				_cp.SetType( 'image' );
+				_cp.SetParam( {
+					urls: ptarg.attr( 'urls' ),
+					index: targ.attr( 'index' ),
+				} );
+				_cp.Start();
+			}
+			////////////////////////////////////////
 			// メニューボタンクリック
 			////////////////////////////////////////
 			else if ( targ.hasClass( 'timeline_menu' ) )
