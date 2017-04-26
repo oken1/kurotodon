@@ -972,6 +972,34 @@ console.log( res );
 
 				}
 			}
+			
+			
+			////////////////////////////////////////
+			// もっと見る⇔隠す
+			////////////////////////////////////////
+			else if ( targ.hasClass( 'showmore_button' ) )
+			{
+				var toot_text = ptarg.parent().find( '.toot_text' );
+
+				if ( toot_text.hasClass( 'off' ) )
+				{
+					toot_text.removeClass( 'off' );
+					targ.html( i18nGetMessage( 'i18n_0369' ) );
+				}
+				else
+				{
+					toot_text.addClass( 'off' );
+					targ.html( i18nGetMessage( 'i18n_0368' ) );
+				}
+			}
+			////////////////////////////////////////
+			// NSFW表示切り替え
+			////////////////////////////////////////
+			else if ( targ.hasClass( 'nsfw_change' ) )
+			{
+				ptarg.find( '.images' ).toggle();
+				targ.html( i18nGetMessage( ( ptarg.find( '.images' ).css( 'display' ) == 'none' ) ? 'i18n_0370' : 'i18n_0371' ) );
+			}
 			////////////////////////////////////////
 			// サムネイルクリック
 			////////////////////////////////////////
@@ -980,7 +1008,7 @@ console.log( res );
 				var _cp = new CPanel( null, null, 320, 320 );
 				_cp.SetType( 'image' );
 				_cp.SetParam( {
-					urls: ptarg.attr( 'urls' ),
+					urls: targ.closest( '.thumbnails' ).attr( 'urls' ),
 					index: targ.attr( 'index' ),
 				} );
 				_cp.Start();
@@ -1163,7 +1191,6 @@ console.log( res );
 			}
 
 			$( this ).addClass( 'disabled' );
-
 			ListMake( cp.param['get_count'], 'old' );
 
 			e.stopPropagation();

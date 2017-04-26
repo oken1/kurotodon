@@ -1152,7 +1152,8 @@ function MakeTimeline( json, account_id )
 		dispdate: DateConv( json.created_at, 3 ),
 
 		source: ( user_instance == g_cmn.account[account_id].instance ) ? '' : '@' + user_instance,
-		
+
+		spoiler_text: json.spoiler_text,
 		text: ConvertContent( json.content, json ),
 	};
 
@@ -1845,26 +1846,43 @@ function ConvertContent( content, json )
 	var _thumbnails = $( '<div class="thumbnails" urls="">' );
 	var _index = 0;
 	var _urls = [];
+	
+	_thumbnails.html( OutputTPL( 'thumbnail', {} ) );
 
 	for ( var i = 0 ; i < json.media_attachments.length ; i++ )
 	{
-		_jq.find( 'a[href="' + json.media_attachments[i].text_url + '"]' ).each( function( e ) {
-			var anchor = $( this );
+		if ( json.media_attachments[i].text_url != null )
+		{
+			_jq.find( 'a[href="' + json.media_attachments[i].text_url + '"]' ).each( function( e ) {
+				$( this ).remove();
+			} );
+		}
 
-			$( this ).remove();
+		var _img = $( '<img class="thumbnail" src="' + json.media_attachments[i].preview_url + '" index="' + _index + '">' );
 
-			var _img = $( '<img class="thumbnail" src="' + json.media_attachments[i].preview_url + '" index="' + _index + '">' );
+		_urls[_index] = json.media_attachments[i].url;
+		_index++;
 
-			_urls[_index] = json.media_attachments[i].url;
-			_index++;
-
-			_thumbnails.append( _img );
-		} );
+		_thumbnails.find( '.images' ).append( _img );
 	}
 
-	_thumbnails.attr( 'urls', _urls.join( ',' ) );
-	_jq.append( _thumbnails );
+	if ( json.sensitive )
+	{
+		_thumbnails.find( '.nsfw_change' ).show();
+		_thumbnails.find( '.images' ).hide();
+	}
+	else
+	{
+		_thumbnails.find( '.nsfw_change' ).hide();
+		_thumbnails.find( '.images' ).show();
+	}
 
+	if ( json.media_attachments.length )
+	{
+		_thumbnails.attr( 'urls', _urls.join( ',' ) );
+		_jq.append( _thumbnails );
+	}
+	
 	// #hashtagを置き換える
 	for ( var i = 0 ; i < json.tags.length ; i++ )
 	{
@@ -1872,7 +1890,7 @@ function ConvertContent( content, json )
 			var anchor = $( this );
 			
 			$( this ).unwrap();
-			var _tag = $( '<span class="hashtag anchor">#' + json.tags[i].name + '</span' );
+			var _tag = $( '<span class="hashtag anchor">#' + json.tags[i].name + '</span>' );
 			
 			$( this ).replaceWith( _tag );
 		} );

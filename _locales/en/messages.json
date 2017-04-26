@@ -4,7 +4,7 @@
 	},
 
 	"i18n_0001": {
-		"message": "Retweet by {$$rt_screen_name}"
+		"message": "{$$bt_user_display_name} boosted"
 	},
 
 	"i18n_0003": {
@@ -1453,6 +1453,22 @@
 
 	"i18n_0367": {
 		"message": "Toot"
+	},
+
+	"i18n_0368": {
+		"message": "Show more"
+	},
+
+	"i18n_0369": {
+		"message": "Show less"
+	},
+
+	"i18n_0370": {
+		"message": "Sensitive content<br>Click to view"
+	},
+
+	"i18n_0371": {
+		"message": "Hide"
 	},
 
 

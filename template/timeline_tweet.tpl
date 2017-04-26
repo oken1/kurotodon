@@ -32,6 +32,8 @@
 
 		</div>
 
-		<div class='toot_text'>{$text}</div>
+		{if $spoiler_text}<div class='spoiler_text'>{$spoiler_text} <span class='showmore_button'>(i18n_0368)</span></div>{/if}
+		
+		<div class='toot_text {if $spoiler_text}off{/if}'>{$text}</div>
 	</div>
 </div>
