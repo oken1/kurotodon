@@ -9,7 +9,7 @@ Contents.account = function( cp )
 	var cont = p.find( 'div.contents' );
 	var scrollPos = null;
 
-	cp.SetIcon( 'icon-users' );
+	cp.SetIcon( 'icon-user' );
 
 	////////////////////////////////////////////////////////////
 	// プルダウンメニューを作成
@@ -118,10 +118,7 @@ Contents.account = function( cp )
 		$( '#account_list' ).find( 'div.item' ).find( '.icon' ).find( 'img' ).click( function( e ) {
 			var account_id = $( this ).parent().parent().attr( 'account_id' );
 
-			OpenUserShow(
-				g_cmn.account[account_id].id,
-				g_cmn.account[account_id].instance,
-				account_id );
+			OpenUserProfile( g_cmn.account[account_id].id, g_cmn.account[account_id].instance, account_id );
 
 			e.stopPropagation();
 		} );
@@ -132,18 +129,8 @@ Contents.account = function( cp )
 		$( '#account_list' ).find( 'div.item' ).find( '.account_display_name' ).click( function( e ) {
 			var account_id = $( this ).parent().parent().parent().attr( 'account_id' );
 
-			var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
-			_cp.SetType( 'timeline' );
-			_cp.SetParam( {
-				account_id: account_id,
-				timeline_type: 'user',
-				user_id: g_cmn.account[account_id].id,
-				user_username: g_cmn.account[account_id].username,
-				user_display_name: g_cmn.account[account_id].display_name,
-				user_instance: g_cmn.account[account_id].instance,
-				reload_time: g_cmn.cmn_param['reload_time'],
-			} );
-			_cp.Start();
+			OpenUserTimeline( account_id, g_cmn.account[account_id].id, g_cmn.account[account_id].username,
+				g_cmn.account[account_id].display_name, g_cmn.account[account_id].instance );
 
 			e.stopPropagation();
 		} );
@@ -319,28 +306,15 @@ Contents.account = function( cp )
 				return;
 			}
 
-			var pid = IsUnique( 'accountset' );
 
-			if ( pid == null )
-			{
-				var _cp = new CPanel( null, null, 360, 420 );
-				_cp.SetType( 'accountset' );
-				_cp.SetTitle( i18nGetMessage( 'i18n_0047' ) + '(' + g_cmn.account[$( '#account_del' ).attr( 'delid' )].display_name + ')', false );
-				_cp.SetParam( {
-					account_id: $( '#account_del' ).attr( 'delid' ),
-				} );
-				_cp.Start();
-			}
-			else
-			{
-				var _cp = GetPanel( pid );
-				_cp.SetType( 'accountset' );
-				_cp.SetTitle( i18nGetMessage( 'i18n_0047' ) + '(' + g_cmn.account[$( '#account_del' ).attr( 'delid' )].display_name + ')', false );
-				_cp.SetParam( {
-					account_id: $( '#account_del' ).attr( 'delid' ),
-				} );
-				$( '#' + pid ).find( 'div.contents' ).trigger( 'account_change' );
-			}
+
+
+
+
+
+
+
+
 
 			e.stopPropagation();
 		} );
@@ -561,7 +535,7 @@ Contents.account = function( cp )
 								},
 								function( res )
 								{
-									if ( !res.status )
+									if ( res.status === undefined )
 									{
 										_account.instance = instance;
 										_account.id = res.id;

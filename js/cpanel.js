@@ -440,36 +440,6 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 			titlebar.find( '.badge' ).hide();
 		}
 
-		// "アカウント選択の表示設定
-		if ( titlediv.find( '.titlename' ).length < 1 )
-		{
-			titlebar.find( '.titlename_list' ).remove();
-		}
-		else
-		{
-			var s = '';
-
-			for ( var i = 0, _len = g_cmn.account_order.length ; i < _len ; i++ )
-			{
-				var id = g_cmn.account_order[i];
-				s += '<span account_id="' + id + '">' + g_cmn.account[id].screen_name + '</span>';
-			}
-
-			titlebar.find( '.titlename_list' ).css( {
-				left: titlediv.find( '.titlename' ).position().left,
-			} )
-			.html( s )
-			.hide()
-			.find( 'span' ).click( function( e ) {
-				p.find( 'div.contents' ).trigger( 'account_change', [$( this ).attr( 'account_id' )] );
-				$( this ).parent().hide();
-			} );
-
-			titlediv.find( '.titlename' ).click( function( e ) {
-				titlebar.find( '.titlename_list' ).toggle();
-			} );
-		}
-
 		// setting=falseの場合、設定ボタンを隠す"
 		if ( !setting )
 		{

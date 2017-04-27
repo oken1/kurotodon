@@ -281,8 +281,8 @@ div.contents.timeline .lines div.item > .toot > .spoiler_text > .showmore_button
 	display: inline-block;
 	line-height: 1rem;
 	font-size: 0.9rem;
-	background: #181818;
-	color: #cccccc;
+	background: #787878;
+	color: #282828;
 	padding: 4px 8px;
 	text-align: center;
 	-webkit-user-select: none;
@@ -290,13 +290,12 @@ div.contents.timeline .lines div.item > .toot > .spoiler_text > .showmore_button
 
 div.contents.timeline .lines div.item > .toot > .spoiler_text > .showmore_button:hover {
 	cursor: pointer;
-	background: #484848;
+	background: #989898;
 }
 
 /* トゥート */
 div.contents.timeline .lines div.item > .toot > .toot_text {
 	line-height: 1.4rem;
-	padding: 2px 0;
 	-webkit-user-select: auto;
 	word-break: break-word;
 	white-space: pre-wrap;
@@ -334,7 +333,7 @@ div.contents.timeline .lines div.item > .toot > .toot_text .thumbnails > .nsfw_c
 	line-height: 1rem;
 	font-size: 0.9rem;
 	background: #181818;
-	color: #cccccc;
+	color: #ffffff;
 	padding: 4px 8px;
 	text-align: center;
 	-webkit-user-select: none;
@@ -342,7 +341,7 @@ div.contents.timeline .lines div.item > .toot > .toot_text .thumbnails > .nsfw_c
 
 div.contents.timeline .lines div.item > .toot > .toot_text .thumbnails > .nsfw_change:hover {
 	cursor: pointer;
-	background: #484848;
+	background: #383838;
 }
 
 div.contents.timeline .lines div.item > .toot > .toot_text .thumbnails > .images {

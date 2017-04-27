@@ -8,7 +8,7 @@
 			</div>
 		</div>
 	</div>
-	<form id='export_form' method='post' target='_blank' action='http://www.jstwi.com/jsonexport'>
+	<form id='export_form' method='post' target='_blank' rel='nofollow noopener noreferrer' action='http://www.jstwi.com/jsonexport'>
 		<input type='hidden' id='export_json' name='json'>
 	</form>
 	<div id='import' class='group'>

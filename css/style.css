@@ -2,6 +2,7 @@
 * {
 	margin: 0;
 	padding: 0;
+
 }
 
 html {
@@ -406,9 +407,7 @@ panel div.titlebar .title .titlename:hover {
 	cursor: pointer;
 }
 
-/* パネルを開いているアカウント選択 */
 /* 位置固定メニュー */
-panel div.titlebar .titlecontainer .titlename_list,
 panel div.titlebar .titlecontainer .titlesetting {
 	position: absolute;
 	word-break: break-all;
@@ -422,24 +421,11 @@ panel div.titlebar .titlecontainer .titlesetting {
 	color: #ffffff;			/* color set: 固定(popup-menu) */
 }
 
-panel div.titlebar .titlecontainer .titlename_list span
-{
-	display: block;
-	padding: 6px 12px;
-	text-align: left;
-}
-
 panel div.titlebar .titlecontainer .titlesetting span
 {
 	display: block;
 	padding: 3px 6px;
 	text-align: left;
-}
-
-panel div.titlebar .titlecontainer .titlename_list span:hover {
-	cursor: pointer;
-
-	background: #4e4e4e;	/* color set: 固定(popup-menu) */
 }
 
 /* パネル-コンテンツ */

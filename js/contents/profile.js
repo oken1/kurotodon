@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // ユーザ情報表示
 ////////////////////////////////////////////////////////////////////////////////
-Contents.show = function( cp )
+Contents.profile = function( cp )
 {
 	var p = $( '#' + cp.id );
 	var cont = p.find( 'div.contents' );
@@ -13,12 +13,54 @@ Contents.show = function( cp )
 	////////////////////////////////////////////////////////////
 	// ユーザ情報作成
 	////////////////////////////////////////////////////////////
-	var ShowMake = function() {
+	var ProfileMake = function() {
 		cont.html( '' )
-			.addClass( 'show' );
+			.addClass( 'profile' );
 
 		cont.activity( { color: '#ffffff' } );
 
+		SendRequest(
+			{
+				action: 'api_call',
+				instance: g_cmn.account[cp.param['account_id']].instance,
+				api: 'accounts/' + cp.param['user_id'],
+				access_token: g_cmn.account[cp.param['account_id']].access_token
+			},
+			function( res )
+			{
+console.log( res );
+				if ( res.status === undefined )
+				{
+					cp.SetTitle( res.display_name + ' ' + i18nGetMessage( 'i18n_0107' ) + 
+						'(' + g_cmn.account[cp.param['account_id']].display_name + '@' + g_cmn.account[cp.param['account_id']].instance + ')', false );
+
+					cont.html( OutputTPL( 'profile',
+						{
+							avatar: res.avatar,
+							display_name: res.display_name,
+							acct: res.acct,
+							note: res.note
+						}
+					) );
+					
+					if ( res.header )
+					{
+						cont.find( '.profilebase' ).css( {
+							backgroundImage: 'url("' + res.header + '")',
+							backgroundSize: 'cover'
+						} );
+					}
+				}
+				else
+				{
+					ApiError( res );
+				}
+
+				cont.activity( false );
+			}
+		);
+
+/*
 		var param = {
 			type: 'GET',
 			url: ApiUrl( '1.1' ) + 'users/show.json',
@@ -485,6 +527,8 @@ Contents.show = function( cp )
 				cont.activity( false );
 			}
 		);
+
+*/
 	};
 
 	////////////////////////////////////////////////////////////
@@ -507,49 +551,10 @@ Contents.show = function( cp )
 		};
 
 		////////////////////////////////////////
-		// アカウント変更
-		////////////////////////////////////////
-		cont.on( 'account_change', function( e, account_id ) {
-			if ( cp.param['account_id'] == account_id )
-			{
-			}
-			else
-			{
-				p.find( 'div.titlebar' ).find( '.titlename' ).text( g_cmn.account[account_id].screen_name );
-				cp.param['account_id'] = account_id;
-
-				cp.title = cp.title.replace( /(<span class=\"titlename\">).*(<\/span>)/,
-					'$1' + g_cmn.account[account_id].screen_name + '$2' );
-
-				// パネルリストの更新"
-				$( document ).trigger( 'panellist_changed' );
-
-				// 更新
-				ShowMake();
-			}
-		} );
-
-		////////////////////////////////////////
 		// アカウント情報更新
 		////////////////////////////////////////
 		cont.on( 'account_update', function() {
 			AccountAliveCheck();
-
-			// アカウント選択リスト更新
-			var s = '';
-			var id;
-
-			for ( var i = 0, _len = g_cmn.account_order.length ; i < _len ; i++ )
-			{
-				id = g_cmn.account_order[i];
-				s += '<span account_id="' + id + '">' + g_cmn.account[id].screen_name + '</span>';
-			}
-
-			p.find( 'div.titlebar' ).find( '.titlename_list' ).html( s )
-				.find( 'span' ).click( function( e ) {
-					p.find( 'div.contents' ).trigger( 'account_change', [$( this ).attr( 'account_id' )] );
-					$( this ).parent().hide();
-				} );
 		} );
 
 		if ( !AccountAliveCheck() )
@@ -557,7 +562,7 @@ Contents.show = function( cp )
 			return;
 		}
 
-		ShowMake();
+		ProfileMake();
 	};
 
 	////////////////////////////////////////////////////////////

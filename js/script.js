@@ -104,7 +104,7 @@ function Init()
 	} ).done( function( data ) {
 		manifest = data;
 
-		$( '#main' ).append( '<div id="version"><a class="anchor" href="http://www.jstwi.com/kurotodon/" target="_blank">' +
+		$( '#main' ).append( '<div id="version"><a class="anchor" href="http://www.jstwi.com/kurotodon/" rel="nofollow noopener noreferrer" target="_blank">' +
 			manifest.name + ' version ' + manifest.version + '</a></div>' );
 	} );
 
@@ -218,7 +218,7 @@ function Init()
 							{
 								MessageBox( i18nGetMessage( 'i18n_0345', [g_cmn.current_version, manifest.version] ) +
 									'<br><br>' +
-									'<a class="anchor" href="http://www.jstwi.com/kurotodon/update.html" target="_blank">http://www.jstwi.com/kurotodon/update.html</a>',
+									'<a class="anchor" href="http://www.jstwi.com/kurotodon/update.html" rel="nofollow noopener noreferrer" target="_blank">http://www.jstwi.com/kurotodon/update.html</a>',
 									5 * 1000 );
 							}
 						}
@@ -322,7 +322,7 @@ function Init()
 								},
 								function( res )
 								{
-									if ( !res.status )
+									if ( res.status === undefined )
 									{
 										g_cmn.account[account_id].username = res.username;
 										g_cmn.account[account_id].display_name = res.display_name;
@@ -1106,6 +1106,7 @@ function MakeTimeline( json, account_id )
 	var bt_user_id = json.account.id;
 	var bt_user_instance = GetInstanceFromAcct( json.account.acct, account_id );
 	var bt_user_display_name = json.account.display_name;
+	var bt_user_username = json.account.username;
 	var bt_avatar = AvatarURLConvert( json.account, account_id );
 
 	if ( bt_flg )
@@ -1136,6 +1137,7 @@ function MakeTimeline( json, account_id )
 		bt_user_id: bt_user_id,
 		bt_user_instance: bt_user_instance,
 		bt_user_display_name: bt_user_display_name,
+		bt_user_username,
 		bt_avatar: bt_avatar,
 
 		user_display_name: json.account.display_name,
@@ -1155,6 +1157,8 @@ function MakeTimeline( json, account_id )
 
 		spoiler_text: json.spoiler_text,
 		text: ConvertContent( json.content, json ),
+
+		url : json.url,
 	};
 
 	return OutputTPL( 'timeline_tweet', assign );
@@ -1830,6 +1834,7 @@ function ConvertContent( content, json )
 			var anchor = $( this );
 
 			$( this ).unwrap();
+
 			var _user = $( '<span class="user anchor">@' + anchor.find( 'span' ).text() + '</span>' );
 
 			_user.attr( {
@@ -1851,6 +1856,11 @@ function ConvertContent( content, json )
 
 	for ( var i = 0 ; i < json.media_attachments.length ; i++ )
 	{
+		if ( json.media_attachments[i].url == '/files/original/missing.png' )
+		{
+			continue;
+		}
+		
 		if ( json.media_attachments[i].text_url != null )
 		{
 			_jq.find( 'a[href="' + json.media_attachments[i].text_url + '"]' ).each( function( e ) {
@@ -1882,17 +1892,15 @@ function ConvertContent( content, json )
 		_thumbnails.attr( 'urls', _urls.join( ',' ) );
 		_jq.append( _thumbnails );
 	}
-	
+
 	// #hashtagを置き換える
 	for ( var i = 0 ; i < json.tags.length ; i++ )
 	{
-		_jq.find( 'a.mention.hashtag[href="' + json.tags[i].url + '"]' ).each( function( e ) {
-			var anchor = $( this );
-			
-			$( this ).unwrap();
-			var _tag = $( '<span class="hashtag anchor">#' + json.tags[i].name + '</span>' );
-			
-			$( this ).replaceWith( _tag );
+		_jq.find( 'a.mention.hashtag' ).each( function( e ) {
+			if ( $( this ).find( 'span' ).text() == json.tags[i].name )
+			{
+				$( this ).replaceWith( '<span class="hashtag anchor">#' + json.tags[i].name + '</span>' );
+			}
 		} );
 	}
 
@@ -1918,7 +1926,7 @@ function ConvertContent( content, json )
 		}
 
 		$( this ).replaceWith( $( '<a href="' + anchor.attr( 'href' ) + 
-			'" rel="nofollow noopener" target="_blank" class="url anchor">' + 
+			'" rel="nofollow noopener noreferrer" target="_blank" class="url anchor">' + 
 			display_url + ellipsis + '</span></a>' ) );
 	} );
 
@@ -1957,6 +1965,46 @@ function AvatarURLConvert( account, account_id )
 		return account.avatar;
 	}
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ユーザータイムライン表示
+////////////////////////////////////////////////////////////////////////////////
+function OpenUserTimeline( account_id, user_id, user_username, user_display_name, user_instance )
+{
+	var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+	_cp.SetType( 'timeline' );
+
+	_cp.SetParam( {
+		account_id: account_id,
+		timeline_type: 'user',
+		user_id: user_id,
+		user_username: user_username,
+		user_display_name: user_display_name,
+		user_instance: user_instance,
+		reload_time: g_cmn.cmn_param['reload_time'],
+	} );
+	_cp.Start();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// プロフィール表示
+////////////////////////////////////////////////////////////////////////////////
+function OpenUserProfile( user_id, user_instance, account_id )
+{
+	var _cp = new CPanel( null, null, 400, 360 );
+	_cp.SetType( 'profile' );
+
+	_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0107' ), false );
+	_cp.SetParam( {
+		user_id: user_id,
+		user_instance: user_instance,
+		account_id: account_id
+	} );
+	_cp.Start();
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // フレンドかチェック

@@ -6,7 +6,6 @@
 		<div class='titlesetting'>
 			<span class='no_move'><input type='checkbox'> (i18n_0188)</span>
 		</div>
-		<div class='titlename_list'></div>
 	</div>
 	<span class='minimum icon-underline'></span>
 	<span class='setting icon-cog'></span>

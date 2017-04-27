@@ -3,7 +3,7 @@
 	<div class='item feed'>
 		<div class='container'>
 			<div class='title'>
-				<a href='{$item->feedlink}' class='anchor' target='_blank'>{$item->feedtitle}</a>
+				<a href='{$item->feedlink}' class='anchor' rel="nofollow noopener noreferrer" target='_blank'>{$item->feedtitle}</a>
 			</div>
 		</div>
 	</div>
@@ -11,7 +11,7 @@
 	<div class='item'>
 		<div class='container'>
 			<div class='title'>
-				<a href='{$item->link}' class='anchor' target='_blank'>{$item->title}</a>
+				<a href='{$item->link}' class='anchor' rel="nofollow noopener noreferrer" target='_blank'>{$item->title}</a>
 			</div>
 			{if $showdesc}
 			<div class='desc'>
