@@ -81,10 +81,6 @@ img.emoji {
 	z-index: 1000;
 }
 
-.rich #head {
-	box-shadow: 2px 2px 4px rgba( 0, 0, 0, 0.5 );
-}
-
 #head > div {
 	display: table-cell;
 	text-align: right;
@@ -193,24 +189,12 @@ img.emoji {
 	background-color: #ffcc60;	/* color set: 固定(US-try) */
 }
 
-.rich .streamsts > div.try {
-	box-shadow: 0 0 4px #ffcc60;
-}
-
 .streamsts > div.on {
 	background-color: #60ffa0;	/* color set: 固定(US-on) */
 }
 
-.rich .streamsts > div.on {
-	box-shadow: 0 0 8px #60ffa0;
-}
-
 .streamsts > div.off {
 	background-color: #303030;	/* color set: 固定(US-off) */
-}
-
-.rich .streamsts > div.off {
-	box-shadow: none;
 }
 
 .streamsts > div.on:hover,
@@ -310,10 +294,6 @@ panel {
 	color: #ffffff;	/* color set:パネルのフォント */
 }
 
-.rich panel {
-	box-shadow: 2px 2px 4px rgba( 0, 0, 0, 0.5 );
-}
-
 /* パネルのタイトルバー */
 panel div.titlebar {
 	display: table;
@@ -324,10 +304,6 @@ panel div.titlebar {
 	border-bottom: 1px solid #101010;	/* color set: 固定(titlebar) */
 	background-color: #606060;	/* color set: タイトルバーのBG */
 	color: #ffffff;			/* color set: タイトルバーのフォント */
-}
-
-.rich panel div.titlebar {
-	background-image: -webkit-gradient( linear, left top, left bottom, from( rgba( 255, 255, 255, 0.25 ) ), color-stop( 0.4, rgba( 255, 255, 255, 0 ) ) );
 }
 
 /* タイトルバーのアイコン＋文字列 */
@@ -386,10 +362,6 @@ panel div.titlebar > span:not(.badge) {
 panel div.titlebar > span:not(.badge):hover {
 	cursor: pointer;
 	opacity: 1.0;
-}
-
-.rich panel div.titlebar > span:not(.badge):hover {
-	text-shadow: 0 0 4px #ffffff;
 }
 
 panel div.titlebar > span:not(.badge):active {
@@ -975,176 +947,7 @@ div.mapdiv {
 	background-color: #dc2d2d;
 }
 
-.rich #panellist {
-	box-shadow: 2px 2px 4px rgba( 0, 0, 0, 0.5 );
-}
-
-/* ツイ消し */
-.twd_pop {
-	z-index: 12000;
-	position: absolute;
-	text-align: center;
-}
-
-.twd {
-	position: relative;
-	display: inline-block;
-	text-align: center;
-	padding: 4px;
-	line-height: normal;
-	background: #222222;
-	box-shadow: 4px 4px 4px #000000;
-	border-radius: 6%;
-	border: 2px solid;
-	text-shadow: 1px 1px 4px #000000;
-	overflow: hidden;
-}
-
-.twd > span {
-	display: block;
-	font-weight: bold;
-	font-size: 0.8rem;
-}
-
-.twd > .twd_icon > img {
-	border-radius: 100%;
-	width: 4rem;
-	height: 4rem;
-	border: 4px solid;
-}
-
-.twd_pop > div:first-child {
-	margin: 8px 4px;
-}
-
-.twd_pop .twd_title {
-	font-size: 3rem;
-	font-weight: bold;
-	text-shadow: 4px 4px 4px #000000;
-}
-
-.twd > .twd_time .twd_num {
-	font-size: 1.2rem;
-}
-
-.twd > .twd_time.non_best {
-	color: #cccccc;
-}
-
-.twd > .twd_time .twd_num.best {
-	color: #ffff44;
-}
-
-.twd > .twd_rarity {
-	display: block;
-	color: #222222;
-	-webkit-transform: translate( 2.4rem, 2.0rem ) rotate( 45deg );
-	text-shadow: none;
-	text-align: center;
-	font-size: 1.3rem;
-	width: 10rem;
-	line-height: 1.3rem;
-}
-
-.twd > .twd_date {
-	font-weight: normal;
-	color: #888888;
-}
-
-.twd > .twd_name {
-	-webkit-user-select: auto;
-}
-
-.twd.rarity1 {
-	border-color: #808080;
-}
-
-.twd.rarity1 > .twd_icon > img {
-	border-color: #808080;
-}
-
-.twd.rarity1 .twd_rarity {
-	background: #606060;
-	border: 2px solid #808080;
-}
-
-.twd.rarity2 {
-	border-color: #ffffff;
-}
-
-.twd.rarity2 > .twd_icon > img {
-	border-color: #ffffff;
-}
-
-.twd.rarity2 .twd_rarity {
-	background: #dddddd;
-	border: 2px solid #ffffff;
-}
-
-.twd.rarity3 {
-	border-color: #4477ff;
-}
-
-.twd.rarity3 > .twd_icon > img {
-	border-color: #4477ff;
-}
-
-.twd.rarity3 .twd_rarity {
-	background: #2255dd;
-	border: 2px solid #4477ff;
-}
-
-.twd.rarity4 {
-	border-color: #ffff44;
-}
-
-.twd.rarity4 > .twd_icon > img {
-	border-color: #ffff44;
-}
-
-.twd.rarity4 .twd_rarity {
-	background: #dddd22;
-	border: 2px solid #ffff44;
-}
-
-.twd.rarity5 {
-	background: -webkit-linear-gradient(-45deg, #ff7744 0%, #000000 100%);
-	border-color: #ff7744;
-}
-
-.twd.rarity5 > .twd_icon > img {
-	border-color: #ff7744;
-}
-
-.twd.rarity5 .twd_rarity {
-	background: #dd5522;
-	border: 2px solid #ff7744;
-}
-
-.twd.rarity6 {
-	background: -webkit-linear-gradient(-45deg, #aa44ff 0%, #000000 100%);
-	border-color: #aa44ff;
-}
-
-.twd.rarity6 > .twd_icon > img {
-	border-color: #aa44ff;
-}
-
-.twd.rarity6 .twd_rarity {
-	background: #8822dd;
-	border: 2px solid #aa44ff;
-}
-
-.twd > .twd_del {
-	position: absolute;
-	display: none;
-	right: 4px;
-	top: 4px;
-	font-size: 1.5rem;
-	font-weight: normal;
-	text-shadow: none;
-}
-
-.twd > .twd_del:hover {
-	cursor: pointer;
+img.ui-draggable {
+	width: 32px;
+	height: 32px;
 }

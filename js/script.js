@@ -13,9 +13,9 @@ var g_cmn = {
 
 		tootkey:			0,								// - トゥートショートカットキー
 
-		reload_time:		60,								// - 新着読み込み
+		reload_time:		30,								// - 新着読み込み
 		get_count:			40,								// - 一度に取得する件数
-		max_count:			120,							// - タイムラインに表示する最大件数
+		max_count:			200,							// - タイムラインに表示する最大件数
 		newscroll:			1,								// - 新着ツイートにスクロール
 		follow_mark:		1,								// - 相互フォロー表示
 		iconsize:			48,								// - アイコンサイズ
@@ -957,11 +957,11 @@ function AccountCount()
 ////////////////////////////////////////////////////////////////////////////////
 // 登録しているアカウントかチェック
 ////////////////////////////////////////////////////////////////////////////////
-function IsMyAccount( user_id )
+function IsMyAccount( account_id )
 {
 	for ( var id in g_cmn.account )
 	{
-		if ( id == user_id )
+		if ( id == account_id )
 		{
 			return id;
 		}
@@ -1103,10 +1103,10 @@ function MakeTimeline( json, account_id )
 	var text = json.content;
 
 	var bt_flg = ( json.reblog );
-	var bt_user_id = json.account.id;
-	var bt_user_instance = GetInstanceFromAcct( json.account.acct, account_id );
-	var bt_user_display_name = json.account.display_name;
-	var bt_user_username = json.account.username;
+	var bt_id = json.account.id;
+	var bt_instance = GetInstanceFromAcct( json.account.acct, account_id );
+	var bt_display_name = json.account.display_name;
+	var bt_username = json.account.username;
 	var bt_avatar = AvatarURLConvert( json.account, account_id );
 
 	if ( bt_flg )
@@ -1115,34 +1115,33 @@ function MakeTimeline( json, account_id )
 		json = _json;
 	}
 
-	var user_instance = GetInstanceFromAcct( json.account.acct, account_id );
+	var instance = GetInstanceFromAcct( json.account.acct, account_id );
 
 	// 相互、一方フォローマーク
-	var isfriend = IsFriend( account_id, json.account.id, user_instance );
-	var isfollower = IsFollower( account_id, json.account.id, user_instance );
+	var isfriend = IsFriend( account_id, json.account.id, instance );
+	var isfollower = IsFollower( account_id, json.account.id, instance );
 
 	var assign = {
-		user_id: json.account.id,
-		user_instance: '仮',
+		id: json.account.id,
 		status_id: json.id,
 		created_at: json.created_at,
 
-		user_avatar: AvatarURLConvert( json.account, account_id ),
+		avatar: AvatarURLConvert( json.account, account_id ),
 		statuses_count: json.account.statuses_count,
 		following: json.account.following_count,
 		followers: json.account.followers_count,
 
 		bt_flg: bt_flg,
 
-		bt_user_id: bt_user_id,
-		bt_user_instance: bt_user_instance,
-		bt_user_display_name: bt_user_display_name,
-		bt_user_username,
+		bt_id: bt_id,
+		bt_instance: bt_instance,
+		bt_display_name: bt_display_name,
+		bt_username: bt_username,
 		bt_avatar: bt_avatar,
 
-		user_display_name: json.account.display_name,
-		user_username: json.account.username,
-		user_instance: user_instance,
+		display_name: json.account.display_name,
+		username: json.account.username,
+		instance: instance,
 
 		isfriend: isfriend,
 		isfollower: isfollower,
@@ -1153,7 +1152,7 @@ function MakeTimeline( json, account_id )
 		date: DateConv( json.created_at, 0 ),
 		dispdate: DateConv( json.created_at, 3 ),
 
-		source: ( user_instance == g_cmn.account[account_id].instance ) ? '' : '@' + user_instance,
+		source: ( instance == g_cmn.account[account_id].instance ) ? '' : '@' + instance,
 
 		spoiler_text: json.spoiler_text,
 		text: ConvertContent( json.content, json ),
@@ -1184,15 +1183,15 @@ function SetDraggable( selector, p, cp )
 				SetFront( p );
 				$( this ).addClass( 'fromtl' );
 			}
-
 			$( this ).addClass( 'dropitem user' )
 				.attr( {
 					account_id: ( cp != null ) ? cp.param['account_id'] : null,
+					created_at: item.attr( 'created_at' ),
+					avatar: item.attr( 'avatar' ),
+					display_name: item.attr( 'display_name' ),
+					username: item.attr( 'username' ),
 					id: item.attr( 'id' ),
 					instance: item.attr( 'instance' ),
-					display_name: item.attr( 'display_name' ),
-					avatar: $( this ).attr( 'avatar' ),
-					created_at: item.attr( 'created_at' ),
 					type: ( item.attr( 'type' ) ) ? item.attr( 'type' ) : 'user',
 				} );
 
@@ -1228,15 +1227,16 @@ function SetDraggable( selector, p, cp )
 			// TLから
 			else
 			{
-				if ( IsToolbarUser( $( this ).attr( 'id' ) ) == -1 )
+				if ( IsToolbarUser( $( this ).attr( 'account_id' ), $( this ).attr( 'id' ), $( this ).attr( 'instance' ) ) == -1 )
 				{
 					dropuser = {
-						id: $( this ).attr( 'id' ),
-						instance: $( this ).attr( 'instance' ),
-						display_name: $( this ).attr( 'display_name' ),
-						avatar: $( this ).attr( 'avatar' ),
 						account_id: $( this ).attr( 'account_id' ),
 						created_at: $( this ).attr( 'created_at' ),
+						avatar: $( this ).attr( 'avatar' ),
+						display_name: $( this ).attr( 'display_name' ),
+						username: $( this ).attr( 'username' ),
+						id: $( this ).attr( 'id' ),
+						instance: $( this ).attr( 'instance' ),
 						type: $( this ).attr( 'type' ),
 					};
 				}
@@ -1262,14 +1262,12 @@ function SetDraggable( selector, p, cp )
 					}
 					else
 					{
-						for ( var i = 0, _len = g_cmn.toolbar_user.length ; i < _len ; i++ )
+						var index = IsToolbarUser( $( this ).attr( 'account_id' ), $( this ).attr( 'id' ), $( this ).attr( 'instance' ) );
+
+						if ( index != -1 )
 						{
-							if ( ( g_cmn.toolbar_user[i].type == 'user' && g_cmn.toolbar_user[i].user_id == $( this ).attr( 'user_id' ) ) )
-							{
-								g_cmn.toolbar_user.splice( i, 0, dropuser );
-								insflg = true;
-								break;
-							}
+							g_cmn.toolbar_user.splice( index, 0, dropuser );
+							insflg = true;
 						}
 					}
 
@@ -1496,13 +1494,14 @@ function SetImportFile( file )
 ////////////////////////////////////////////////////////////////////////////////
 // ツールバーユーザ？
 ////////////////////////////////////////////////////////////////////////////////
-function IsToolbarUser( user_id )
+function IsToolbarUser( account_id, id, instance )
 {
 	var len = g_cmn.toolbar_user.length;
 
 	for ( var i = 0 ; i < len ; i++ )
 	{
-		if ( g_cmn.toolbar_user[i].user_id == user_id && ( !g_cmn.toolbar_user[i].type || g_cmn.toolbar_user[i].type == 'user' ) )
+		if ( g_cmn.toolbar_user[i].account_id == account_id &&
+			 g_cmn.toolbar_user[i].id == id && g_cmn.toolbar_user[i].instance == instance )
 		{
 			return i;
 		}
@@ -1523,18 +1522,14 @@ function UpdateToolbarUser()
 
 	for ( var i = 0 ; i < len ; i++ )
 	{
-		if ( !g_cmn.toolbar_user[i].type )
-		{
-			g_cmn.toolbar_user[i].type = 'user';
-		}
-
 		assign = {
-			avatar: g_cmn.toolbar_user[i].avatar,
-			id: g_cmn.toolbar_user[i].id,
-			instance: g_cmn.toolbar_user[i].instance,
-			display_name: g_cmn.toolbar_user[i].display_name,
 			account_id: g_cmn.toolbar_user[i].account_id,
 			created_at: g_cmn.toolbar_user[i].created_at,
+			avatar: g_cmn.toolbar_user[i].avatar,
+			display_name: g_cmn.toolbar_user[i].display_name,
+			username: g_cmn.toolbar_user[i].username,
+			id: g_cmn.toolbar_user[i].id,
+			instance: g_cmn.toolbar_user[i].instance,
 			type: g_cmn.toolbar_user[i].type,
 			drag_id: GetUniqueID(),
 		};
@@ -1550,9 +1545,10 @@ function UpdateToolbarUser()
 			return true;
 		}
 
-		var display_name = $( this ).attr( 'display_name' );
 		var account_id = $( this ).attr( 'account_id' );
 		var id = $( this ).attr( 'id' );
+		var username = $( this ).attr( 'username' );
+		var display_name = $( this ).attr( 'display_name' );
 		var instance = $( this ).attr( 'instance' );
 		var type = $( this ).attr( 'type' );
 
@@ -1563,7 +1559,7 @@ function UpdateToolbarUser()
 			switch ( type )
 			{
 				case 'user':
-					OpenUserTimeline( id, instance, account_id );
+					OpenUserTimeline( account_id, id, username, display_name, instance );
 					break;
 			}
 
@@ -1573,17 +1569,13 @@ function UpdateToolbarUser()
 		// 削除処理
 		////////////////////////////////////////////////////////////
 		.on( 'contextmenu', function( e ) {
-			var len = g_cmn.toolbar_user.length;
+			var index = IsToolbarUser( account_id, id, instance );
 
-			for ( var i = 0 ; i < len ; i++ )
+			if ( index != -1 )
 			{
-				if ( ( type == 'user' && g_cmn.toolbar_user[i].type == 'user' && user_id == g_cmn.toolbar_user[i].user_id ) )
-				{
-					g_cmn.toolbar_user.splice( i, 1 );
-					UpdateToolbarUser();
-					$( '#tooltip' ).hide();
-					break;
-				}
+				g_cmn.toolbar_user.splice( index, 1 );
+				UpdateToolbarUser();
+				$( '#tooltip' ).hide();
 			}
 
 			return false;
@@ -1830,7 +1822,7 @@ function ConvertContent( content, json )
 	// @userを置き換える
 	for ( var i = 0 ; i < json.mentions.length ; i++ )
 	{
-		_jq.find( 'a.mention.u-url[href="' + json.mentions[i].url + '"]' ).each( function( e ) {
+		_jq.find( 'a[href="' + json.mentions[i].url + '"]' ).each( function( e ) {
 			var anchor = $( this );
 
 			$( this ).unwrap();
@@ -1896,10 +1888,10 @@ function ConvertContent( content, json )
 	// #hashtagを置き換える
 	for ( var i = 0 ; i < json.tags.length ; i++ )
 	{
-		_jq.find( 'a.mention.hashtag' ).each( function( e ) {
-			if ( $( this ).find( 'span' ).text() == json.tags[i].name )
+		_jq.find( 'a' ).each( function( e ) {
+			if ( $( this ).find( 'span' ).text().toLowerCase() == json.tags[i].name.toLowerCase() )
 			{
-				$( this ).replaceWith( '<span class="hashtag anchor">#' + json.tags[i].name + '</span>' );
+				$( this ).replaceWith( '<span class="hashtag anchor">#' + $( this ).find( 'span' ).text() + '</span>' );
 			}
 		} );
 	}
@@ -1970,7 +1962,7 @@ function AvatarURLConvert( account, account_id )
 ////////////////////////////////////////////////////////////////////////////////
 // ユーザータイムライン表示
 ////////////////////////////////////////////////////////////////////////////////
-function OpenUserTimeline( account_id, user_id, user_username, user_display_name, user_instance )
+function OpenUserTimeline( account_id, id, username, display_name, instance )
 {
 	var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
 	_cp.SetType( 'timeline' );
@@ -1978,10 +1970,28 @@ function OpenUserTimeline( account_id, user_id, user_username, user_display_name
 	_cp.SetParam( {
 		account_id: account_id,
 		timeline_type: 'user',
-		user_id: user_id,
-		user_username: user_username,
-		user_display_name: user_display_name,
-		user_instance: user_instance,
+		id: id,
+		username: username,
+		display_name: display_name,
+		instance: instance,
+		reload_time: g_cmn.cmn_param['reload_time'],
+	} );
+	_cp.Start();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ハッシュタグ検索結果表示
+////////////////////////////////////////////////////////////////////////////////
+function OpenHashtagTimeline( account_id, hashtag )
+{
+	var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+	_cp.SetType( 'timeline' );
+
+	_cp.SetParam( {
+		account_id: account_id,
+		timeline_type: 'hashtag',
+		hashtag: hashtag.replace( /^#/, '' ),
 		reload_time: g_cmn.cmn_param['reload_time'],
 	} );
 	_cp.Start();
@@ -1991,15 +2001,15 @@ function OpenUserTimeline( account_id, user_id, user_username, user_display_name
 ////////////////////////////////////////////////////////////////////////////////
 // プロフィール表示
 ////////////////////////////////////////////////////////////////////////////////
-function OpenUserProfile( user_id, user_instance, account_id )
+function OpenUserProfile( id, instance, account_id )
 {
 	var _cp = new CPanel( null, null, 400, 360 );
 	_cp.SetType( 'profile' );
 
 	_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0107' ), false );
 	_cp.SetParam( {
-		user_id: user_id,
-		user_instance: user_instance,
+		id: id,
+		instance: instance,
 		account_id: account_id
 	} );
 	_cp.Start();
@@ -2009,7 +2019,7 @@ function OpenUserProfile( user_id, user_instance, account_id )
 ////////////////////////////////////////////////////////////////////////////////
 // フレンドかチェック
 ////////////////////////////////////////////////////////////////////////////////
-function IsFriend( account_id, user_id, user_instance )
+function IsFriend( account_id, id, instance )
 {
 /*
 	var account = g_cmn.account[account_id];
@@ -2035,7 +2045,7 @@ function IsFriend( account_id, user_id, user_instance )
 ////////////////////////////////////////////////////////////////////////////////
 // フォロワーかチェック
 ////////////////////////////////////////////////////////////////////////////////
-function IsFollower( account_id, user_id, user_instance )
+function IsFollower( account_id, id, instance )
 {
 /*
 	var account = g_cmn.account[account_id];

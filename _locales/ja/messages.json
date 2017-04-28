@@ -4,7 +4,7 @@
 	},
 
 	"i18n_0001": {
-		"message": "{$$bt_user_display_name}がブースト"
+		"message": "{$$bt_display_name}がブースト"
 	},
 
 	"i18n_0003": {
@@ -293,11 +293,11 @@
 	},
 
 	"i18n_0093": {
-		"message": "デスクトップ通知"
+		"message": "通知"
 	},
 
 	"i18n_0094": {
-		"message": "デスクトップ通知履歴"
+		"message": "通知履歴"
 	},
 
 	"i18n_0095": {

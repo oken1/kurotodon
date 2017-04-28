@@ -105,64 +105,6 @@ Contents.timeline = function( cp )
 */
 	};
 
-	////////////////////////////////////////////////////
-	// 宛先を抽出してツイートパネルにセット
-	////////////////////////////////////////////////////
-	var ExtractReplyUser = function( item ) {
-		var text = item.find( '.tweet' ).find( '.tweet_text' ).text();
-
-		var users = text.match( /@[0-9a-zA-Z_]+/g );
-
-		if ( users == null )
-		{
-			users = new Array();
-		}
-
-		var pid = IsUnique( 'tweetbox' );
-
-		var SetRep = function() {
-			for ( var i = users.length - 1; i >= 0 ; i-- )
-			{
-				var screen_name = users[i].replace( /^@/, '' );
-
-				// 自分は除外
-				if ( screen_name == g_cmn.account[cp.param['account_id']].screen_name )
-				{
-					continue;
-				}
-
-				// このツイートのユーザーも除外
-				if ( screen_name == item.attr( 'screen_name' ) )
-				{
-					continue;
-				}
-
-				$( '#' + pid ).find( 'div.contents' ).trigger( 'userset', [screen_name] );
-			}
-		};
-
-		// ツイートパネルが開いていない場合は開く
-		if ( pid == null )
-		{
-			var _cp = new CPanel( null, null, 324, 240 );
-			_cp.SetType( 'tweetbox' );
-			_cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
-			_cp.SetParam( { account_id: cp.param['account_id'], maxlen: 140, } );
-			_cp.Start( function() {
-				pid = IsUnique( 'tweetbox' );
-				SetRep();
-				$( '#' + pid ).find( 'div.contents' ).trigger( 'userset', [item.attr( 'screen_name' )] );
-			} );
-		}
-		else
-		{
-			SetRep();
-			$( '#' + pid ).find( 'div.contents' ).trigger( 'userset', [item.attr( 'screen_name' )] );
-			GetPanel( pid ).param.account_id = cp.param['account_id'];
-			$( '#' + pid ).find( 'div.contents' ).trigger( 'account_update' );
-		}
-	};
-
 
 	////////////////////////////////////////////////////////////
 	// 一覧作成
@@ -177,7 +119,7 @@ Contents.timeline = function( cp )
 				param = {
 					api: 'timelines/home',
 					data: {
-						count: count
+						limit: count
 					}
 				};
 
@@ -187,7 +129,7 @@ Contents.timeline = function( cp )
 				param = {
 					api: 'timelines/public?local=true',
 					data: {
-						count: count
+						limit: count
 					}
 				};
 			
@@ -197,7 +139,7 @@ Contents.timeline = function( cp )
 				param = {
 					api: 'timelines/public',
 					data: {
-						count: count
+						limit: count
 					}
 				};
 
@@ -205,9 +147,19 @@ Contents.timeline = function( cp )
 			// ユーザ
 			case 'user':
 				param = {
-					api: 'accounts/' + cp.param['user_id'] + '/statuses',
+					api: 'accounts/' + cp.param['id'] + '/statuses',
 					data: {
-						count: count
+						limit: count
+					}
+				};
+
+				break;
+			// ハッシュタグ
+			case 'hashtag':
+				param = {
+					api: 'timelines/tag/' + encodeURIComponent( cp.param['hashtag'] ),
+					data: {
+						limit: count
 					}
 				};
 
@@ -376,7 +328,7 @@ console.log( res );
 								{
 									// 新着で読み込んだ分だけ削除
 									timeline_list.find( '> div.item:gt(' + ( itemcnt - addcnt - 1 ) + ')' ).each( function() {
-										delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'user_instance' )];
+										delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'instance' )];
 										$( this ).remove();
 									} );
 
@@ -564,18 +516,22 @@ console.log( res );
 				cp.SetIcon( 'icon-earth' );
 				break;
 			case 'user':
-				cp.param['user_display_name'] = ( cp.param['user_display_name'] == '' ) ? cp.param['user_username'] : cp.param['user_display_name'];
+				cp.param['display_name'] = ( cp.param['display_name'] == '' ) ? cp.param['username'] : cp.param['display_name'];
 				
-				if ( cp.param['user_instance'] == account.instance )
+				if ( cp.param['instance'] == account.instance )
 				{
-					cp.SetTitle( cp.param['user_display_name'] + ' (' + account.display_name + '@' + account.instance + ')', true );
+					cp.SetTitle( cp.param['display_name'] + ' (' + account.display_name + '@' + account.instance + ')', true );
 				}
 				else
 				{
-					cp.SetTitle( cp.param['user_display_name'] + '@' + cp.param['user_instance'] + ' (' + account.display_name + '@' + account.instance + ')', true );
+					cp.SetTitle( cp.param['display_name'] + '@' + cp.param['instance'] + ' (' + account.display_name + '@' + account.instance + ')', true );
 				}
 
 				cp.SetIcon( 'icon-user' );
+				break;
+			case 'hashtag':
+				cp.SetTitle( cp.param['hashtag'] + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-hash' );
 				break;
 		}
 
@@ -686,22 +642,6 @@ console.log( res );
 				tm = null;
 			}
 
-			// グループストリームの場合はタイマー起動しない
-			if ( cp.param['timeline_type'] == 'group' )
-			{
-				lines.find( '.streamuse' ).css( { display: 'none' } );
-
-				if ( cp.param['account_id'] )
-				{
-					if ( g_cmn.account[cp.param['account_id']].notsave.stream == 2 )
-					{
-						lines.find( '.streamuse' ).css( { display: 'inline-block' } );
-					}
-				}
-
-				return;
-			}
-
 			// ユーザーストリームを使うTL
 			var tl_stream = ( cp.param['timeline_type'] == 'home' ||
 							  cp.param['timeline_type'] == 'mention' ||
@@ -773,8 +713,8 @@ console.log( res );
 			{
 				var item = targ.closest( '.item' );
 
-				OpenUserTimeline( cp.param['account_id'], item.attr( 'user_id' ), ptarg.find( '.username' ).text(),
-					ptarg.find( '.display_name' ).text(), item.attr( 'user_instance' ) );
+				OpenUserTimeline( cp.param['account_id'], item.attr( 'id' ), ptarg.find( '.username' ).text(),
+					ptarg.find( '.display_name' ).text(), item.attr( 'instance' ) );
 			}
 			////////////////////////////////////////
 			// アイコンクリック
@@ -783,7 +723,7 @@ console.log( res );
 			{
 				var item = targ.closest( '.item' );
 
-				OpenUserProfile( item.attr( 'user_id' ), item.attr( 'user_instance' ), cp.param['account_id'] );
+				OpenUserProfile( item.attr( 'id' ), item.attr( 'instance' ), cp.param['account_id'] );
 			}
 			////////////////////////////////////////
 			// リンククリック処理
@@ -805,10 +745,7 @@ console.log( res );
 
 				if ( targ.hasClass( 'hashtag' ) )
 				{
-
-
-
-
+					OpenHashtagTimeline( cp.param['account_id'], targ.text() );
 				}
 			}
 			
@@ -869,7 +806,7 @@ console.log( res );
 				if ( item.find( '.menubox' ).length == 0 )
 				{
 					item.find( '.toot' ).append( OutputTPL( 'timeline_menu', {
-						toolbaruser: ( IsToolbarUser( item.attr( 'user_id' ) ) != -1 ) ? true : false,
+						toolbaruser: ( IsToolbarUser( cp.param['account_id'], item.attr( 'id' ), item.attr( 'instance' ) ) != -1 ) ? true : false,
 					} ) );
 
 					var menubox = item.find( 'div.toot' ).find( 'div.menubox' );
@@ -885,15 +822,11 @@ console.log( res );
 						// ツールバーから削除
 						if ( $( this ).attr( 'toolbaruser' ) == 'true' )
 						{
-							var len = g_cmn.toolbar_user.length;
+							var index = IsToolbarUser( cp.param['account_id'], item.attr( 'id' ), item.attr( 'instance' ) );
 
-							for ( var i = 0 ; i < len ; i++ )
+							if ( index != -1 )
 							{
-								if ( g_cmn.toolbar_user[i].screen_name == item.attr( 'screen_name' ) && g_cmn.toolbar_user[i].type == 'user' )
-								{
-									g_cmn.toolbar_user.splice( i, 1 );
-									break;
-								}
+								g_cmn.toolbaar_user.splice( index, 1 );
 							}
 
 							$( this ).attr( 'toolbaruser', false ).html( chrome.i18n.getMessage( 'i18n_0092' )  );
@@ -903,15 +836,17 @@ console.log( res );
 						// ツールバーに登録
 						else
 						{
-							if ( IsToolbarUser( item.attr( 'user_id' ) ) == -1 )
+							if ( IsToolbarUser( cp.param['account_id'], item.attr( 'id' ), item.attr( 'instance' ) ) == -1 )
 							{
 								g_cmn.toolbar_user.push( {
-									type: 'user',
-									user_id: item.attr( 'user_id' ),
-									screen_name: item.attr( 'screen_name' ),
-									icon: item.find( '.icon img' ).attr( 'src' ),
 									account_id: cp.param['account_id'],
 									created_at: item.attr( 'created_at' ),
+									avatar: item.attr( 'avatar' ),
+									display_name: item.attr( 'display_name' ),
+									username: item.attr( 'username' ),
+									id: item.attr( 'id' ),
+									instance: item.attr( 'instance' ),
+									type: 'user'
 								} );
 							}
 
@@ -940,8 +875,8 @@ console.log( res );
 		timeline_list.on( 'contextmenu', '> div.item div.boost img.bt_avatar', function( e ) {
 			var ptarg = $( this ).parent();
 
-			OpenUserTimeline( cp.param['account_id'], ptarg.attr( 'bt_user_id' ), ptarg.attr( 'bt_user_username' ),
-				ptarg.attr( 'bt_user_display_name' ), ptarg.attr( 'bt_user_instance' ) );
+			OpenUserTimeline( cp.param['account_id'], ptarg.attr( 'bt_id' ), ptarg.attr( 'bt_username' ),
+				ptarg.attr( 'bt_display_name' ), ptarg.attr( 'bt_instance' ) );
 
 			return false;
 		} );
@@ -949,7 +884,7 @@ console.log( res );
 		////////////////////////////////////////
 		// アイコンにカーソルを乗せたとき
 		////////////////////////////////////////
-		timeline_list.on( 'mouseenter mouseleave', '> div.item div.icon > img', function( e ) {
+		timeline_list.on( 'mouseenter mouseleave', '> div.item div.avatar > img', function( e ) {
 			if ( e.type == 'mouseenter' )
 			{
 				// Draggableの設定をする
@@ -1074,12 +1009,6 @@ console.log( res );
 
 				item.removeClass( 'new' );
 
-				if ( g_cmn.cmn_param['auto_thumb'] )
-				{
-					OpenThumbnail( item, ( g_cmn.account[cp.param['account_id']].notsave.stream == 2 &&
-						( cp.param['timeline_type'] == 'home' || cp.param['timeline_type'] == 'mention' ) ) );
-				}
-
 				_chgcnt++;
 			} );
 
@@ -1104,6 +1033,10 @@ console.log( res );
 
 		timeline_list.trigger( 'reload_timer' );
 
+
+
+
+/*
 		// ホーム/Mention/DM/グループストリームの場合、ユーザーストリームの受け口を用意する
 		if ( ( cp.param['timeline_type'] == 'home' ||
 			   cp.param['timeline_type'] == 'mention' ||
@@ -1137,24 +1070,6 @@ console.log( res );
 				{
 					tltype = 'normal';
 				}
-
-				// グループストリームの場合はメンバーか確認
-				var memchk = false;
-
-				if ( cp.param['timeline_type'] == 'group' )
-				{
-					for ( var id in cp.param['users'] )
-					{
-						if ( id == json.user.id_str )
-						{
-							memchk = true;
-							break;
-						}
-					}
-				}
-
-				// 引用元付きのときはキャッシュに追加
-				AddQuoteCache( json );
 
 				// 既に読み込み済みのツイート/非表示ユーザは無視
 				if ( status_ids[json.id_str] == undefined )
@@ -1246,6 +1161,10 @@ console.log( res );
 				}
 			} );
 		}
+*/
+
+
+
 	};
 
 	////////////////////////////////////////////////////////////
@@ -1254,192 +1173,6 @@ console.log( res );
 	function SettingInit()
 	{
 		setting.find( '.tlsetting_apply' ).addClass( 'disabled' );
-
-		// 現行値設定(スライダー)
-
-		// 検索、ユーザーTL、リストは最小30秒にできるようにする
-		var min = 60;
-
-		if ( cp.param['timeline_type'] == 'user' ||
-			 cp.param['timeline_type'] == 'list' ||
-			 cp.param['timeline_type'] == 'search' )
-		{
-				min = 30;
-		}
-
-		setting.find( '.set_reload_time' ).slider( {
-			min: min,
-			max: 600,
-			step: 30,
-			value: cp.param['reload_time'],
-			animate: 'fast',
-			slide: function( e, ui ) {
-				setting.find( '.tlsetting_apply' ).removeClass( 'disabled' );
-				setting.find( '.set_reload_time' ).parent().find( '.value_disp' ).html( ui.value + chrome.i18n.getMessage( 'i18n_0270' ) );
-			},
-		} );
-
-		setting.find( '.set_get_count' ).slider( {
-			min: 20,
-			max: 200,
-			step: 10,
-			value: cp.param['get_count'],
-			animate: 'fast',
-			slide: function( e, ui ) {
-				setting.find( '.tlsetting_apply' ).removeClass( 'disabled' );
-				setting.find( '.set_get_count' ).parent().find( '.value_disp' ).html( ui.value + chrome.i18n.getMessage( 'i18n_0204' ) );
-
-				if ( setting.find( '.set_max_count' ).slider( 'value' ) < ui.value )
-				{
-					setting.find( '.set_max_count' ).slider( 'value', ui.value );
-				}
-
-				setting.find( '.set_max_count' ).slider( 'option', {
-					min: ui.value,
-				} );
-
-				setting.find( '.set_max_count' ).parent().find( '.value_disp' ).html( setting.find( '.set_max_count' ).slider( 'value' ) + chrome.i18n.getMessage( 'i18n_0204' ) );
-			},
-		} );
-
-		setting.find( '.set_max_count' ).slider( {
-			min: cp.param['get_count'],
-			max: 1000,
-			step: 10,
-			value: cp.param['max_count'],
-			animate: 'fast',
-			slide: function( e, ui ) {
-				setting.find( '.tlsetting_apply' ).removeClass( 'disabled' );
-				setting.find( '.set_max_count' ).parent().find( '.value_disp' ).html( ui.value + chrome.i18n.getMessage( 'i18n_0204' ) );
-			},
-		} );
-
-		var _users = {};
-
-		// グループ設定
-		if ( cp.param['timeline_type'] == 'group' )
-		{
-			// アカウント
-			var acclist = setting.find( '.acclist' );
-
-			var account_id;
-
-			for ( var i = 0, _len = g_cmn.account_order.length ; i < _len ; i++ )
-			{
-				account_id = g_cmn.account_order[i];
-				acclist.append( OutputTPL( 'tlsetting_accsel', { item: g_cmn.account[account_id], account_id: account_id } ) );
-
-				if ( account_id == cp.param['account_id'] )
-				{
-					acclist.find( 'div:last' ).addClass( 'selected' );
-				}
-			}
-
-			acclist.find( 'div' ).on( 'click', function( e ) {
-				acclist.find( 'div' ).removeClass( 'selected' );
-				$( this ).addClass( 'selected' );
-
-				if ( $( this ).attr( 'account_id' ) != cp.param['account_id'] )
-				{
-					setting.find( '.tlsetting_apply' ).removeClass( 'disabled' );
-				}
-
-				e.stopPropagation();
-			} );
-
-			// メンバー
-			var MakeMemberList = function() {
-				var member_list = setting.find( '.member_list' );
-				var cnt = 0;
-
-				var s = '';
-
-				for ( var user_id in _users )
-				{
-					s += OutputTPL( 'tlsetting_member', { item: _users[user_id] } );
-					cnt++;
-				}
-
-				if ( s == '' )
-				{
-					s = '<span>' + chrome.i18n.getMessage( 'i18n_0162' ) + '</span>';
-				}
-
-				member_list.html( s );
-
-				member_list.find( 'div' ).on( 'click', function( e ) {
-					var account_id = setting.find( '.acclist' ).find( 'div.selected' ).attr( 'account_id' );
-
-					if ( account_id )
-					{
-						OpenUserTimeline( $( this ).find( 'img' ).attr( 'tooltip' ), account_id );
-					}
-
-					e.stopPropagation();
-				} )
-				.on( 'contextmenu', function( e ) {
-					var user_id = $( this ).attr( 'user_id' );
-
-					delete _users[user_id];
-
-					MakeMemberList();
-					setting.find( '.tlsetting_apply' ).removeClass( 'disabled' );
-					$( '#tooltip' ).hide();
-
-					return false;
-				} );
-
-				setting.find( '.memcnt' ).html( cnt );
-			};
-
-			for ( var user_id in cp.param['users'] )
-			{
-				_users[user_id] = cp.param['users'][user_id];
-			}
-
-			MakeMemberList();
-
-			// ドロップ処理
-			setting.find( '.member_list' ).on( 'itemdrop', function( e, ui ) {
-				if ( ui.draggable.hasClass( 'user' ) &&  ui.draggable.hasClass( 'fromtl' ) )
-				{
-					if ( setting.find( '.memcnt' ).html() == '300' )
-					{
-						MessageBox( chrome.i18n.getMessage( 'i18n_0069' ) );
-					}
-					else
-					{
-						var dropuser = {
-							user_id: ui.draggable.attr( 'user_id' ),
-							screen_name: ui.draggable.attr( 'screen_name' ),
-							icon: ui.draggable.attr( 'icon' ),
-							account_id: ui.draggable.attr( 'account_id' ),
-							created_at: ui.draggable.attr( 'created_at' ),
-						};
-
-						_users[dropuser.user_id] = dropuser;
-
-						MakeMemberList();
-						setting.find( '.tlsetting_apply' ).removeClass( 'disabled' );
-					}
-				}
-			} );
-
-			setting.find( '.member_list' ).droppable( {
-				accept: '.dropitem',
-				greedy: true,
-				drop: function( e, ui ) {
-					setting.find( '.member_list' ).trigger( 'itemdrop', [ ui ] );
-				},
-			} );
-
-			setting.find( '.set_title' ).keyup( function() {
-				if ( $( this ).val() != cp.param['title'] )
-				{
-					setting.find( '.tlsetting_apply' ).removeClass( 'disabled' );
-				}
-			} );
-		}
 
 		////////////////////////////////////////
 		// 設定変更時処理
@@ -1458,83 +1191,8 @@ console.log( res );
 				return;
 			}
 
-			// タイムラインに表示する最大ツイート数
-			cp.param['max_count'] = setting.find( '.set_max_count' ).slider( 'value' );
-
-			// グループ設定
-			if ( cp.param['timeline_type'] == 'group' )
-			{
-				// タイトル
-				var title = setting.find( '.set_title' ).val();
-
-				if ( title.length <= 0 )
-				{
-					MessageBox( chrome.i18n.getMessage( 'i18n_0076' ) );
-					setting.find( '.set_title' ).focus();
-					return false;
-				}
-
-				cp.param['title'] = title;
-				cp.SetTitle( title, true );
-
-				// アカウント
-				var account_id = '';
-
-				setting.find( '.acclist' ).find( 'div' ).each( function() {
-					if ( $( this ).hasClass( 'selected' ) )
-					{
-						account_id = $( this ).attr( 'account_id' );
-						return false;
-					}
-				} );
-
-				cp.param['account_id'] = account_id;
-
-				// メンバー
-				cp.param['users'] = _users;
-
-				cp.param['count'] = 0;
-
-				for ( var user_id in _users )
-					cp.param['count']++;
-
-				// グループパネル管理に登録
-				var _id = cp.id.replace( /^panel_/, '' );
-
-				g_cmn.group_panel[_id] = {
-					id: _id,
-					param: cp.param,
-				};
-
-				// グループパネル一覧を表示している場合は一覧更新
-				var pid = IsUnique( 'grouplist' );
-
-				if ( pid != null )
-				{
-					$( '#grouplist_reload' ).trigger( 'click' );
-					SetFront( p );
-				}
-			}
-			// その他
-			else
-			{
-				// 新着読み込み
-				cp.param['reload_time'] = setting.find( '.set_reload_time' ).slider( 'value' );
-
-				timeline_list.trigger( 'reload_timer' );
-
-				// 一度に取得するツイート数
-				cp.param['get_count'] = setting.find( '.set_get_count' ).slider( 'value' );
-
-				// 新着あり通知
-				cp.param['notify_new'] = ( setting.find( '.set_notify_new' ).prop( 'checked' ) ) ? 1 : 0;
-
-				// 検索対象言語
-				if ( cp.param['timeline_type'] == 'search' )
-				{
-					cp.param['search_lang'] = setting.find( 'input[class=set_search_lang]:checked' ).val();
-				}
-			}
+			// 新着あり通知
+			cp.param['notify_new'] = ( setting.find( '.set_notify_new' ).prop( 'checked' ) ) ? 1 : 0;
 
 			setting.find( '.tlsetting_apply' ).addClass( 'disabled' );
 
@@ -1565,8 +1223,6 @@ console.log( res );
 
 			e.stopPropagation();
 		} );
-
-//		setting.find( '.kind' ).trigger( 'click' );
 	}
 
 	////////////////////////////////////////////////////////////

@@ -1,8 +1,8 @@
-<div class='item' user_id='{$user_id}' user_instance='{$user_instance}' status_id='{$status_id}' created_at='{$created_at}'>
+<div class='item' id='{$id}' instance='{$instance}' display_name='{$display_name}' avatar='{$avatar}' username='{$username}' status_id='{$status_id}' created_at='{$created_at}'>
 	<div class='avatar'>
-		{if $following!='-'}<img class='tooltip' src='{$user_avatar}' tooltip='(i18n_0367):{$statuses_count} (i18n_0125):{$following} (i18n_0122):{$followers}'>{else}<img src='{$user_avatar}'>{/if}
+		{if $following!='-'}<img class='tooltip' src='{$avatar}' tooltip='(i18n_0367):{$statuses_count} (i18n_0125):{$following} (i18n_0122):{$followers}'>{else}<img src='{$avatar}'>{/if}
 		{if $bt_flg}
-		<div class='boost tooltip' tooltip='(i18n_0001)' bt_user_id='{$bt_user_id}' bt_user_instance='{$bt_user_instance}' bt_user_display_name='{$bt_user_display_name}' bt_user_username='{$bt_user_username}'>
+		<div class='boost tooltip' tooltip='(i18n_0001)' bt_id='{$bt_id}' bt_instance='{$bt_instance}' bt_display_name='{$bt_display_name}' bt_username='{$bt_username}'>
 			<img src='{$bt_avatar}' class='bt_avatar'>
 		</div>
 		{/if}
@@ -10,7 +10,7 @@
 	<div class='toot'>
 		<div class='headcontainer'>
 			<div class='namedate'>
-				<span class='display_name'>{if $user_display_name}{$user_display_name}{else}{$user_username}{/if}</span> <span class='username'>{$user_username}</span>
+				<span class='display_name'>{if $display_name}{$display_name}{else}{$username}{/if}</span> <span class='username'>{$username}</span>
 
 <!--
 				{if $isfriend}<span class='icon-arrow-left'></span>{/if}{if $isfollower}<span class='icon-arrow-right'></span>{/if}

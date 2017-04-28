@@ -23,7 +23,7 @@ Contents.profile = function( cp )
 			{
 				action: 'api_call',
 				instance: g_cmn.account[cp.param['account_id']].instance,
-				api: 'accounts/' + cp.param['user_id'],
+				api: 'accounts/' + cp.param['id'],
 				access_token: g_cmn.account[cp.param['account_id']].access_token
 			},
 			function( res )
@@ -50,6 +50,29 @@ console.log( res );
 							backgroundSize: 'cover'
 						} );
 					}
+					
+
+
+/*
+/// TEST
+					SendRequest(
+						{
+							action: 'api_call',
+							instance: g_cmn.account[cp.param['account_id']].instance,
+							api: 'accounts/relationships',
+							access_token: g_cmn.account[cp.param['account_id']].access_token,
+							param: {
+								id: cp.param['id']
+							},
+						},
+						function( res )
+						{
+console.log(res);
+						}
+					);
+*/
+
+
 				}
 				else
 				{
