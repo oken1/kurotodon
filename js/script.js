@@ -15,10 +15,9 @@ var g_cmn = {
 
 		reload_time:		30,								// - 新着読み込み
 		get_count:			40,								// - 一度に取得する件数
-		max_count:			200,							// - タイムラインに表示する最大件数
+		max_count:			160,							// - タイムラインに表示する最大件数
 		newscroll:			1,								// - 新着ツイートにスクロール
 		follow_mark:		1,								// - 相互フォロー表示
-		iconsize:			48,								// - アイコンサイズ
 	},
 	panel:			null,			// パネル
 	account:		null,			// アカウント
@@ -1100,8 +1099,6 @@ function SetFront( p )
 ////////////////////////////////////////////////////////////////////////////////
 function MakeTimeline( json, account_id )
 {
-	var text = json.content;
-
 	var bt_flg = ( json.reblog );
 	var bt_id = json.account.id;
 	var bt_instance = GetInstanceFromAcct( json.account.acct, account_id );
@@ -1161,6 +1158,23 @@ function MakeTimeline( json, account_id )
 	};
 
 	return OutputTPL( 'timeline_tweet', assign );
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// 通知一覧作成
+////////////////////////////////////////////////////////////////////////////////
+function MakeNotifications( json, account_id )
+{
+	var assign = {
+		status_id: json.id,
+		type: json.type,
+		
+		avatar: json.account.avatar,
+		display_name: json.account.display_name
+	};
+
+	return OutputTPL( 'timeline_notification', assign );
 }
 
 

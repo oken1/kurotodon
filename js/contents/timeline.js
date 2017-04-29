@@ -164,6 +164,16 @@ Contents.timeline = function( cp )
 				};
 
 				break;
+			// 通知
+			case 'notifications':
+				param = {
+					api: 'notifications',
+					data: {
+						limit: count
+					}
+				};
+
+				break;
 		}
 
 		switch ( type )
@@ -233,7 +243,15 @@ console.log( res );
 
 						if ( status_ids[res[i].id + '@' + instance] == undefined )
 						{
-							s += MakeTimeline( res[i], cp.param['account_id'] );
+							if ( cp.param['timeline_type'] == 'notifications' )
+							{
+								s += MakeNotifications( res[i], cp.param['account_id'] );
+							}
+							else
+							{
+								s += MakeTimeline( res[i], cp.param['account_id'] );
+							}
+							
 							status_ids[res[i].id + '@' + instance] = true;
 							addcnt++;
 
@@ -533,6 +551,11 @@ console.log( res );
 				cp.SetTitle( cp.param['hashtag'] + ' (' + account.display_name + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-hash' );
 				break;
+			case 'notifications':
+				cp.SetTitle( i18nGetMessage( 'i18n_0093' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-notifications' );
+				break;
+
 		}
 
 		// タイトルバーに新着件数表示用のバッジを追加

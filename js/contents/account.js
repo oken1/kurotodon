@@ -25,7 +25,8 @@ Contents.account = function( cp )
 		_instance_list['mstdn.jp'] = true;
 		_instance_list['mastodon.social'] = true;
 		_instance_list['mastodon.cloud'] = true;
-
+		_instance_list['friends.nico'] = true;
+		
 		for ( var id in g_cmn.account )
 		{
 			_instance_list[g_cmn.account[id].instance] = true;
@@ -139,11 +140,15 @@ Contents.account = function( cp )
 		// ホームボタンクリック
 		// ローカルボタンクリック
 		// 連合ボタンクリック
+		// 通知ボタンクリック
 		////////////////////////////////////////
-		$( '#account_list' ).find( 'div.item' ).find( '.buttons' ).find( '.home,.local,.federated' ).click( function( e ) {
+		$( '#account_list' ).find( 'div.item' ).find( '.buttons' ).find( '.home,.local,.federated,.notifications' ).click( function( e ) {
 			var account_id = $( this ).parent().parent().attr( 'account_id' );
 
-			var timeline_type = $( this ).hasClass( 'home' ) ? 'home' : $( this ).hasClass( 'local' ) ? 'local' : 'federated';
+			var timeline_type = $( this ).hasClass( 'home' ) ? 'home' :
+								$( this ).hasClass( 'local' ) ? 'local' :
+								$( this ).hasClass( 'federated' ) ? 'federated' :
+								'notifications';
 
 			var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
 			_cp.SetType( 'timeline' );

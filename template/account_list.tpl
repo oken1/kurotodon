@@ -11,6 +11,7 @@
 			<a class='btn img home tooltip icon-home' tooltip='(i18n_0152)'></a>
 			<a class='btn img local tooltip icon-users' tooltip='(i18n_0363)'></a>
 			<a class='btn img federated tooltip icon-earth' tooltip='(i18n_0364)'></a>
+			<a class='btn img notifications tooltip icon-notifications' tooltip='(i18n_0093)'></a>
 		</div>
 	</div>
 	{/foreach}

@@ -293,7 +293,7 @@
 	},
 
 	"i18n_0093": {
-		"message": "Notification"
+		"message": "Notifications"
 	},
 
 	"i18n_0094": {
@@ -1471,6 +1471,9 @@
 		"message": "Hide"
 	},
 
+	"i18n_0372": {
+		"message": "{$$display_name} followed you"
+	},
 
 
 
