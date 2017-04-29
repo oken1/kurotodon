@@ -127,8 +127,9 @@ Contents.timeline = function( cp )
 			// ローカル
 			case 'local':
 				param = {
-					api: 'timelines/public?local=true',
+					api: 'timelines/public',
 					data: {
+						local: true,
 						limit: count
 					}
 				};

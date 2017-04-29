@@ -3,6 +3,11 @@ Kurotodon
 
 KuroTwiをベースに、Mastodonのクライアントを作っています。
 
+Screenshot
+=============
+
+![Screenshot](./images/screenshot.png)
+
 Installation
 =============
 
