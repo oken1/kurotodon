@@ -1139,7 +1139,9 @@ function MakeTimeline( json, account_id )
 		display_name: json.account.display_name,
 		username: json.account.username,
 		instance: instance,
-
+		acct: json.account.acct,
+		application: json.application,
+		
 		isfriend: isfriend,
 		isfollower: isfollower,
 
@@ -1148,8 +1150,6 @@ function MakeTimeline( json, account_id )
 
 		date: DateConv( json.created_at, 0 ),
 		dispdate: DateConv( json.created_at, 3 ),
-
-		source: ( instance == g_cmn.account[account_id].instance ) ? '' : '@' + instance,
 
 		spoiler_text: json.spoiler_text,
 		text: ConvertContent( json.content, json ),

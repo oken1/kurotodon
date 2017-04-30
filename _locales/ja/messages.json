@@ -1475,6 +1475,13 @@
 		"message": "{$$display_name}にフォローされました"
 	},
 
+	"i18n_0373": {
+		"message": "{$$display_name}がお気に入りに登録しました"
+	},
+
+	"i18n_0374": {
+		"message": "{$$display_name}がブーストしました"
+	},
 
 
 

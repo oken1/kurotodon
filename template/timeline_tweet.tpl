@@ -10,20 +10,20 @@
 	<div class='toot'>
 		<div class='headcontainer'>
 			<div class='namedate'>
-				<span class='display_name'>{if $display_name}{$display_name}{else}{$username}{/if}</span> <span class='username'>{$username}</span>
+				<span class='display_name'>{if $display_name}{$display_name}{else}{$username}{/if}</span> <span class='username'>{$acct}</span>
 
 <!--
 				{if $isfriend}<span class='icon-arrow-left'></span>{/if}{if $isfollower}<span class='icon-arrow-right'></span>{/if}
 -->
 
 				<br>
-				<span class='date tooltip' tooltip='{$date}'><a href='{$url}' rel="nofollow noopener noreferrer" target='_blank' class='anchor'>{$dispdate}</a></span><span class='source'>{$source}</span>
+				<span class='date tooltip' tooltip='{$date}'><a href='{$url}' rel="nofollow noopener noreferrer" target='_blank' class='anchor'>{$dispdate}</a></span>
+				<span>{if $application->website}<a href='{$application->website}' rel="nofollow noopener noreferrer" target='_blank' class='anchor'>{$application->name}</a>{/if}</span>
 				<br>
 
 				{if $btcnt > 0 || $favcnt > 0}
 				<span class='btfav_cnt'>{if $btcnt > 0}<span class='icon-loop'></span>:{$btcnt}{/if} {if $favcnt > 0}<span class='icon-star'></span>:{$favcnt}{/if}</span>
 				{/if}
-
 			</div>
 
 			<div class='options' mytoot='{$mytoot}' protected='{$protected}'>
