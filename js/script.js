@@ -1099,6 +1099,34 @@ function SetFront( p )
 ////////////////////////////////////////////////////////////////////////////////
 function MakeTimeline( json, account_id )
 {
+	var notification = null;
+	
+	// Notification
+	if ( json.type )
+	{
+		notification = {
+			type: json.type,
+			display_name: ( json.account.display_name ) ? json.account.display_name : json.account.username,
+			username: json.account.username,
+			acct: json.account.acct,
+			avatar: AvatarURLConvert( json.account, account_id ),
+			statuses_count: json.account.statuses_count,
+			following: json.account.following_count,
+			followers: json.account.followers_count,
+		};
+
+		if ( json.type == 'follow' )
+		{
+			var assign = {
+				notification: notification
+			};
+
+			return OutputTPL( 'timeline_follow', assign );
+		}
+
+		json = json.status;
+	}
+
 	var bt_flg = ( json.reblog );
 	var bt_id = json.account.id;
 	var bt_instance = GetInstanceFromAcct( json.account.acct, account_id );
@@ -1155,26 +1183,11 @@ function MakeTimeline( json, account_id )
 		text: ConvertContent( json.content, json ),
 
 		url : json.url,
+		
+		notification: notification,
 	};
 
 	return OutputTPL( 'timeline_tweet', assign );
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// 通知一覧作成
-////////////////////////////////////////////////////////////////////////////////
-function MakeNotifications( json, account_id )
-{
-	var assign = {
-		status_id: json.id,
-		type: json.type,
-		
-		avatar: json.account.avatar,
-		display_name: json.account.display_name
-	};
-
-	return OutputTPL( 'timeline_notification', assign );
 }
 
 

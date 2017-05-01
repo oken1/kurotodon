@@ -1472,15 +1472,15 @@
 	},
 
 	"i18n_0372": {
-		"message": "{$$display_name} followed you"
+		"message": "{$$notification->display_name} followed you"
 	},
 
 	"i18n_0373": {
-		"message": "{$$display_name} favourited your status"
+		"message": "{$$notification->display_name} favourited your status"
 	},
 
 	"i18n_0374": {
-		"message": "{$$display_name} boosted your status"
+		"message": "{$$notification->display_name} boosted your status"
 	},
 
 

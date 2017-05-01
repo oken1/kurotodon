@@ -1472,15 +1472,15 @@
 	},
 
 	"i18n_0372": {
-		"message": "{$$display_name}にフォローされました"
+		"message": "{$$notification->display_name}にフォローされました"
 	},
 
 	"i18n_0373": {
-		"message": "{$$display_name}がお気に入りに登録しました"
+		"message": "{$$notification->display_name}がお気に入りに登録しました"
 	},
 
 	"i18n_0374": {
-		"message": "{$$display_name}がブーストしました"
+		"message": "{$$notification->display_name}がブーストしました"
 	},
 
 

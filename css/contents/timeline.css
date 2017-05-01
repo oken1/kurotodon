@@ -67,10 +67,6 @@ div.contents.timeline .lines div.item.resopen {
 	border-bottom: none;
 }
 
-div.contents.timeline .lines div.item.res {
-	padding-left: 22px;
-}
-
 /* アイコン */
 div.contents.timeline .lines div.item > .avatar {
 	display: table-cell;
@@ -102,18 +98,20 @@ div.contents.timeline .lines div.item.deleted {
 	opacity: 0.5;
 }
 
-div.contents.timeline .lines div.item.res > .toot {
-	border-radius: 6px;
-	background: #202020;	/* color set:返信元ツイートのBG */
+/* Notification */
+div.contents.timeline .lines div.item > .toot .notification {
+	display: table;
+	width: 100%;
+	padding-bottom: 2px;
+	box-sizing: border-box;
 }
 
-div.contents.timeline .lines div.item.res > .tail {
-	display: block;
-	border-top: 8px solid #202020;
-	width: 8px;
-	-webkit-transform:rotate( 45deg );
-	margin-top: 16px;
-	margin-left: -4px;
+div.contents.timeline .lines div.item > .toot .notification .icon-star {
+	color: #eda637;
+}
+
+div.contents.timeline .lines div.item > .toot .notification .icon-loop {
+	color: #86aa65;
 }
 
 /* 名前・日付・お気に入り */
@@ -213,10 +211,6 @@ div.contents.timeline .lines div.item > .toot .headcontainer .options {
 
 div.contents.timeline .lines div.item.new > .toot .headcontainer .options {
 	background: #204060;	/* color set:新着ツイートのBG */
-}
-
-div.contents.timeline .lines div.item.res > .toot .headcontainer .options {
-	background: #202020;	/* color set:返信元ツイートのBG */
 }
 
 /* アカウント選択 */

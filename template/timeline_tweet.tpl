@@ -8,6 +8,12 @@
 		{/if}
 	</div>
 	<div class='toot'>
+		{if $notification}
+		<div class='notification'>
+			{if $notification->type=='favourite'}<span class='icon-star'></span>(i18n_0373){/if}
+			{if $notification->type=='reblog'}<span class='icon-loop'></span>(i18n_0374){/if}
+		</div>
+		{/if}
 		<div class='headcontainer'>
 			<div class='namedate'>
 				<span class='display_name'>{if $display_name}{$display_name}{else}{$username}{/if}</span> <span class='username'>{$acct}</span>

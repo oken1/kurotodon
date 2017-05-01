@@ -244,15 +244,8 @@ console.log( res );
 
 						if ( status_ids[res[i].id + '@' + instance] == undefined )
 						{
-							if ( cp.param['timeline_type'] == 'notifications' )
-							{
-								s += MakeNotifications( res[i], cp.param['account_id'] );
-							}
-							else
-							{
-								s += MakeTimeline( res[i], cp.param['account_id'] );
-							}
-							
+							s += MakeTimeline( res[i], cp.param['account_id'] );
+
 							status_ids[res[i].id + '@' + instance] = true;
 							addcnt++;
 
@@ -748,6 +741,13 @@ console.log( res );
 				var item = targ.closest( '.item' );
 
 				OpenUserProfile( item.attr( 'id' ), item.attr( 'instance' ), cp.param['account_id'] );
+			}
+			////////////////////////////////////////
+			// BTアイコンクリック
+			////////////////////////////////////////
+			else if ( targ.hasClass( 'bt_avatar' ) )
+			{
+				OpenUserProfile( ptarg.attr( 'bt_id' ), ptarg.attr( 'bt_instance' ), cp.param['account_id'] );
 			}
 			////////////////////////////////////////
 			// リンククリック処理
