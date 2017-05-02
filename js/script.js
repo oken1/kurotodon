@@ -582,41 +582,20 @@ function Init()
 	});
 
 	////////////////////////////////////////////////////////////
-	// ツイートボタンのクリック処理
+	// トゥートボタンのクリック処理
 	////////////////////////////////////////////////////////////
-	$( '#head_tweet' ).click( function( e ) {
+	$( '#head_toot' ).click( function( e ) {
 		// disabledなら処理しない
 		if ( $( this ).hasClass( 'disabled' ) )
 		{
 			return;
 		}
 
-		var pid = IsUnique( 'tweetbox' );
-		var left = null;
-		var top = null;
-		var width = 324;
-
-		if ( pid != null )
-		{
-			SetFront( $( '#' + pid ) );
-
-			// 最小化している場合は元に戻す
-			if ( GetPanel( pid ).minimum.minimum == true )
-			{
-				$( '#' + pid ).find( 'div.titlebar' ).find( '.minimum' ).trigger( 'click' );
-			}
-
-			$( '#tweetbox_text' ).focus();
-		}
-
-		if ( pid == null )
-		{
-			var _cp = new CPanel( left, top, width, 240 );
-			_cp.SetType( 'tweetbox' );
-			_cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
-			_cp.SetParam( { account_id: '', rep_user: null, hashtag: null, maxlen: 140, } );
-			_cp.Start();
-		}
+		var _cp = new CPanel( null, null, 324, 240 );
+		_cp.SetType( 'tootbox' );
+		_cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
+		_cp.SetParam( { account_id: '' } );
+		_cp.Start();
 	});
 
 	////////////////////////////////////////////////////////////
@@ -680,12 +659,12 @@ function Init()
 			if ( AccountCount() > 0 )
 			{
 				$( '#head_search' ).removeClass( 'disabled' );
-				$( '#head_tweet' ).removeClass( 'disabled' );
+				$( '#head_toot' ).removeClass( 'disabled' );
 			}
 			else
 			{
 				$( '#head_search' ).addClass( 'disabled' );
-				$( '#head_tweet' ).addClass( 'disabled' );
+				$( '#head_toot' ).addClass( 'disabled' );
 			}
 
 			// 各パネルの処理を呼ぶ
@@ -735,7 +714,7 @@ function Init()
 		{
 			// alt+'w'でツイートパネル
 			case 87:
-				element_id = '#head_tweet'
+				element_id = '#head_toot'
 				break;
 			// alt+'s'で検索パネル
 			case 83:
@@ -989,9 +968,10 @@ function AccountSelectMake( cp )
 
 	// 選択したアカウント部
 	var item = {
-		id: cp.param['account_id'],
-		icon: g_cmn.account[cp.param['account_id']].icon,
-		name: g_cmn.account[cp.param['account_id']].display_name,
+		account_id: cp.param['account_id'],
+		avatar: g_cmn.account[cp.param['account_id']].avatar,
+		display_name: g_cmn.account[cp.param['account_id']].display_name,
+		instance: g_cmn.account[cp.param['account_id']].instance,
 	};
 
 	var account_select = cont.find( '.account_select' );
@@ -1001,6 +981,9 @@ function AccountSelectMake( cp )
 	account_select.find( '.selectitem' ).click(
 		function()
 		{
+		
+		console.log( account_select.find( '.selectlist' ).find( '.item.select' ) );
+		
 			account_select.find( '.selectlist' ).slideToggle( 200, function() {
 				account_select.find( '.selectlist' ).scrollTop( account_select.find( '.selectlist' ).find( '.item.select' ).position().top );
 			} );
@@ -1018,9 +1001,10 @@ function AccountSelectMake( cp )
 		id = g_cmn.account_order[i];
 
 		items.push( {
-			name: g_cmn.account[id]['display_name'],
-			icon: g_cmn.account[id]['icon'],
-			id: id,
+			display_name: g_cmn.account[id]['display_name'],
+			avatar: g_cmn.account[id]['avatar'],
+			account_id: id,
+			instance: g_cmn.account[id]['instance'],
 		} );
 	}
 
@@ -1033,6 +1017,7 @@ function AccountSelectMake( cp )
 	selectlist.find( '.item' ).each( function() {
 		if ( $( this ).attr( 'account_id' ) == cp.param['account_id'] )
 		{
+		console.log( cp.param['account_id'] );
 			$( this ).addClass( 'select' );
 			return false;
 		}
@@ -1060,7 +1045,7 @@ function AccountSelectMake( cp )
 ////////////////////////////////////////////////////////////////////////////////
 function SetFont( formflg )
 {
-g_cmn.cmn_param.font_family ='Meiryo';
+g_cmn.cmn_param.font_family ="Meiryo";
 g_cmn.cmn_param.font_size =12;
 	if ( !formflg )
 	{
@@ -1106,19 +1091,26 @@ function MakeTimeline( json, account_id )
 	{
 		notification = {
 			type: json.type,
-			display_name: ( json.account.display_name ) ? json.account.display_name : json.account.username,
+			id: json.account.id,
 			username: json.account.username,
-			acct: json.account.acct,
-			avatar: AvatarURLConvert( json.account, account_id ),
-			statuses_count: json.account.statuses_count,
-			following: json.account.following_count,
-			followers: json.account.followers_count,
+			display_name: ( json.account.display_name ) ? json.account.display_name : json.account.username,
+			instance: GetInstanceFromAcct( json.account.acct, account_id ),
 		};
 
 		if ( json.type == 'follow' )
 		{
 			var assign = {
-				notification: notification
+				notification: notification,
+				instance: GetInstanceFromAcct( json.account.acct, account_id ),
+				id: json.account.id,
+				display_name: json.account.display_name,
+				avatar: AvatarURLConvert( json.account, account_id ),
+				username: json.account.username,
+				status_id: json.id,
+				created_at: json.created_at,
+				statuses_count: json.account.statuses_count,
+				following: json.account.following_count,
+				followers: json.account.followers_count,
 			};
 
 			return OutputTPL( 'timeline_follow', assign );
@@ -1187,7 +1179,7 @@ function MakeTimeline( json, account_id )
 		notification: notification,
 	};
 
-	return OutputTPL( 'timeline_tweet', assign );
+	return OutputTPL( 'timeline_toot', assign );
 }
 
 
@@ -1484,11 +1476,11 @@ function ApiError( res )
 {
 	if ( res.responseJSON )
 	{
-		MessageBox( 'status: ' + res.status + '<br>' + res.responseJSON.error );
+		MessageBox( res.url + '<br>' + 'status: ' + res.status + '<br>' + res.responseJSON.error );
 	}
 	else
 	{
-		MessageBox( 'status: ' + res.status + '<br>' + res.statusText );
+		MessageBox( res.url + '<br>' + 'status: ' + res.status + '<br>' + res.statusText );
 	}
 }
 
@@ -1617,20 +1609,6 @@ function UpdateToolbarUser()
 				$( '#tooltip' ).hide();
 			}
 		} );
-	} );
-}
-
-////////////////////////////////////////////////////////////
-// ツイートから画像のURLを抽出してサムネイル表示を呼び出す
-////////////////////////////////////////////////////////////
-function OpenThumbnail( item, stream )
-{
-	item.find( '.tweet_text' ).find( 'a' ).each( function() {
-		// 画像URLなら
-		if ( isImageURL( $( this ).attr( 'href' ) ) )
-		{
-			$( this ).trigger( 'mouseover', [ true, stream ] );
-		}
 	} );
 }
 

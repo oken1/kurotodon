@@ -12,7 +12,7 @@
 		</div>
 	</span>
 	<a id='head_search' class='btn headerbtn icon-search tooltip disabled' tooltip='(i18n_0206) (Alt+S)'></a>
-	<a id='head_tweet' class='btn headerbtn icon-pencil tooltip disabled' tooltip='(i18n_0367) (Alt+W)'></a>
+	<a id='head_toot' class='btn headerbtn icon-pencil tooltip disabled' tooltip='(i18n_0367) (Alt+W)'></a>
 	<a id='head_setting' class='btn headerbtn icon-cog tooltip' tooltip='(i18n_0242)'></a>
 	<a id='head_account' class='btn headerbtn icon-user tooltip' tooltip='(i18n_0044) (Alt+A)'></a>
 </div>

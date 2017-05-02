@@ -78,8 +78,9 @@ chrome.extension.onMessage.addListener(
 					dataType: 'json',
 					type: 'POST',
 					data: {
-						client_name: 'Kurotodon test',
-						redirect_uris: 'urn:ietf:wg:oauth:2.0:oob'
+						client_name: app_manifest.name,
+						redirect_uris: 'urn:ietf:wg:oauth:2.0:oob',
+						scopes: 'read write follow'
 					}
 				} ).done( function( data ) {
 					sendres( data );
@@ -105,7 +106,7 @@ chrome.extension.onMessage.addListener(
 						client_secret: req.client_secret,
 						grant_type: 'password',
 						username: req.username,
-						password: req.password
+						password: req.password,
 					}
 				} ).done( function( data ) {
 					sendres( data );
@@ -119,32 +120,31 @@ chrome.extension.onMessage.addListener(
 			// req : instance
 			//       api
 			//       access_token
-			//       param
+			//       param/post (GET/POST)
 			case 'api_call':
-				var query = '';
+				var query = new URLSearchParams();
 
-				if ( req.param )
+				for ( var i in req.param )
 				{
-					query = '?';
-
-					for ( var i in req.param )
-					{
-						query += i + '=' + req.param[i] + '&';
-					}
+					query.set( i, req.param[i] );
 				}
 
-				console.log( 'https://' + req.instance + '/api/v1/' + req.api + query );
+				var url = 'https://' + req.instance + '/api/v1/' + req.api + ( req.param ? '?' : '' ) + query.toString();
+
+				console.log( url );
 
 				$.ajax( {
-					url: 'https://' + req.instance + '/api/v1/' + req.api + query,
+					url: url,
 					dataType: 'json',
-					type: 'GET',
+					type: ( req.post ) ? 'POST' : 'GET',
+					data: req.post,
 					headers: {
 						'Authorization': 'Bearer ' + req.access_token
 					}
 				} ).done( function( data ) {
 					sendres( data );
 				} ).fail( function( data ) {
+					data.url = url;
 					sendres( data );
 				} );
 

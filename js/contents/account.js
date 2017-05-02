@@ -21,11 +21,11 @@ Contents.account = function( cp )
 		var _instance_list = {};
 
 		// 初期設定
-		_instance_list['pawoo.net'] = true;
 		_instance_list['mstdn.jp'] = true;
+		_instance_list['pawoo.net'] = true;
+		_instance_list['friends.nico'] = true;
 		_instance_list['mastodon.social'] = true;
 		_instance_list['mastodon.cloud'] = true;
-		_instance_list['friends.nico'] = true;
 		
 		for ( var id in g_cmn.account )
 		{
@@ -496,6 +496,7 @@ Contents.account = function( cp )
 					},
 					function( res )
 					{
+console.log( res );
 						if ( res.client_id && res.client_secret )
 						{
 							_account.client_id = res.client_id;
@@ -526,6 +527,7 @@ Contents.account = function( cp )
 					},
 					function( res )
 					{
+console.log( res );
 						if ( res.access_token )
 						{
 							_account.access_token = res.access_token;
@@ -551,9 +553,12 @@ Contents.account = function( cp )
 										_account.notsave.following_count = res.following_count;
 										_account.notsave.followers_count = res.followers_count;
 
+										if ( IsMyAccount( res.id + '@' + instance ) == false )
+										{
+											g_cmn.account_order.push( res.id + '@' + instance );
+										}
+										
 										g_cmn.account[res.id + '@' + instance] = $.extend( true, {}, _account );
-
-										g_cmn.account_order.push( res.id + '@' + instance );
 
 										$( '#head' ).trigger( 'account_update' );
 										UpdateToolbarUser();

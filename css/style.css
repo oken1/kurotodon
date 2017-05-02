@@ -524,7 +524,7 @@ input[type=file] {
 	cursor: pointer;
 }
 
-.selectitem > div.icon img {
+.selectitem > div.avatar img {
 	width: 32px;
 	height: 32px;
 	margin-right: 4px;
@@ -535,12 +535,12 @@ input[type=file] {
 	vertical-align: middle;
 }
 
-.selectitem > div.icon {
+.selectitem > div.avatar {
 	width: 38px;
 	min-width: 38px;
 }
 
-.selectitem > div.name {
+.selectitem > div.display_name {
 	width: 100%;
 	font-weight: bold;
 }
@@ -588,12 +588,12 @@ input[type=file] {
 	vertical-align: middle;
 }
 
-.selectlist .item > div.icon {
+.selectlist .item > div.avatar {
 	width: 38px;
 	min-width: 38px;
 }
 
-.selectlist .item > div.name {
+.selectlist .item > div.display_name {
 	width: 100%;
 	font-weight: bold;
 }

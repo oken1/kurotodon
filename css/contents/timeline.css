@@ -51,7 +51,7 @@ div.contents.timeline .lines .timeline_list {
 div.contents.timeline .lines div.item {
 	display: table;
 	width: 100%;
-	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
+	border-bottom: 1px solid rgba( 80, 80, 80, 0.5 );
 	padding: 2px;
 	box-sizing: border-box;
 	background: #282828;	/* color set:ツイートのBG */
@@ -106,11 +106,18 @@ div.contents.timeline .lines div.item > .toot .notification {
 	box-sizing: border-box;
 }
 
-div.contents.timeline .lines div.item > .toot .notification .icon-star {
+div.contents.timeline .lines div.item > .toot .notification .acct {
+	opacity: 0.6;
+	font-size: 0.9rem;
+}
+
+div.contents.timeline .lines div.item > .avatar .icon-star {
+	font-size: 32px;
 	color: #eda637;
 }
 
-div.contents.timeline .lines div.item > .toot .notification .icon-loop {
+div.contents.timeline .lines div.item > .avatar .icon-loop {
+	font-size: 32px;
 	color: #86aa65;
 }
 
@@ -149,6 +156,7 @@ div.contents.timeline .lines div.item > .toot .headcontainer .namedate .icon-arr
 }
 
 div.contents.timeline .lines div.item > .toot .headcontainer .namedate .display_name,
+div.contents.timeline .lines div.item > .toot .notification .display_name,
 div.contents.timeline .lines div.item > .toot .headcontainer .namedate .username
 {
 	-webkit-user-select: auto;
@@ -164,12 +172,14 @@ div.contents.timeline .lines div.item > .toot .headcontainer .namedate .username
 	opacity: 0.6;
 }
 
-div.contents.timeline .lines div.item > .toot .headcontainer .namedate .display_name:hover {
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .display_name:hover,
+div.contents.timeline .lines div.item > .toot .notification .display_name:hover {
 	cursor: pointer;
 	opacity: 0.8;
 }
 
-div.contents.timeline .lines div.item > .toot .headcontainer .namedate .display_name {
+div.contents.timeline .lines div.item > .toot .headcontainer .namedate .display_name,
+div.contents.timeline .lines div.item > .toot .notification .display_name {
 	font-weight: bold;
 	font-size: 1rem;
 }
@@ -298,6 +308,16 @@ div.contents.timeline .lines div.item > .toot > .toot_text {
 div.contents.timeline .lines div.item > .toot > .toot_text.off {
 	display: none;
 }
+
+div.contents.timeline .lines div.item > .toot > .toot_text.notification {
+	opacity: 0.6;
+	font-size: 0.9rem;
+}
+
+div.contents.timeline .lines div.item > .toot > .toot_text.notification img {
+	display: none;
+}
+
 
 /* トゥート内リンク */
 div.contents.timeline .lines div.item > .toot > .toot_text .anchor {

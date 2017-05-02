@@ -728,10 +728,18 @@ console.log( res );
 			////////////////////////////////////////
 			if ( targ.hasClass( 'username' ) || targ.hasClass( 'display_name' ) )
 			{
-				var item = targ.closest( '.item' );
+				if ( ptarg.hasClass( 'notification' ) )
+				{
+					OpenUserTimeline( cp.param['account_id'], ptarg.attr( 'id' ), ptarg.attr( 'username' ),
+						ptarg.attr( 'display_name' ), ptarg.attr( 'instance' ) );
+				}
+				else
+				{
+					var item = targ.closest( '.item' );
 
-				OpenUserTimeline( cp.param['account_id'], item.attr( 'id' ), ptarg.find( '.username' ).text(),
-					ptarg.find( '.display_name' ).text(), item.attr( 'instance' ) );
+					OpenUserTimeline( cp.param['account_id'], item.attr( 'id' ), item.attr( 'username' ),
+						item.attr( 'display_name' ), item.attr( 'instance' ) );
+				}
 			}
 			////////////////////////////////////////
 			// アイコンクリック

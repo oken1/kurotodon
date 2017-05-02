@@ -1,8 +1,8 @@
-<div class='selectitem' accountid='{$item->id}@{$item->instance}'>
-	<div class='icon'>
+<div class='selectitem' accountid='{$item->account_id}'>
+	<div class='avatar'>
 		<img src='{$item->avatar}'>
 	</div>
-	<div class='name'>
+	<div class='display_name'>
 		{$item->display_name}@{$item->instance}
 	</div>
 	<div>

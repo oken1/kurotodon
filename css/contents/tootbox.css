@@ -1,0 +1,110 @@
+/* tootbox */
+div.contents.tootbox {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+/* テキストエリア＋トゥートボタン */
+.tootbox {
+	width: 100%;
+	height: 120px;
+	padding: 4px;
+}
+
+/* テキストエリア */
+.tootbox .text {
+	height: 60px;
+}
+
+.tootbox > div {
+	display: table;
+	padding-top: 4px;
+	box-sizing: border-box;
+}
+
+.tootbox .cnt {
+	display: table-cell;
+	width: 30%;
+	text-align: left;
+	color: #88ccff;
+	font-size: 1.4rem;
+	padding-left: 8px;
+	vertical-align: middle;
+}
+
+.tootbox .cnt.ng {
+	color: #ff88cc;
+}
+
+.tootbox .buttons {
+	display: table-cell;
+	width: 70%;
+	text-align: right;
+	vertical-align: middle;
+}
+
+.tootbox .buttons .btn.toot {
+	padding: 8px 16px;
+}
+
+.tootbox .imageattach_input {
+	visibility: hidden;
+}
+
+/* 添付画像 */
+.tootimages {
+	display: block;
+}
+
+.imageitem {
+	display: inline-block;
+	padding: 2px;
+	margin: 0 auto;
+	margin-bottom: 4px;
+	box-sizing: border-box;
+	text-align: left;
+}
+
+.imageitem > div {
+	display: inline-block;
+	vertical-align: middle;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: normal;
+}
+
+.imageitem > div.del {
+	vertical-align: top;
+}
+
+.imageitem > div.icon img {
+	width: 40px;
+	height: 40px;
+	margin: 2px 0px 0px 4px;
+	font-size: 24px;
+}
+
+/* 削除ボタン */
+.imageitem > div.del span {
+	width: 12px;
+	height: 12px;
+	padding-right: 4px;
+	font-size: 8px;
+}
+
+.imageitem > div.del span:hover {
+	cursor: pointer;
+}
+
+.imageitem > div.filename {
+	padding-left: 4px;
+	width: 100%;
+}
+
+.imageitem > div.filename > span {
+	font-size: 0.8rem;
+}
