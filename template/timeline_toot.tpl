@@ -26,7 +26,7 @@
 
 					<br>
 					<span class='date tooltip' tooltip='{$date}'><a href='{$url}' rel="nofollow noopener noreferrer" target='_blank' class='anchor'>{$dispdate}</a></span>
-					<span>{if $application->website}<a href='{$application->website}' rel="nofollow noopener noreferrer" target='_blank' class='anchor'>{$application->name}</a>{/if}</span>
+					<span>{if $application->website}<a href='{$application->website}' rel="nofollow noopener noreferrer" target='_blank' class='anchor'>{$application->name}</a>{else}<span class='source'>{$application->name}</span>{/if}</span>
 					<br>
 
 					{if $btcnt > 0 || $favcnt > 0}

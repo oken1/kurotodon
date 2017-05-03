@@ -9,24 +9,24 @@ div.contents.tootbox {
 }
 
 /* テキストエリア＋トゥートボタン */
-.tootbox {
+.tootbox_box {
 	width: 100%;
 	height: 120px;
 	padding: 4px;
 }
 
 /* テキストエリア */
-.tootbox .text {
+.tootbox_box .text {
 	height: 60px;
 }
 
-.tootbox > div {
+.tootbox_box .cnt_buttons {
 	display: table;
 	padding-top: 4px;
 	box-sizing: border-box;
 }
 
-.tootbox .cnt {
+.tootbox_box .cnt {
 	display: table-cell;
 	width: 30%;
 	text-align: left;
@@ -36,27 +36,27 @@ div.contents.tootbox {
 	vertical-align: middle;
 }
 
-.tootbox .cnt.ng {
+.tootbox_box .cnt.ng {
 	color: #ff88cc;
 }
 
-.tootbox .buttons {
+.tootbox_box .buttons {
 	display: table-cell;
 	width: 70%;
 	text-align: right;
 	vertical-align: middle;
 }
 
-.tootbox .buttons .btn.toot {
+.tootbox_box .buttons .btn.toot {
 	padding: 8px 16px;
 }
 
-.tootbox .imageattach_input {
+.tootbox_box .imageattach_input {
 	visibility: hidden;
 }
 
 /* 添付画像 */
-.tootimages {
+.tootbox_box > div.tootimages {
 	display: block;
 }
 

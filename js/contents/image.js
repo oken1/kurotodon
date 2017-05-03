@@ -8,7 +8,7 @@ Contents.image = function( cp )
 	var p = $( '#' + cp.id );
 	var cont = p.find( 'div.contents' );
 	var scaleX = 1, scaleY = 1, rotate = 0;
-	var urls = cp.param['urls'].split( /,/ );
+	var urls = cp.param['urls'].split( /\n/ );
 
 	cp.SetIcon( 'icon-image' );
 
@@ -18,7 +18,7 @@ Contents.image = function( cp )
 	this.start = function() {
 		cp.SetTitle( i18nGetMessage( 'i18n_0199' ), false );
 		setTimeout( function() { cont.activity( { color: '#ffffff' } ); }, 0 );
-
+console.log(urls[cp.param['index']]);
 		cont.addClass( 'image' )
 			.html( OutputTPL( 'image', { url: urls[cp.param['index']] } ) );
 

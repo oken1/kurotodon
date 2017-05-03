@@ -113,12 +113,12 @@ div.contents.timeline .lines div.item > .toot .notification .acct {
 
 div.contents.timeline .lines div.item > .avatar .icon-star {
 	font-size: 32px;
-	color: #eda637;
+	color: #dd9627;
 }
 
 div.contents.timeline .lines div.item > .avatar .icon-loop {
 	font-size: 32px;
-	color: #86aa65;
+	color: #769a55;
 }
 
 /* 名前・日付・お気に入り */
@@ -310,8 +310,9 @@ div.contents.timeline .lines div.item > .toot > .toot_text.off {
 }
 
 div.contents.timeline .lines div.item > .toot > .toot_text.notification {
-	opacity: 0.6;
+	opacity: 0.5;
 	font-size: 0.9rem;
+	line-height: 1.3rem;
 }
 
 div.contents.timeline .lines div.item > .toot > .toot_text.notification img {
@@ -326,6 +327,10 @@ div.contents.timeline .lines div.item > .toot > .toot_text .anchor {
 
 div.contents.timeline .lines div.item > .toot > .toot_text p {
 	padding: 0.5rem 0;
+}
+
+div.contents.timeline .lines div.item > .toot > .toot_text.notification p {
+	padding: 0.2rem 0;
 }
 
 div.contents.timeline .lines div.item > .toot > .toot_text p:last-child {

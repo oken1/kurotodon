@@ -292,6 +292,7 @@ panel {
 	border: 2px solid #101010;	/* color set: 固定(panel) */
 	background-color: #282828;	/* color set: パネルのBG */
 	color: #ffffff;	/* color set:パネルのフォント */
+
 }
 
 /* パネルのタイトルバー */
@@ -508,7 +509,7 @@ input[type=file] {
 /* アカウントセレクト */
 .account_select {
 	width: 100%;
-	height: 50px;
+	height: 3rem;
 }
 
 /* 選択されたアカウント */
@@ -525,8 +526,8 @@ input[type=file] {
 }
 
 .selectitem > div.avatar img {
-	width: 32px;
-	height: 32px;
+	width: 1.5rem;
+	height: 1.5rem;
 	margin-right: 4px;
 }
 
@@ -579,8 +580,8 @@ input[type=file] {
 }
 
 .selectlist .item > div img {
-	width: 32px;
-	height: 32px;
+	width: 1.5rem;
+	height: 1.5rem;
 }
 
 .selectlist .item > div {

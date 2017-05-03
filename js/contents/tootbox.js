@@ -177,14 +177,15 @@ Contents.tootbox = function( cp )
 		////////////////////////////////////////
 		cont.on( 'contents_resize', function() {
 			cont.find( '.text' ).width( p.width() - 24 );
-			cont.find( '.tootbox' ).find( 'div:first' ).width( p.width() - 12 );
+			cont.find( '.tootbox_box' ).find( 'div:first' ).width( p.width() - 12 );
 
 			var acc_h = cont.find( '.account_select' ).outerHeight();
 			var opt_h = cont.find( '.tootimages' ).outerHeight();
 			var btn_h = cont.find( '.buttons' ).parent().outerHeight( true );
 
-			cont.find( '.tootbox' ).height( cont.outerHeight() - acc_h - opt_h - 12 );
-			cont.find( '.text' ).height( cont.outerHeight() - acc_h - opt_h - 12 - btn_h - 24 );
+			cont.find( '.tootbox_box' ).height( cont.outerHeight() - acc_h - opt_h - 12 );
+			cont.find( '.text' ).height( cont.find( '.tootbox_box' ).outerHeight() - btn_h - 24 );
+//			cont.find( '.text' ).height( cont.outerHeight() - acc_h - opt_h - 12 - btn_h - 24 );
 		} );
 
 		cont.trigger( 'contents_resize' );

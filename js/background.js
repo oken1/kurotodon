@@ -107,6 +107,7 @@ chrome.extension.onMessage.addListener(
 						grant_type: 'password',
 						username: req.username,
 						password: req.password,
+						scope: 'read write follow',
 					}
 				} ).done( function( data ) {
 					sendres( data );

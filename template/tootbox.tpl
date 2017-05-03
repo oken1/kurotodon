@@ -1,8 +1,8 @@
 <div class='account_select'>
 </div>
-<div class='tootbox'>
+<div class='tootbox_box'>
 	<textarea class='text'></textarea>
-	<div>
+	<div class='cnt_buttons'>
 		<div class='cnt'>
 			500
 		</div>

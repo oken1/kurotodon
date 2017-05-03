@@ -981,9 +981,6 @@ function AccountSelectMake( cp )
 	account_select.find( '.selectitem' ).click(
 		function()
 		{
-		
-		console.log( account_select.find( '.selectlist' ).find( '.item.select' ) );
-		
 			account_select.find( '.selectlist' ).slideToggle( 200, function() {
 				account_select.find( '.selectlist' ).scrollTop( account_select.find( '.selectlist' ).find( '.item.select' ).position().top );
 			} );
@@ -1017,7 +1014,6 @@ function AccountSelectMake( cp )
 	selectlist.find( '.item' ).each( function() {
 		if ( $( this ).attr( 'account_id' ) == cp.param['account_id'] )
 		{
-		console.log( cp.param['account_id'] );
 			$( this ).addClass( 'select' );
 			return false;
 		}
@@ -1108,9 +1104,9 @@ function MakeTimeline( json, account_id )
 				username: json.account.username,
 				status_id: json.id,
 				created_at: json.created_at,
-				statuses_count: json.account.statuses_count,
-				following: json.account.following_count,
-				followers: json.account.followers_count,
+				statuses_count: NumFormat( json.account.statuses_count ),
+				following: NumFormat( json.account.following_count ),
+				followers: NumFormat( json.account.followers_count ),
 			};
 
 			return OutputTPL( 'timeline_follow', assign );
@@ -1144,9 +1140,9 @@ function MakeTimeline( json, account_id )
 		created_at: json.created_at,
 
 		avatar: AvatarURLConvert( json.account, account_id ),
-		statuses_count: json.account.statuses_count,
-		following: json.account.following_count,
-		followers: json.account.followers_count,
+		statuses_count: NumFormat( json.account.statuses_count ),
+		following: NumFormat( json.account.following_count ),
+		followers: NumFormat( json.account.followers_count ),
 
 		bt_flg: bt_flg,
 
@@ -1886,7 +1882,7 @@ function ConvertContent( content, json )
 
 	if ( json.media_attachments.length )
 	{
-		_thumbnails.attr( 'urls', _urls.join( ',' ) );
+		_thumbnails.attr( 'urls', _urls.join( '\n' ) );
 		_jq.append( _thumbnails );
 	}
 
