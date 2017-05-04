@@ -12,6 +12,9 @@ var app_tab = null;
 // アプリのmanifest.json
 var app_manifest = null;
 
+// アップロードファイルオブジェクト
+var uploadFile = null;
+
 // Ajax設定
 $.ajaxSetup( {
 	timeout: 30 * 1000,
@@ -139,6 +142,39 @@ chrome.extension.onMessage.addListener(
 					dataType: 'json',
 					type: ( req.post ) ? 'POST' : 'GET',
 					data: req.post,
+					headers: {
+						'Authorization': 'Bearer ' + req.access_token
+					}
+				} ).done( function( data ) {
+					sendres( data );
+				} ).fail( function( data ) {
+					data.url = url;
+					sendres( data );
+				} );
+
+				break;
+
+			// mediaアップロード
+			// req : instance
+			//       access_token
+			//       data
+			case 'media_upload':
+				var url = 'https://' + req.instance + '/api/v1/media';
+
+				console.log( url );
+
+				var fd = new FormData();
+
+				fd.append( 'file', uploadFile );
+
+				$.ajax( {
+					url: url,
+					dataType: 'json',
+					type: 'POST',
+					data: fd,
+					cache: false,
+					contentType: false,
+					processData: false,
 					headers: {
 						'Authorization': 'Bearer ' + req.access_token
 					}

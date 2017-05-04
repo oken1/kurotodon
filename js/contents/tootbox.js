@@ -7,7 +7,7 @@ Contents.tootbox = function( cp )
 {
 	var p = $( '#' + cp.id );
 	var cont = p.find( 'div.contents' );
-	var atimg = false;
+	var uploading = 0;
 
 	cp.SetIcon( 'icon-pencil' );
 
@@ -42,20 +42,32 @@ Contents.tootbox = function( cp )
 				e.preventDefault();
 
 				// ファイル
-				for ( var i = 0, _len = e.originalEvent.dataTransfer.files.length ; i < _len ; i++ )
-				{
-					var _file = e.originalEvent.dataTransfer.files[i];
+				var _index = 0;
+				var _len = e.originalEvent.dataTransfer.files.length;
+				var _files = e.originalEvent.dataTransfer.files;
 
-					if ( cont.find( '.imageattach' ).hasClass( 'disabled' ) )
+				var WaitUpload = function() {
+					if ( uploading > 0 )
 					{
-						return false;
+						setTimeout( WaitUpload, 100 );
 					}
+					else
+					{
+						if ( cont.find( '.imageattach' ).hasClass( 'disabled' ) )
+						{
+							return false;
+						}
 
-					if ( _file.type.match( /^image\// ) )
-					{
-						AppendAttachFile( _file );
+						if ( _index < _len )
+						{
+							AppendAttachFile( _files[_index] );
+							_index++;
+							setTimeout( WaitUpload, 100 );
+						}
 					}
-				}
+				};
+
+				WaitUpload();
 			}
 		);
 
@@ -82,7 +94,6 @@ Contents.tootbox = function( cp )
 			}
 
 			ImageFileReset();
-			atimg = ( cont.find( '.tootimages' ).find( '.imageitem' ).length ) ? true :false;
 			cont.find( '.text' ).trigger( 'keyup' );
 
 			// 画像添付ボタンのdisabled解除
@@ -115,56 +126,60 @@ Contents.tootbox = function( cp )
 		// 添付画像を追加
 		////////////////////////////////////////
 		var AppendAttachFile = function( f ) {
-			var _itemcnt = cont.find( '.tootimages' ).find( '.imageitem' ).length;
-			cont.find( '.tootimages' ).append( OutputTPL( 'tootbox_image', { item: { filename: f.name }} ) );
-			cont.find( '.tootimages' ).find( '.del:last' ).find( 'span' ).click( ImageDelClick );
-			var _uid = GetUniqueID();
-			cont.find( '.tootimages' ).find( '.imageitem:last' ).attr( 'uid', _uid );
+			var tootimages = cont.find( '.tootimages' );
+			var _itemcnt = tootimages.find( '.imageitem' ).length;
 
-			// カメラアイコンを画像のサムネイルにする
 			if ( f.type.match( 'image.*' ) )
 			{
-				var reader = new FileReader();
+				chrome.extension.getBackgroundPage().uploadFile = f;
 
-				reader.onload = function( e ) {
-					var result = e.target.result;
-					var item = cont.find( '.tootimages' ).find( '.imageitem[uid=' + _uid + ']' );
+				Blackout( true );
+				$( '#account_list' ).activity( { color: '#ffffff' } );
 
-					item.find( '.icon' ).find( 'img' ).attr( 'src', result )
-						.hover(
-							function() { $( this ).css( { cursor: 'pointer' } ) },
-							function() { $( this ).css( { cursor: 'default' } ) }
-						)
-						.click( function( e ) {
-							var _cp = new CPanel( null, null, 320, 320 );
-							_cp.SetType( 'image' );
-							_cp.SetParam( {
-								urls: result,
-								index: 0,
-							} );
-							_cp.Start();
-							e.stopPropagation();
-						} );
+				uploading++;
 
-					var height = item.outerHeight( true );
-
-					if ( _itemcnt == 0 )
+				SendRequest(
 					{
-						cont.height( cont.height() + height );
-						p.height( p.height() + height );
+						action: 'media_upload',
+						instance: g_cmn.account[cp.param['account_id']].instance,
+						access_token: g_cmn.account[cp.param['account_id']].access_token,
+					},
+					function( res )
+					{
+						uploading--;
+
+						if ( res.status === undefined )
+						{
+							tootimages.append( OutputTPL( 'tootbox_image', { item: res } ) );
+							tootimages.find( '.del:last' ).find( 'span' ).click( ImageDelClick );
+							tootimages.find( '.imageitem:last' ).attr( 'uid', GetUniqueID() );
+
+							tootimages.find( '.imageitem:last > .icon > img' ).attr( 'src', res.preview_url );
+							cont.find( '.text' ).val( cont.find( '.text' ).val() + ' ' + res.text_url );
+
+							var height = tootimages.find( '.imageitem:last' ).outerHeight( true );
+
+							if ( _itemcnt == 0 )
+							{
+								cont.height( cont.height() + height );
+								p.height( p.height() + height );
+							}
+
+							if ( tootimages.find( '.imageitem' ).length == 4 )
+							{
+								cont.find( '.imageattach' ).addClass( 'disabled' );
+							}
+						}
+						else
+						{
+							ApiError( res );
+						}
+						
+						$( '#account_list' ).activity( false );
+						Blackout( false );
 					}
-				};
-
-				reader.readAsDataURL( f );
-			}
-
-			atimg = true;
-
-			// 最大4枚まで
-			if ( cont.find( '.tootimages' ).find( '.imageitem' ).length == 4 )
-			{
-				cont.find( '.imageattach' ).addClass( 'disabled' );
-			}
+				);
+			};
 
 			ImageFileReset();
 			cont.find( '.text' ).trigger( 'keyup' );
@@ -229,6 +244,12 @@ Contents.tootbox = function( cp )
 
 			$( this ).addClass( 'disabled' );
 
+			var media_ids = [];
+
+			cont.find( '.tootimages' ).find( '.imageitem' ).each( function() {
+				media_ids.push( $( this ).attr( 'attachment_id' ) );
+			} );
+
 			SendRequest(
 				{
 					action: 'api_call',
@@ -237,6 +258,7 @@ Contents.tootbox = function( cp )
 					access_token: g_cmn.account[cp.param['account_id']].access_token,
 					post: {
 						status: cont.find( '.text' ).val(),
+						media_ids: media_ids,
 					}
 				},
 				function( res )
@@ -496,6 +518,5 @@ Contents.tootbox = function( cp )
 	this.stop = function() {
 		// 添付画像をクリア
 		cont.find( '.tootimages' ).find( '.imageitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
-		atimg = false;
 	};
 }
