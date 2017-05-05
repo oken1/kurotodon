@@ -8,3 +8,6 @@
 <div class='resizebtn img_lrreverse icon-lrrev tooltip' tooltip='(i18n_0312)'></div>
 <div class='resizebtn img_rotate icon-redo tooltip' tooltip='(i18n_0313)'></div>
 </div>
+
+<div class='resizebtn img_pageup icon-arrow-right'></div>
+<div class='resizebtn img_pagedown icon-arrow-left'></div>

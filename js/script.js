@@ -696,14 +696,25 @@ function Init()
 	// キーボードショートカット
 	////////////////////////////////////////////////////////////
 	$( window ).keydown( function( e ) {
-		// altを押していない場合は無視
-		if ( e.altKey != true )
+		// ブラックアウト中は無効
+		if ( $( '#blackout' ).css( 'display' ) != 'none' )
 		{
 			return;
 		}
 
-		// ブラックアウト中は無効
-		if ( $( '#blackout' ).css( 'display' ) != 'none' )
+		// 画像ページ送り
+		if ( $( 'panel' ).find( 'div.contents.image' ).length )
+		{
+			if ( e.keyCode == 37 || e.keyCode == 39 )
+			{
+				
+				$( 'panel' ).find( 'div.contents.image' ).trigger( 'keyevent', [e] );
+				return false;
+			}
+		}
+
+		// altを押していない場合は無視
+		if ( e.altKey != true )
 		{
 			return;
 		}
@@ -1841,9 +1852,10 @@ function ConvertContent( content, json )
 	}
 
 	// mediaをサムネイルに置き換える
-	var _thumbnails = $( '<div class="thumbnails" urls="">' );
+	var _thumbnails = $( '<div class="thumbnails" urls="" types="">' );
 	var _index = 0;
 	var _urls = [];
+	var _types = [];
 	
 	_thumbnails.html( OutputTPL( 'thumbnail', {} ) );
 
@@ -1861,9 +1873,10 @@ function ConvertContent( content, json )
 			} );
 		}
 
-		var _img = $( '<img class="thumbnail" src="' + json.media_attachments[i].preview_url + '" index="' + _index + '">' );
+		var _img = $( '<img class="thumbnail ' + json.media_attachments[i].type + '" src="' + json.media_attachments[i].preview_url + '" index="' + _index + '">' );
 
 		_urls[_index] = json.media_attachments[i].url;
+		_types[_index] = json.media_attachments[i].type;
 		_index++;
 
 		_thumbnails.find( '.images' ).append( _img );
@@ -1883,6 +1896,7 @@ function ConvertContent( content, json )
 	if ( json.media_attachments.length )
 	{
 		_thumbnails.attr( 'urls', _urls.join( '\n' ) );
+		_thumbnails.attr( 'types', _types.join( '\n' ) );
 		_jq.append( _thumbnails );
 	}
 

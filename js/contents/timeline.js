@@ -817,6 +817,7 @@ console.log( res );
 				_cp.SetType( 'image' );
 				_cp.SetParam( {
 					urls: targ.closest( '.thumbnails' ).attr( 'urls' ),
+					types: targ.closest( '.thumbnails' ).attr( 'types' ),
 					index: targ.attr( 'index' ),
 				} );
 				_cp.Start();

@@ -376,6 +376,13 @@ div.contents.timeline .lines div.item > .toot > .toot_text .thumbnails > .images
 	cursor: pointer;
 }
 
+/* 動画サムネイル */
+div.contents.timeline .lines div.item > .toot > .toot_text .thumbnails > .images img.video {
+	width: 100px;
+	height: 75px;
+	margin: 2px;
+}
+
 /* メニューボックス */
 div.contents.timeline .lines div.item > .toot .menubox {
 	display: none;

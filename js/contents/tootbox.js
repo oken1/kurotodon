@@ -129,7 +129,7 @@ Contents.tootbox = function( cp )
 			var tootimages = cont.find( '.tootimages' );
 			var _itemcnt = tootimages.find( '.imageitem' ).length;
 
-			if ( f.type.match( 'image.*' ) )
+			if ( f.type.match( 'image.*' ) || f.type.match( 'video.*' ) )
 			{
 				chrome.extension.getBackgroundPage().uploadFile = f;
 

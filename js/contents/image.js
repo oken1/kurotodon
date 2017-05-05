@@ -9,6 +9,7 @@ Contents.image = function( cp )
 	var cont = p.find( 'div.contents' );
 	var scaleX = 1, scaleY = 1, rotate = 0;
 	var urls = cp.param['urls'].split( /\n/ );
+	var types = cp.param['types'].split( /\n/ );
 
 	cp.SetIcon( 'icon-image' );
 
@@ -18,21 +19,41 @@ Contents.image = function( cp )
 	this.start = function() {
 		cp.SetTitle( i18nGetMessage( 'i18n_0199' ), false );
 		setTimeout( function() { cont.activity( { color: '#ffffff' } ); }, 0 );
-console.log(urls[cp.param['index']]);
-		cont.addClass( 'image' )
-			.html( OutputTPL( 'image', { url: urls[cp.param['index']] } ) );
+
+		if ( types[cp.param['index']] == 'image' )
+		{
+			cont.addClass( 'image' )
+				.html( OutputTPL( 'image', { url: urls[cp.param['index']] } ) );
+		}
+		else if ( types[cp.param['index']] == 'video' )
+		{
+			cont.addClass( 'image' )
+				.html( OutputTPL( 'video', { url: urls[cp.param['index']] } ) );
+		}
+		else
+		{
+			console.log( 'Unknown media type [' + types[cp.param['index']] + ']' );
+		}
 
 		cont.find( '.resizebtn' ).hide();
 
 		////////////////////////////////////////
-		// ロード完了
+		// 画像ロード完了
 		////////////////////////////////////////
 		var LoadedEvent = function( e ) {
 			// 実サイズ
 			var nw, nh;
 
-			nw = $( e.target ).get( 0 ).naturalWidth;
-			nh = $( e.target ).get( 0 ).naturalHeight;
+			if ( types[cp.param['index']] == 'image' )
+			{
+				nw = $( e.target ).get( 0 ).naturalWidth;
+				nh = $( e.target ).get( 0 ).naturalHeight;
+			}
+			else if ( types[cp.param['index']] == 'video' )
+			{
+				nw = e.target.videoWidth;
+				nh = e.target.videoHeight;
+			}
 
 			setTimeout( function() {cont.activity( false ); }, 0 );
 
@@ -67,104 +88,162 @@ console.log(urls[cp.param['index']]);
 			p.css( { width: nw, height: nh, left: ( $( 'body' ).outerWidth() - nw ) / 2 + $( document ).scrollLeft() } )
 				.trigger( 'resize' );
 
-			// 画像ダブルクリックで閉じる
-			cont.find( 'img.image' ).dblclick( function( e ) {
-				p.find( '.close' ).trigger( 'click', [false] );
-			} );
-
-			////////////////////////////////////////
-			// パネルサイズに合わせる
-			////////////////////////////////////////
-			cont.find( '.img_panelsize' ).click( function( e ) {
-				var pw = cont.outerWidth();
-				var ph = cont.outerHeight() - p.find( 'div.titlebar' ).outerHeight()+5;
-
-				var nw, nh;
-
-				nw = cont.find( 'img.image' ).get( 0 ).naturalWidth;
-				nh = cont.find( 'img.image' ).get( 0 ).naturalHeight;
-
-				var pnw = pw;
-				var pnh = pw / nw * nh;
-
-				if ( pnh > ph )
-				{
-					pnh = ph;
-					pnw = ph / nh * nw;
-				}
-
-				cont.find( 'img.image' ).css( {
-					width: pnw,
-					height: pnh,
-				} );
-
-				p.trigger( 'resize' );
-				e.stopPropagation();
-			} );
-
-			////////////////////////////////////////
-			// 実サイズで表示
-			////////////////////////////////////////
-			cont.find( '.img_fullsize' ).click( function( e ) {
-				var img = cont.find( 'img.image' );
-
-				img.width( img.get( 0 ).naturalWidth )
-					.height( img.get( 0 ).naturalHeight );
-
-				p.trigger( 'resize' );
-				e.stopPropagation();
-			} );
-
-			////////////////////////////////////////
-			// 上下反転
-			////////////////////////////////////////
-			cont.find( '.img_udreverse' ).click( function( e ) {
-				scaleY = ( scaleY == 1 ) ? -1 : 1;
-
-				cont.find( 'img.image' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
-				e.stopPropagation();
-			} );
-
-			////////////////////////////////////////
-			// 左右反転
-			////////////////////////////////////////
-			cont.find( '.img_lrreverse' ).click( function( e ) {
-				scaleX = ( scaleX == 1 ) ? -1 : 1;
-
-				cont.find( 'img.image' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
-				e.stopPropagation();
-			} );
-
-			////////////////////////////////////////
-			// 回転
-			////////////////////////////////////////
-			cont.find( '.img_rotate' ).click( function( e ) {
-				rotate = ( rotate == 270 ) ? 0 : rotate + 90;
-
-				cont.find( 'img.image' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
-				e.stopPropagation();
-			} );
-
-			////////////////////////////////////////
-			// リサイズボタン群表示
-			////////////////////////////////////////
-			cont.mouseenter( function( e ) {
-				cont.find( '.resizebtn' ).show();
-			} );
-
-			////////////////////////////////////////
-			// リサイズボタン群非表示
-			////////////////////////////////////////
-			cont.mouseleave( function( e ) {
-				cont.find( '.resizebtn' ).hide();
-			} );
-
 			// 初期表示
 			cont.find( '.img_panelsize' ).trigger( 'click' );
 		};
 
+		// 画像ダブルクリックで閉じる
+		cont.find( 'img.image,video' ).dblclick( function( e ) {
+			p.find( '.close' ).trigger( 'click', [false] );
+		} );
+
+		////////////////////////////////////////
+		// パネルサイズに合わせる
+		////////////////////////////////////////
+		cont.find( '.img_panelsize' ).click( function( e ) {
+			var pw = cont.outerWidth();
+			var ph = cont.outerHeight() - p.find( 'div.titlebar' ).outerHeight()+5;
+
+			var nw, nh;
+
+			nw = cont.find( 'img.image' ).get( 0 ).naturalWidth;
+			nh = cont.find( 'img.image' ).get( 0 ).naturalHeight;
+
+			var pnw = pw;
+			var pnh = pw / nw * nh;
+
+			if ( pnh > ph )
+			{
+				pnh = ph;
+				pnw = ph / nh * nw;
+			}
+
+			cont.find( 'img.image' ).css( {
+				width: pnw,
+				height: pnh,
+			} );
+
+			p.trigger( 'resize' );
+			e.stopPropagation();
+		} );
+
+		////////////////////////////////////////
+		// 実サイズで表示
+		////////////////////////////////////////
+		cont.find( '.img_fullsize' ).click( function( e ) {
+			var img = cont.find( 'img.image' );
+
+			img.width( img.get( 0 ).naturalWidth )
+				.height( img.get( 0 ).naturalHeight );
+
+			p.trigger( 'resize' );
+			e.stopPropagation();
+		} );
+
+		////////////////////////////////////////
+		// 上下反転
+		////////////////////////////////////////
+		cont.find( '.img_udreverse' ).click( function( e ) {
+			scaleY = ( scaleY == 1 ) ? -1 : 1;
+
+			cont.find( 'img.image' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
+			e.stopPropagation();
+		} );
+
+		////////////////////////////////////////
+		// 左右反転
+		////////////////////////////////////////
+		cont.find( '.img_lrreverse' ).click( function( e ) {
+			scaleX = ( scaleX == 1 ) ? -1 : 1;
+
+			cont.find( 'img.image' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
+			e.stopPropagation();
+		} );
+
+		////////////////////////////////////////
+		// 回転
+		////////////////////////////////////////
+		cont.find( '.img_rotate' ).click( function( e ) {
+			rotate = ( rotate == 270 ) ? 0 : rotate + 90;
+
+			cont.find( 'img.image' ).css( { '-webkit-transform': 'scale(' + scaleX + ',' + scaleY + ') rotate(' + rotate + 'deg)' } );
+			e.stopPropagation();
+		} );
+
+		////////////////////////////////////////
+		// ページ送り→
+		////////////////////////////////////////
+		cont.find( '.img_pageup' ).click( function( e ) {
+			if ( cp.param['index'] == urls.length - 1 )
+			{
+				cp.param['index'] = 0;
+			}
+			else
+			{
+				cp.param['index']++;
+			}
+
+			cont.find( '.image' ).attr( 'src', urls[cp.param['index']] );
+
+			e.stopPropagation();
+		} );
+
+		////////////////////////////////////////
+		// ページ送り←
+		////////////////////////////////////////
+		cont.find( '.img_pagedown' ).click( function( e ) {
+			if ( cp.param['index'] == 0 )
+			{
+				cp.param['index'] = urls.length - 1;
+			}
+			else
+			{
+				cp.param['index']--;
+			}
+
+			cont.find( '.image' ).attr( 'src', urls[cp.param['index']] );
+
+			e.stopPropagation();
+		} );
+
+		////////////////////////////////////////
+		// リサイズボタン群表示
+		////////////////////////////////////////
+		cont.mouseenter( function( e ) {
+			cont.find( '.resizebtn' ).show();
+		} );
+
+		////////////////////////////////////////
+		// リサイズボタン群非表示
+		////////////////////////////////////////
+		cont.mouseleave( function( e ) {
+			cont.find( '.resizebtn' ).hide();
+		} );
+
 		cont.find( 'img.image' ).on( 'load', function( e ) {
 			LoadedEvent( e );
+		} );
+
+		cont.find( 'video' ).on( 'loadeddata', function( e ) {
+			LoadedEvent( e );
+		} );
+
+		////////////////////////////////////////
+		// キーイベント
+		////////////////////////////////////////
+		cont.on( 'keyevent', function( e, event ) {
+			if( cont.find( '.img_pageup' ).css( 'display' ) != 'none' )
+			{
+				switch( event.keyCode )
+				{
+					case 37:
+						cont.find( '.img_pagedown' ).trigger( 'click' );
+						return false;
+					case 39:
+						cont.find( '.img_pageup' ).trigger( 'click' );
+						return false;
+				}
+			}
 		} );
 
 		////////////////////////////////////////
