@@ -815,7 +815,7 @@ $( document ).on( 'mouseenter mouseleave', '.tooltip', function( e ) {
 		$( '#tooltip' ).css( { left: 0, top: 0, width: 'auto' } ).text( tip );
 
 		var l, t, w;
-		l = $( this ).offset().left + $( this ).outerWidth( true );
+		l = $( this ).offset().left + $( this ).outerWidth();
 		t = $( this ).offset().top + 2;
 		w = $( '#tooltip' ).outerWidth( true );
 
@@ -1676,8 +1676,8 @@ function SaveDataText()
 
 				_g_cmn[i][j].x = pi.position().left;
 				_g_cmn[i][j].y = pi.position().top;
-				_g_cmn[i][j].w = pi.width();
-				_g_cmn[i][j].h = pi.height();
+				_g_cmn[i][j].w = pi.outerWidth();
+				_g_cmn[i][j].h = pi.outerHeight();
 				_g_cmn[i][j].zindex = pi[0].style.zIndex;
 			}
 		}

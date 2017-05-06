@@ -85,7 +85,6 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 			if ( minimum.width != null && minimum.height != null )
 			{
 				p.css( {
-					width: minimum.width,
 					height: minimum.height,
 				} );
 			}
@@ -106,8 +105,10 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 				.hide()
 				.end()
 				.css( {
-					width: p.find( 'div.titlebar' ).outerWidth(),
-					height: p.find( 'div.titlebar' ).outerHeight() - 1,
+					height: p.find( 'div.titlebar' ).outerHeight()
+					+ parseInt( p.css( 'border-top-width' ) )
+					+ parseInt( p.css( 'border-bottom-width' ) )
+					- parseInt( p.find( 'div.titlebar' ).css( 'border-bottom-width' ) )
 				} )
 				.resizable( 'disable' )
 				.removeClass( 'ui-state-disabled' )
@@ -199,8 +200,8 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 			.find( '.setting' ).show();
 
 		// 最小サイズの設定
-		var minw = titlebar.find( '.close' ).outerWidth() * 3 + 48;
-		var minh = titlebar.outerHeight() + 24;
+		var minw = titlebar.find( '.close' ).outerWidth() * 6;
+		var minh = titlebar.outerHeight() * 2;
 
 		if ( w < minw )
 		{
@@ -321,8 +322,8 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 			if ( _p.minimum.minimum == false )
 			{
 				_p.minimum.minimum = true;
-				_p.minimum.width = p.width();
-				_p.minimum.height = p.height();
+				_p.minimum.width = p.outerWidth();
+				_p.minimum.height = p.outerHeight();
 			}
 			// 元に戻す
 			else

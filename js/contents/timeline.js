@@ -952,20 +952,7 @@ console.log( res );
 					} ) );
 				}
 
-				// ボタンにカーソルを乗せたときの処理
-				options.find( 'span.btns, span.fav' ).on( 'mouseenter mouseleave', function( e ) {
-					if ( e.type == 'mouseenter' )
-					{
-						cursor_on_option = true;
-					}
-					else
-					{
-						cursor_on_option = false;
-					}
-
-					e.stopPropagation();
-				} )
-				.css( { display: 'inline-block' } );
+				options.find( 'span.btns, span.fav' ).css( { display: 'inline-block' } );
 			}
 			else
 			{
@@ -986,8 +973,6 @@ console.log( res );
 			{
 				cursor_on_option = false;
 			}
-
-			e.stopPropagation();
 		} );
 
 		////////////////////////////////////////

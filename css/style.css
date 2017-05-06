@@ -2,7 +2,7 @@
 * {
 	margin: 0;
 	padding: 0;
-
+	box-sizing: border-box;
 }
 
 html {
@@ -73,7 +73,6 @@ img.emoji {
 /* ヘッダ */
 #head {
 	display: table;
-	box-sizing: border-box;
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -252,7 +251,6 @@ img.emoji {
 	-webkit-animation-play-state: running;
 	-webkit-animation-delay:0;
 	pointer-events: none;
-	box-sizing: border-box;
 
 	border: 1px solid #101010;	/* color set: 固定(tooltip) */
 	background-color: #202424;	/* color set: 固定(tooltip) */
@@ -300,7 +298,6 @@ panel div.titlebar {
 	display: table;
 	width: 100%;
 	height: 2rem;
-	box-sizing: border-box;
 
 	border-bottom: 1px solid #101010;	/* color set: 固定(titlebar) */
 	background-color: #606060;	/* color set: タイトルバーのBG */
@@ -331,7 +328,7 @@ panel div.titlebar .title {
 panel div.titlebar .title div {
 	overflow-x: hidden;
 	overflow-y: hidden;
-	height: 1.5rem;
+	height: 2rem;
 	font-size: 1rem;
 	line-height: 1.5rem;
 	margin: 2px 0;
@@ -354,7 +351,6 @@ panel div.titlebar .titleicon:hover {
 panel div.titlebar > span:not(.badge) {
 	display: table-cell;
 	vertical-align: middle;
-	box-sizing: border-box;
 	opacity: 0.5;
 	padding: 0 6px;
 	vertical-align: middle;
@@ -425,7 +421,6 @@ panel div.contents > .setting {
 	width: auto;
 	height: auto;
 	text-align: center;
-	box-sizing: border-box;
 	padding: 8px;
 	font-size: 1.0rem;
 
@@ -456,7 +451,6 @@ panel div.contents > .setting {
 	display: table;
 	width: 100%;
 	height: 37px;
-	box-sizing: border-box;
 
 	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );	/* color set:固定(panel-buttons) */
 }
@@ -509,7 +503,6 @@ input[type=file] {
 /* アカウントセレクト */
 .account_select {
 	width: 100%;
-	height: 3rem;
 }
 
 /* 選択されたアカウント */
@@ -518,7 +511,6 @@ input[type=file] {
 	width: 100%;
 	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
 	padding: 4px;
-	box-sizing: border-box;
 }
 
 .selectitem:hover {
@@ -537,8 +529,8 @@ input[type=file] {
 }
 
 .selectitem > div.avatar {
-	width: 38px;
-	min-width: 38px;
+	width: 2rem;
+	min-width: 2rem;
 }
 
 .selectitem > div.display_name {
@@ -572,7 +564,6 @@ input[type=file] {
 	width: 100%;
 	padding: 4px;
 	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
-	box-sizing: border-box;
 }
 
 .selectlist .item:hover {
@@ -590,8 +581,8 @@ input[type=file] {
 }
 
 .selectlist .item > div.avatar {
-	width: 38px;
-	min-width: 38px;
+	width: 2rem;
+	min-width: 2rem;
 }
 
 .selectlist .item > div.display_name {
@@ -628,7 +619,6 @@ input[type=file] {
 	width: 100%;
 	margin: 0 0;
 	vertical-align: top;
-	box-sizing: border-box;
 }
 
 .slidercontainer .slidestr {
@@ -645,7 +635,6 @@ input[type=file] {
 	width: 100%;
 	margin: 0 0;
 	vertical-align: top;
-	box-sizing: border-box;
 }
 
 .checkboxcontainer > span {
@@ -661,7 +650,6 @@ input[type=file] {
 	width: 100%;
 	margin: 0 0;
 	vertical-align: top;
-	box-sizing: border-box;
 }
 
 .radiocontainer > div {
@@ -827,7 +815,6 @@ div.selectbox:hover {
 
 div.selectbox > div {
 	display: table;
-	box-sizing: border-box;
 }
 
 div.selectbox > div > .selitem {

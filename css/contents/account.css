@@ -20,7 +20,6 @@ div.contents.account {
 	width: 100%;
 	padding: 4px;
 	border-bottom: 1px solid  rgba( 0, 0, 0, 0.4 );
-	box-sizing: border-box;
 }
 
 #account_list div.item > .icon img {

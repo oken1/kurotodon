@@ -53,7 +53,6 @@ div.contents.timeline .lines div.item {
 	width: 100%;
 	border-bottom: 1px solid rgba( 80, 80, 80, 0.5 );
 	padding: 2px;
-	box-sizing: border-box;
 	background: #282828;	/* color set:ツイートのBG */
 	color: #ffffff;
 }
@@ -103,7 +102,6 @@ div.contents.timeline .lines div.item > .toot .notification {
 	display: table;
 	width: 100%;
 	padding-bottom: 2px;
-	box-sizing: border-box;
 }
 
 div.contents.timeline .lines div.item > .toot .notification .acct {
@@ -126,7 +124,6 @@ div.contents.timeline .lines div.item > .toot .headcontainer {
 	display: table;
 	width: 100%;
 	padding-bottom: 2px;
-	box-sizing: border-box;
 }
 
 /* 名前・日付 */
@@ -243,7 +240,7 @@ div.contents.timeline .lines div.item > .toot .headcontainer .options .btns {
 	display: inline-block;
 	cursor: pointer;
 	opacity: 0.4;
-	padding-right: 0 2px;
+	padding-right: 2px;
 }
 
 div.contents.timeline .lines div.item > .toot .headcontainer .options .btns:hover {
@@ -472,7 +469,6 @@ div.contents.timeline .setting .member {
 	display: table;
 	width: 100%;
 	margin-bottom: 4px;
-	box-sizing: border-box;
 }
 
 div.contents.timeline .setting .member div:first-child {

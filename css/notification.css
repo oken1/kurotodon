@@ -16,7 +16,6 @@
 	display: table;
 	width: auto;
 	padding: 1px 4px 4px 4px;
-	box-sizing: border-box;
 }
 
 .notify .tc {

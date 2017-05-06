@@ -12,18 +12,19 @@ div.contents.tootbox {
 .tootbox_box {
 	width: 100%;
 	height: 120px;
-	padding: 4px;
+	padding: 8px 4px;
 }
 
 /* テキストエリア */
 .tootbox_box .text {
 	height: 60px;
+	width: 100%;
 }
 
 .tootbox_box .cnt_buttons {
 	display: table;
 	padding-top: 4px;
-	box-sizing: border-box;
+	width: 100%;
 }
 
 .tootbox_box .cnt {
@@ -65,7 +66,6 @@ div.contents.tootbox {
 	padding: 2px;
 	margin: 0 auto;
 	margin-bottom: 4px;
-	box-sizing: border-box;
 	text-align: left;
 }
 
