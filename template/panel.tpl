@@ -2,7 +2,7 @@
 	<div class='titlecontainer'>
 		<span class='titleicon {if $icon}{$icon}{else}icon-file{/if} tooltip'></span>
 		<span class='badge'></span>
-		<span class='title'><div>{$title}</div></span>
+		<span class='title'>{$title}</span>
 		<div class='titlesetting'>
 			<span class='no_move'><input type='checkbox'> (i18n_0188)</span>
 		</div>

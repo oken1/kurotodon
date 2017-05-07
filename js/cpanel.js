@@ -200,21 +200,7 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 			.find( '.setting' ).show();
 
 		// 最小サイズの設定
-		var minw = titlebar.find( '.close' ).outerWidth() * 6;
-		var minh = titlebar.outerHeight() * 2;
-
-		if ( w < minw )
-		{
-			p.width( minw );
-		}
-
-		if ( h < minh )
-		{
-			p.height( minh );
-		}
-
-		p.resizable( 'option', 'minWidth', minw )
-			.resizable( 'option', 'minHeight', minh );
+		SetMinimumSize( p );
 
 		////////////////////////////////////////
 		// パネル上でマウスがクリックされたとき
@@ -346,6 +332,39 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 		p.resize();
 	} )( x, y, w, h, this.id, this.minimum, this.zindex, this.status );
 
+	////////////////////////////////////////
+	// 最小サイズ設定
+	////////////////////////////////////////
+	function SetMinimumSize( p ) {
+		var _tb = p.find( '.titlebar' );
+		var minw = _tb.find( '.close' ).outerWidth() * 3
+				 + _tb.find( '.titleicon' ).outerWidth()
+				 + _tb.find( '.badge' ).outerWidth()
+				 + parseInt( _tb.find( '.title' ).css( 'font-size' ) ) * 2;
+		var minh = p.find( '.titlebar' ).outerHeight()
+				+ parseInt( p.css( 'border-top-width' ) )
+				+ parseInt( p.css( 'border-bottom-width' ) )
+				- parseInt( p.find( 'div.titlebar' ).css( 'border-bottom-width' ) );
+
+		if ( w < minw )
+		{
+			p.width( minw );
+		}
+
+		if ( h < minh )
+		{
+			p.height( minh );
+		}
+
+		p.resizable( 'option', 'minWidth', minw )
+			.resizable( 'option', 'minHeight', minh );
+	};
+
+	this.SetMinimumSize = function( p )
+	{
+		SetMinimumSize( p );
+	};
+
 	////////////////////////////////////////////////////////////
 	// タイプ設定
 	////////////////////////////////////////////////////////////
@@ -421,7 +440,7 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 
 		var p = $( '#' + this.id );
 		var titlebar = p.find( 'div.titlebar' );
-		var titlediv = titlebar.find( '.title' ).find( 'div' );
+		var titlediv = titlebar.find( '.title' );
 
 		titlediv.text( title );
 
@@ -431,15 +450,8 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 			'<span class="titlename tooltip" tooltip="' + chrome.i18n.getMessage( 'i18n_0048' ) + '">$1</span>' )
 		);
 
-		// timelineパネル以外は未読件数表示を削除"
-		if ( this.type != 'timeline' )
-		{
-			titlebar.find( '.badge' ).remove();
-		}
-		else
-		{
-			titlebar.find( '.badge' ).hide();
-		}
+		// バッジを隠す"
+		titlebar.find( '.badge' ).hide();
 
 		// setting=falseの場合、設定ボタンを隠す"
 		if ( !setting )

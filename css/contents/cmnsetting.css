@@ -1,0 +1,67 @@
+/* 設定 */
+div.contents.cmnsetting {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: nowrap;
+	height: 100%;
+}
+
+/* 設定項目部 */
+#cmnsetting_items {
+	width: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+#cmnsetting_items .kind {
+	padding: 4px 8px;
+}
+
+#cmnsetting_items .kind:hover {
+	cursor: pointer;
+}
+
+#cmnsetting_items .kind > span {
+	padding-right: 2px;
+}
+
+#cmnsetting_items .kinditems {
+	min-width: 240px;
+	margin: 2px;
+	padding: 4px;
+	border: 1px solid #101010;
+	white-space: normal;
+}
+
+#cmnsetting_items .group {
+	margin: 2px;
+	padding: 4px;
+}
+
+#cmnsetting_items .group > .title {
+	width: 100%;
+	margin: 2px;
+}
+
+#cmnsetting_items .name_large {
+	color: #ffffff;
+	font-weight: bold;
+}
+
+#cmnsetting_items .name_small {
+	color: #c0c0c0;
+	font-size: 0.8rem;
+}
+
+/* フォントサイズ設定 */
+#cset_font_size {
+	width: 50%;
+}
+
+/* Now Browsing */
+#cset_nowbrowsing_text {
+	width: 90%;
+}
+

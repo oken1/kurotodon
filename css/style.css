@@ -309,35 +309,23 @@ panel div.titlebar .titlecontainer {
 	position: relative;
 	display: table-cell;
 	width: 100%;
-	height: 2rem;
 	cursor: move;
 	vertical-align: middle;
 }
 
 /* タイトルバーの文字列 */
 panel div.titlebar .title {
-	display: table-cell;
+	display: inline-block;
 	font-weight: bold;
 	vertical-align: middle;
-	word-break: break-all;
-	word-wrap: break-word;
 	padding-left: 2px;
-
-}
-
-panel div.titlebar .title div {
-	overflow-x: hidden;
-	overflow-y: hidden;
-	height: 2rem;
-	font-size: 1rem;
-	line-height: 1.5rem;
-	margin: 2px 0;
-	padding: 4px 0 2px 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 /* タイトルアイコン */
 panel div.titlebar .titleicon {
-	display: table-cell;
 	font-size: 1.2rem;
 	vertical-align: middle;
 	padding: 0 2px;
@@ -477,7 +465,6 @@ input[type=text], input[type=password] {
 	display: inline-block;
 	padding: 7px 6px 5px 6px;
 	border: 1px solid #101010;
-	height: 1.4em;
 	box-shadow: 1px 1px 2px rgba( 0, 0, 0, 0.5 ) inset;
 	color: #000000;
 	background-color: #e7e7d4;
@@ -660,7 +647,6 @@ input[type=file] {
 panel div.titlebar .titlecontainer .badge {
 	padding: 0px 2px;
 	font-weight: bold;
-	display: table-cell;
 	font-size: 0.8rem;
 	width: 0.8rem;
 	text-align: center;
@@ -673,6 +659,10 @@ panel div.titlebar .titlecontainer .badge {
 
 panel div.titlebar .titlecontainer .badge:hover {
 	cursor: pointer;
+}
+
+panel.fixed div.titlebar .titlecontainer .badge {
+	border-color: #404040;
 }
 
 /* メッセージボックス */

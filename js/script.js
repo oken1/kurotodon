@@ -4,12 +4,10 @@
 var g_cmn = {
 	cmn_param:	{											// 共通パラメータ
 		font_family:		'',								// - フォント名
-		font_size:			13,								// - フォントサイズ
+		font_size:			12,								// - フォントサイズ
 		scroll_vertical:	1,								// - ページ全体のスクロールバー(縦)
 		scroll_horizontal:	1,								// - ページ全体のスクロールバー(横)
 		locale:				'ja',							// - 言語
-
-		notify_sound_volume:1.0,							// - 音量
 
 		tootkey:			0,								// - トゥートショートカットキー
 
@@ -18,6 +16,8 @@ var g_cmn = {
 		max_count:			160,							// - タイムラインに表示する最大件数
 		newscroll:			1,								// - 新着ツイートにスクロール
 		follow_mark:		1,								// - 相互フォロー表示
+
+		nowbrowsing_text:	'Now Browsing: ',				// - Now Browsingテキスト
 	},
 	panel:			null,			// パネル
 	account:		null,			// アカウント
@@ -1052,8 +1052,6 @@ function AccountSelectMake( cp )
 ////////////////////////////////////////////////////////////////////////////////
 function SetFont( formflg )
 {
-g_cmn.cmn_param.font_family ="Meiryo";
-g_cmn.cmn_param.font_size =12;
 	if ( !formflg )
 	{
 		$( 'html,body' ).css( { fontSize: g_cmn.cmn_param.font_size + 'px', fontFamily: g_cmn.cmn_param.font_family } );
@@ -1064,6 +1062,11 @@ g_cmn.cmn_param.font_size =12;
 	$( 'input[type=file]' ).css( { fontSize: g_cmn.cmn_param.font_size + 'px' } );
 	$( 'textarea' ).css( { fontSize: g_cmn.cmn_param.font_size + 'px' } );
 	$( 'select' ).css( { fontSize: g_cmn.cmn_param.font_size + 'px' } );
+
+	for ( var i = 0 ; i < g_cmn.panel.length ; i++ )
+	{
+		g_cmn.panel[i].SetMinimumSize( $( '#' + g_cmn.panel[i].id ) );
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
