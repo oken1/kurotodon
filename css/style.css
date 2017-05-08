@@ -290,66 +290,58 @@ panel {
 	border: 2px solid #101010;	/* color set: 固定(panel) */
 	background-color: #282828;	/* color set: パネルのBG */
 	color: #ffffff;	/* color set:パネルのフォント */
-
 }
 
 /* パネルのタイトルバー */
 panel div.titlebar {
 	display: table;
 	width: 100%;
-	height: 2rem;
-
+	border-collapse: separate;
+	border-spacing: 4px 4px;
 	border-bottom: 1px solid #101010;	/* color set: 固定(titlebar) */
 	background-color: #606060;	/* color set: タイトルバーのBG */
 	color: #ffffff;			/* color set: タイトルバーのフォント */
-}
-
-/* タイトルバーのアイコン＋文字列 */
-panel div.titlebar .titlecontainer {
-	position: relative;
-	display: table-cell;
-	width: 100%;
+	table-layout: fixed;
 	cursor: move;
-	vertical-align: middle;
 }
 
-/* タイトルバーの文字列 */
-panel div.titlebar .title {
-	display: inline-block;
-	font-weight: bold;
+panel div.titlebar > span {
+	display: table-cell;
 	vertical-align: middle;
-	padding-left: 2px;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+	height: 28px;
 }
 
 /* タイトルアイコン */
 panel div.titlebar .titleicon {
 	font-size: 1.2rem;
-	vertical-align: middle;
-	padding: 0 2px;
+	width: 1.2rem;
 }
 
 panel div.titlebar .titleicon:hover {
 	cursor: pointer;
 }
 
-/* タイトルバーのボタン */
-panel div.titlebar > span:not(.badge) {
-	display: table-cell;
-	vertical-align: middle;
-	opacity: 0.5;
-	padding: 0 6px;
-	vertical-align: middle;
+/* タイトルバーの文字列 */
+panel div.titlebar .title {
+	font-weight: bold;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
-panel div.titlebar > span:not(.badge):hover {
+/* タイトルバーのボタン */
+panel div.titlebar > .ctlbtn {
+	width: 1.5rem;
+	opacity: 0.5;
+	
+}
+
+panel div.titlebar > .ctlbtn:hover {
 	cursor: pointer;
 	opacity: 1.0;
 }
 
-panel div.titlebar > span:not(.badge):active {
+panel div.titlebar > .ctlbtn:active {
 	opacity: 0.3;
 }
 
@@ -365,7 +357,7 @@ panel div.titlebar .title .titlename:hover {
 }
 
 /* 位置固定メニュー */
-panel div.titlebar .titlecontainer .titlesetting {
+panel div.titlebar .titlesetting {
 	position: absolute;
 	word-break: break-all;
 	word-wrap: break-word;
@@ -378,7 +370,7 @@ panel div.titlebar .titlecontainer .titlesetting {
 	color: #ffffff;			/* color set: 固定(popup-menu) */
 }
 
-panel div.titlebar .titlecontainer .titlesetting span
+panel div.titlebar .titlesetting span
 {
 	display: block;
 	padding: 3px 6px;
@@ -644,11 +636,10 @@ input[type=file] {
 }
 
 /* 新着件数 */
-panel div.titlebar .titlecontainer .badge {
+panel div.titlebar .badge {
 	padding: 0px 2px;
 	font-weight: bold;
 	font-size: 0.8rem;
-	width: 0.8rem;
 	text-align: center;
 	vertical-align: middle;
 	color: #ffffff;
@@ -657,11 +648,11 @@ panel div.titlebar .titlecontainer .badge {
 	border-width: 4px 0;
 }
 
-panel div.titlebar .titlecontainer .badge:hover {
+panel div.titlebar .badge:hover {
 	cursor: pointer;
 }
 
-panel.fixed div.titlebar .titlecontainer .badge {
+panel.fixed div.titlebar .badge {
 	border-color: #404040;
 }
 

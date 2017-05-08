@@ -174,7 +174,7 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 				cursor: 'move',
 				snap: false,
 				snapMode: '',
-				cancel: 'div.contents,div.titlebar > span',
+				cancel: 'div.contents,div.titlebar > span.ctlbtn',
 				start: function() {
 					GhostPanel( 'start' );
 				},
@@ -340,6 +340,7 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 		var minw = _tb.find( '.close' ).outerWidth() * 3
 				 + _tb.find( '.titleicon' ).outerWidth()
 				 + _tb.find( '.badge' ).outerWidth()
+				 + parseInt( _tb.css( 'border-spacing' ).split(' ')[0] ) * 5 * 2
 				 + parseInt( _tb.find( '.title' ).css( 'font-size' ) ) * 2;
 		var minh = p.find( '.titlebar' ).outerHeight()
 				+ parseInt( p.css( 'border-top-width' ) )
@@ -440,7 +441,7 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 
 		var p = $( '#' + this.id );
 		var titlebar = p.find( 'div.titlebar' );
-		var titlediv = titlebar.find( '.title' );
+		var titlediv = titlebar.find( '.title .name' );
 
 		titlediv.text( title );
 
