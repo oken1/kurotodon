@@ -25,7 +25,7 @@ Contents.image = function( cp )
 			cont.addClass( 'image' )
 				.html( OutputTPL( 'image', { url: urls[cp.param['index']] } ) );
 		}
-		else if ( types[cp.param['index']] == 'video' )
+		else if ( types[cp.param['index']] == 'video' || types[cp.param['index']] == 'gifv' )
 		{
 			cont.addClass( 'image' )
 				.html( OutputTPL( 'video', { url: urls[cp.param['index']] } ) );
@@ -49,7 +49,7 @@ Contents.image = function( cp )
 				nw = $( e.target ).get( 0 ).naturalWidth;
 				nh = $( e.target ).get( 0 ).naturalHeight;
 			}
-			else if ( types[cp.param['index']] == 'video' )
+			else if ( types[cp.param['index']] == 'video' || types[cp.param['index']] == 'gifv' )
 			{
 				nw = e.target.videoWidth;
 				nh = e.target.videoHeight;

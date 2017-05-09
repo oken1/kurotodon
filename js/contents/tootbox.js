@@ -85,6 +85,11 @@ Contents.tootbox = function( cp )
 
 			var imageitem = $( this ).parent().parent();
 			var height = imageitem.outerHeight( true );
+
+			// テキスト内からURLを削除する
+			var r = new RegExp( ' ?' + imageitem.attr( 'text_url' ) );
+			cont.find( '.text' ).val( cont.find( '.text' ).val().replace( r, '' ) );
+
 			imageitem.remove();
 
 			if ( cont.find( '.tootimages' ).find( '.imageitem' ).length == 0 )
@@ -151,6 +156,7 @@ Contents.tootbox = function( cp )
 						if ( res.status === undefined )
 						{
 							tootimages.append( OutputTPL( 'tootbox_image', { item: res } ) );
+							tootimages.attr( 'account_id', cp.param['account_id'] );
 							tootimages.find( '.del:last' ).find( 'span' ).click( ImageDelClick );
 							tootimages.find( '.imageitem:last' ).attr( 'uid', GetUniqueID() );
 
@@ -222,6 +228,17 @@ Contents.tootbox = function( cp )
 		cont.trigger( 'account_update' );
 
 		////////////////////////////////////////
+		// アカウント変更時処理
+		////////////////////////////////////////
+		cont.on( 'account_changed', function() {
+			// 添付画像をクリア
+			if ( cp.param['account_id'] != cont.find( '.tootimages' ).attr( 'account_id' ) )
+			{
+				cont.find( '.tootimages' ).find( '.imageitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
+			}
+		} );
+
+		////////////////////////////////////////
 		// トゥートボタンクリック処理
 		////////////////////////////////////////
 		var twflg = false;
@@ -260,173 +277,29 @@ Contents.tootbox = function( cp )
 				},
 				function( res )
 				{
-					console.log( res );
+					if ( res.status === undefined )
+					{
+						// テキストボックスを空にする
+						cont.find( '.text' ).val( '' )
+							.trigger( 'keyup' );
+
+						// 添付画像をクリア
+						cont.find( '.tootimages' ).find( '.imageitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
+
+						cont.find( '.text' ).SetPos( 'start' );
+
+						StatusesCountUpdate( cp.param['account_id'], 1 );
+					}
+					else
+					{
+						ApiError( res );
+					}
+
+					Blackout( false, false );
+					$( '#blackout' ).activity( false );
 				}
 			);
 
-/*
-			var data = {};
-			var status = '';
-
-			status += cont.find( '.text' ).val();
-
-			data['status'] = status;
-
-			var param = {
-				type: 'POST',
-				url: ApiUrl( '1.1' ) + 'statuses/update.json',
-				data: data,
-			};
-
-			Blackout( true, false );
-			$( '#blackout' ).activity( { color: '#808080', width: 8, length: 14 } );
-
-			twflg = true;
-
-			var TweetSend = function( media_ids ) {
-				if ( media_ids )
-				{
-					param.data.media_ids = media_ids;
-				}
-
-				SendRequest(
-					{
-						action: 'oauth_send',
-						acsToken: g_cmn.account[cp.param['account_id']]['accessToken'],
-						acsSecret: g_cmn.account[cp.param['account_id']]['accessSecret'],
-						param: param,
-						id: cp.param['account_id']
-					},
-					function( res )
-					{
-						twflg = false;
-
-						if ( res.status == 200 )
-						{
-							// テキストボックスを空にする
-							$( '#tweetbox_text' ).val( '' )
-								.trigger( 'keyup' );
-
-							// 返信情報をクリア
-							$( '#tweetbox_reply' ).find( '.del' ).find( 'span' ).each( function() {
-								$( this ).trigger( 'click' );
-							} );
-
-							// 添付画像をクリア
-							$( '#tweetbox_image' ).find( '.del' ).find( 'span' ).each( function() {
-								$( this ).trigger( 'click' );
-							} );
-
-							// ハッシュタグを自動入力
-							for ( var i = 0, _len = g_cmn.hashtag.length ; i < _len ; i++ )
-							{
-								if ( g_cmn.hashtag[i].checked == true )
-								{
-									cont.trigger( 'hashset', [g_cmn.hashtag[i].hashtag] );
-								}
-							}
-
-							for ( var i = 0, _len = g_cmn.notsave.tl_hashtag.length ; i < _len ; i++ )
-							{
-								if ( g_cmn.notsave.tl_hashtag[i].checked == true )
-								{
-									cont.trigger( 'hashset', [g_cmn.notsave.tl_hashtag[i].hashtag] );
-								}
-							}
-
-							$( '#tweetbox_text' ).SetPos( 'start' );
-
-							// ツイート数表示の更新
-							StatusesCountUpdate( cp.param['account_id'], 1 );
-						}
-						else
-						{
-							console.log( 'status[' + res.status + ']' );
-
-							$( this ).removeClass( 'disabled' );
-
-							ApiError( chrome.i18n.getMessage( 'i18n_0087' ), res );
-						}
-
-						Blackout( false, false );
-						$( '#blackout' ).activity( false );
-					}
-				);
-			};
-*/
-
-/*
-			// 添付画像あり
-			if ( $( '#tweetbox_image' ).find( '.imageitem' ).length > 0 )
-			{
-				var _idx = 0;
-				var media_ids = '';
-				var items = $( '#tweetbox_image' ).find( '.imageitem' ).length;
-
-				var ImageUpload = function() {
-					if ( _idx == items )
-					{
-						TweetSend( media_ids );
-						return;
-					}
-
-					var media_data =  $( '#tweetbox_image' ).find( '.imageitem' ).eq( _idx ).find( 'img' ).attr( 'src' );
-					media_data = media_data.replace(/^.*,/, '');
-
-					SendRequest(
-						{
-							action: 'oauth_send',
-							acsToken: g_cmn.account[cp.param['account_id']]['accessToken'],
-							acsSecret: g_cmn.account[cp.param['account_id']]['accessSecret'],
-							param: {
-								type: 'POST',
-								url: ApiUrl( '1.1', 'upload' ) + 'media/upload.json',
-								data: {
-									media_data: media_data
-								}
-							}
-						},
-						function( res )
-						{
-							if ( res.status == 200 )
-							{
-								if ( media_ids == '' )
-								{
-									media_ids = res.json.media_id_string;
-								}
-								else
-								{
-									media_ids += ',' + res.json.media_id_string;
-								}
-
-								_idx++;
-								ImageUpload();
-							}
-							else
-							{
-								twflg = false;
-
-								console.log( 'status[' + res.status + ']' );
-
-								$( this ).removeClass( 'disabled' );
-
-								ApiError( chrome.i18n.getMessage( 'i18n_0087' ), res );
-
-								Blackout( false, false );
-								$( '#blackout' ).activity( false );
-							}
-						}
-					);
-
-				}
-				ImageUpload();
-			}
-			// なし
-			else
-			{
-				TweetSend();
-			}
-*/
 
 			e.stopPropagation();
 		} );
@@ -437,6 +310,9 @@ Contents.tootbox = function( cp )
 		// 入力文字数によるボタン制御
 		////////////////////////////////////////
 		cont.find( '.text' ).on( 'keyup change', function( e ) {
+
+
+
 
 //////// 仮 /////////////////////////////////////////////////////////////////
 			var val = tootbox_text.val();
@@ -471,7 +347,7 @@ Contents.tootbox = function( cp )
 		////////////////////////////////////////
 		cont.find( '.text' ).keydown( function( e ) {
 			// Enterに設定されているときは、Ctrl+Enterで改行
-			if ( g_cmn.cmn_param.tweetkey == 2 && ( e.keyCode == 13 && e.ctrlKey == true ) )
+			if ( g_cmn.cmn_param.tootkey == 2 && ( e.keyCode == 13 && e.ctrlKey == true ) )
 			{
 				var obj = $( this ).get( 0 );
 				var spos = obj.selectionStart;
@@ -483,9 +359,9 @@ Contents.tootbox = function( cp )
 				return false;
 			}
 
-			if ( ( g_cmn.cmn_param.tweetkey == 0 && ( e.keyCode == 13 && e.ctrlKey == true ) ) ||
-				 ( g_cmn.cmn_param.tweetkey == 1 && ( e.keyCode == 13 && e.shiftKey == true ) ) ||
-				 ( g_cmn.cmn_param.tweetkey == 2 && ( e.keyCode == 13 && e.ctrlKey == false && e.shiftKey == false ) ) )
+			if ( ( g_cmn.cmn_param.tootkey == 0 && ( e.keyCode == 13 && e.ctrlKey == true ) ) ||
+				 ( g_cmn.cmn_param.tootkey == 1 && ( e.keyCode == 13 && e.shiftKey == true ) ) ||
+				 ( g_cmn.cmn_param.tootkey == 2 && ( e.keyCode == 13 && e.ctrlKey == false && e.shiftKey == false ) ) )
 			{
 				cont.find( '.toot' ).trigger( 'click' );
 				return false;

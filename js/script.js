@@ -591,11 +591,26 @@ function Init()
 			return;
 		}
 
-		var _cp = new CPanel( null, null, 324, 240 );
-		_cp.SetType( 'tootbox' );
-		_cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
-		_cp.SetParam( { account_id: '' } );
-		_cp.Start();
+		var pid = IsUnique( 'tootbox' );
+
+		if ( pid == null )
+		{
+			var _cp = new CPanel( null, null, 324, 240 );
+			_cp.SetType( 'tootbox' );
+			_cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
+			_cp.SetParam( { account_id: '' } );
+			_cp.Start();
+		}
+		else
+		{
+			SetFront( $( '#' + pid ) );
+
+			// 最小化している場合は元に戻す
+			if ( GetPanel( pid ).minimum.minimum == true )
+			{
+				$( '#' + pid ).find( 'div.titlebar' ).find( '.minimum' ).trigger( 'click' );
+			}
+		}
 	});
 
 	////////////////////////////////////////////////////////////
@@ -1065,7 +1080,20 @@ function SetFont( formflg )
 
 	for ( var i = 0 ; i < g_cmn.panel.length ; i++ )
 	{
-		g_cmn.panel[i].SetMinimumSize( $( '#' + g_cmn.panel[i].id ) );
+		var p = $( '#' + g_cmn.panel[i].id );
+
+		g_cmn.panel[i].SetMinimumSize( p.outerWidth(), p.outerHeight(), p );
+
+		// 最小化しているパネルのサイズ調整
+		if ( g_cmn.panel[i].minimum.minimum == true )
+		{
+			p.css( {
+				height: p.find( 'div.titlebar' ).outerHeight()
+				+ parseInt( p.css( 'border-top-width' ) )
+				+ parseInt( p.css( 'border-bottom-width' ) )
+				- parseInt( p.find( 'div.titlebar' ).css( 'border-bottom-width' ) )
+			} )
+		}
 	}
 }
 
@@ -1166,12 +1194,15 @@ function MakeTimeline( json, account_id )
 		bt_username: bt_username,
 		bt_avatar: bt_avatar,
 
+		mytoot: ( bt_flg ) ? ( bt_instance == g_cmn.account[account_id].instance && bt_id == g_cmn.account[account_id].id )
+							: ( instance == g_cmn.account[account_id].instance && json.account.id == g_cmn.account[account_id].id ),
+
 		display_name: json.account.display_name,
 		username: json.account.username,
 		instance: instance,
 		acct: json.account.acct,
 		application: json.application,
-		
+
 		isfriend: isfriend,
 		isfollower: isfollower,
 
@@ -1185,7 +1216,10 @@ function MakeTimeline( json, account_id )
 		text: ConvertContent( json.content, json ),
 
 		url : json.url,
-		
+
+		favourited: json.favourited,
+		reblogged: json.reblogged,
+
 		notification: notification,
 	};
 
@@ -2086,6 +2120,21 @@ function IsFollower( account_id, id, instance )
 	return true; // 仮
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// トゥート数表示の更新
+////////////////////////////////////////////////////////////////////////////////
+function StatusesCountUpdate( account_id, num )
+{
+	g_cmn.account[account_id].notsave.statuses_count += num;
+
+	var pid = IsUnique( 'account' );
+
+	// アカウントパネルを開いている場合のみ
+	if ( pid != null )
+	{
+		$( '#' + pid ).find( 'div.contents' ).trigger( 'account_update' );
+	}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // 開始

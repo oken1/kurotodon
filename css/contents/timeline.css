@@ -111,12 +111,12 @@ div.contents.timeline .lines div.item > .toot .notification .acct {
 
 div.contents.timeline .lines div.item > .avatar .icon-star {
 	font-size: 32px;
-	color: #dd9627;
+	color: #eda637;
 }
 
 div.contents.timeline .lines div.item > .avatar .icon-loop {
 	font-size: 32px;
-	color: #769a55;
+	color: #3ba0e9;
 }
 
 /* 名前・日付・お気に入り */
@@ -192,7 +192,7 @@ div.contents.timeline .lines div.item > .toot .headcontainer .date {
 
 /* カウント数表示 */
 div.contents.timeline .lines div.item > .toot .headcontainer .namedate .btfav_cnt > .icon-loop {
-	color: #86aa65;
+	color: #3ba0e9;
 }
 
 div.contents.timeline .lines div.item > .toot .headcontainer .namedate .btfav_cnt > .icon-star {
@@ -247,13 +247,24 @@ div.contents.timeline .lines div.item > .toot .headcontainer .options .btns:hove
 	opacity: 0.8;
 }
 
+/* ブースト */
+div.contents.timeline .lines div.item > .toot .headcontainer .options .timeline_boost.on {
+	color: #3ba0e9;
+	opacity: 1.0;
+}
+
+div.contents.timeline .lines div.item > .toot .headcontainer .options .timeline_boost.off {
+	color: #ffffff;
+	display: none;
+}
+
 /* お気に入り */
 div.contents.timeline .lines div.item > .toot .headcontainer .options .fav {
 	cursor: pointer;
 }
 
 div.contents.timeline .lines div.item > .toot .headcontainer .options .fav.on {
-	color: #dd2e44;
+	color: #eda637;
 }
 
 div.contents.timeline .lines div.item > .toot .headcontainer .options .fav.off {

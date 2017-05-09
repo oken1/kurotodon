@@ -34,8 +34,8 @@
 					{/if}
 				</div>
 
-				<div class='options' mytoot='{$mytoot}' protected='{$protected}'>
-					<span class='fav tooltip icon-star {if $favorited}on{else}off{/if}' tooltip='(i18n_0054)'></span>
+				<div class='options' mytoot='{$mytoot}' reblogged='{$reblogged}'>
+					<span class='fav tooltip icon-star {if $favourited}on{else}off{/if}' tooltip='(i18n_0054)'></span>
 				</div>
 			</div>
 		{/if}

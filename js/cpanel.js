@@ -200,7 +200,7 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 			.find( '.setting' ).show();
 
 		// 最小サイズの設定
-		SetMinimumSize( p );
+		SetMinimumSize( w, h, p );
 
 		////////////////////////////////////////
 		// パネル上でマウスがクリックされたとき
@@ -335,7 +335,7 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 	////////////////////////////////////////
 	// 最小サイズ設定
 	////////////////////////////////////////
-	function SetMinimumSize( p ) {
+	function SetMinimumSize( w, h, p ) {
 		var _tb = p.find( '.titlebar' );
 		var minw = _tb.find( '.close' ).outerWidth() * 3
 				 + _tb.find( '.titleicon' ).outerWidth()
@@ -361,9 +361,9 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 			.resizable( 'option', 'minHeight', minh );
 	};
 
-	this.SetMinimumSize = function( p )
+	this.SetMinimumSize = function( w, h, p )
 	{
-		SetMinimumSize( p );
+		SetMinimumSize( w, h, p );
 	};
 
 	////////////////////////////////////////////////////////////

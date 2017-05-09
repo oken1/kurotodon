@@ -297,7 +297,7 @@ panel div.titlebar {
 	display: table;
 	width: 100%;
 	border-collapse: separate;
-	border-spacing: 4px 4px;
+	border-spacing: 4px 6px;
 	border-bottom: 1px solid #101010;	/* color set: 固定(titlebar) */
 	background-color: #606060;	/* color set: タイトルバーのBG */
 	color: #ffffff;			/* color set: タイトルバーのフォント */
@@ -308,7 +308,7 @@ panel div.titlebar {
 panel div.titlebar > span {
 	display: table-cell;
 	vertical-align: middle;
-	height: 28px;
+	overflow: hidden;
 }
 
 /* タイトルアイコン */

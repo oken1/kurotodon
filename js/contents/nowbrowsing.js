@@ -45,32 +45,38 @@ Contents.nowbrowsing = function( cp )
 
 				var text = $( '<div>' ).html( g_cmn.cmn_param['nowbrowsing_text'] ).text() + item.attr( 'pagetitle' ) + ' - ' + item.attr( 'url' );
 
-				var pid = IsUnique( 'tweetbox' );
+				var pid = IsUnique( 'tootbox' );
 				var left = null;
 				var top = null;
 				var width = 324;
 
 				var SetText = function() {
-					var areatext = $( '#tweetbox_text' ).val();
-					var pos = $( '#tweetbox_text' ).get( 0 ).selectionStart;
-					var bef = areatext.substr( 0, pos );
-					var aft = areatext.substr( pos, areatext.length );
+					$( '.tootbox .text' ).each( function( e ) {
+						var textbox = $( this );
 
-					$( '#tweetbox_text' ).val( bef + text + aft )
-						.focus()
-						.trigger( 'keyup' );
+						var areatext = textbox.val();
+						var pos = textbox.get( 0 ).selectionStart;
+						var bef = areatext.substr( 0, pos );
+						var aft = areatext.substr( pos, areatext.length );
+
+						textbox.val( bef + text + aft )
+							.focus()
+							.trigger( 'keyup' );
+
+						return false;
+					} );
 				};
-
+				
 				// ツイートパネルが開いていない場合は開く
 				if ( pid == null )
 				{
 					var _cp = new CPanel( left, top, width, 240 );
-					_cp.SetType( 'tweetbox' );
-					_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0367' ), false );
-					_cp.SetParam( { account_id: '', rep_user: null, hashtag: null, maxlen: 140, } );
+					_cp.SetType( 'tootbox' );
+					_cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
+					_cp.SetParam( { account_id: '' } );
 					_cp.Start( function() {
 						SetText();
-						$( '#tweetbox_text' ).SetPos( 'start' );
+						$( '.tootbox .text' ).SetPos( 'start' );
 					} );
 				}
 				else

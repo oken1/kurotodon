@@ -311,15 +311,30 @@ Contents.account = function( cp )
 				return;
 			}
 
+			var pid = IsUnique( 'accountset' );
 
-
-
-
-
-
-
-
-
+			var account_id = $( '#account_del' ).attr( 'delid' );
+			
+			if ( pid == null )
+			{
+				var _cp = new CPanel( null, null, 360, 420 );
+				_cp.SetType( 'accountset' );
+				_cp.SetTitle( i18nGetMessage( 'i18n_0047' ) + '(' + g_cmn.account[account_id].display_name + '@' + g_cmn.account[account_id].instance + ')', false );
+				_cp.SetParam( {
+					account_id: account_id,
+				} );
+				_cp.Start();
+			}
+			else
+			{
+				var _cp = GetPanel( pid );
+				_cp.SetType( 'accountset' );
+				_cp.SetTitle( i18nGetMessage( 'i18n_0047' ) + '(' + g_cmn.account[account_id].display_name + '@' + g_cmn.account[account_id].instance + ')', false );
+				_cp.SetParam( {
+					account_id: account_id,
+				} );
+				$( '#' + pid ).find( 'div.contents' ).trigger( 'account_change' );
+			}
 
 			e.stopPropagation();
 		} );
@@ -496,7 +511,6 @@ Contents.account = function( cp )
 					},
 					function( res )
 					{
-console.log( res );
 						if ( res.client_id && res.client_secret )
 						{
 							_account.client_id = res.client_id;
@@ -527,7 +541,6 @@ console.log( res );
 					},
 					function( res )
 					{
-console.log( res );
 						if ( res.access_token )
 						{
 							_account.access_token = res.access_token;
