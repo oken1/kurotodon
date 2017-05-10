@@ -21,6 +21,7 @@ Contents.profile = function( cp )
 
 		SendRequest(
 			{
+				method: 'GET',
 				action: 'api_call',
 				instance: g_cmn.account[cp.param['account_id']].instance,
 				api: 'accounts/' + cp.param['id'],

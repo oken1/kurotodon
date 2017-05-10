@@ -314,6 +314,7 @@ function Init()
 
 							SendRequest(
 								{
+									method: 'GET',
 									action: 'api_call',
 									instance: g_cmn.account[account_id].instance,
 									api: 'accounts/verify_credentials',
@@ -1194,8 +1195,7 @@ function MakeTimeline( json, account_id )
 		bt_username: bt_username,
 		bt_avatar: bt_avatar,
 
-		mytoot: ( bt_flg ) ? ( bt_instance == g_cmn.account[account_id].instance && bt_id == g_cmn.account[account_id].id )
-							: ( instance == g_cmn.account[account_id].instance && json.account.id == g_cmn.account[account_id].id ),
+		mytoot: ( !bt_flg && instance == g_cmn.account[account_id].instance && json.account.id == g_cmn.account[account_id].id ),
 
 		display_name: json.account.display_name,
 		username: json.account.username,

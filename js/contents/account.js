@@ -548,6 +548,7 @@ Contents.account = function( cp )
 							// アカウント情報取得
 							SendRequest(
 								{
+									method: 'GET',
 									action: 'api_call',
 									instance: instance,
 									api: 'accounts/verify_credentials',

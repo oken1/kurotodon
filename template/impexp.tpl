@@ -8,9 +8,6 @@
 			</div>
 		</div>
 	</div>
-	<form id='export_form' method='post' target='_blank' rel='nofollow noopener noreferrer' action='http://www.jstwi.com/jsonexport'>
-		<input type='hidden' id='export_json' name='json'>
-	</form>
 	<div id='import' class='group'>
 		<div class='groupname'>(i18n_0052)</div>
 		<div id='importfile_select'>

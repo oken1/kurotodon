@@ -124,24 +124,33 @@ chrome.extension.onMessage.addListener(
 			// req : instance
 			//       api
 			//       access_token
-			//       param/post (GET/POST)
+			//       method
+			//       param
 			case 'api_call':
 				var query = new URLSearchParams();
 
-				for ( var i in req.param )
+				if ( req.method == 'GET' && req.param )
 				{
-					query.set( i, req.param[i] );
+					for ( var i in req.param )
+					{
+						query.set( i, req.param[i] );
+					}
 				}
 
-				var url = 'https://' + req.instance + '/api/v1/' + req.api + ( req.param ? '?' : '' ) + query.toString();
+				var url = 'https://' + req.instance + '/api/v1/' + req.api;
+				
+				if ( query.toString().length )
+				{
+					url += '?' + query.toString();
+				}
 
 				console.log( url );
 
 				$.ajax( {
 					url: url,
 					dataType: 'json',
-					type: ( req.post ) ? 'POST' : 'GET',
-					data: req.post,
+					type: req.method,
+					data: ( req.method == 'POST' ) ? req.param : {},
 					headers: {
 						'Authorization': 'Bearer ' + req.access_token
 					}

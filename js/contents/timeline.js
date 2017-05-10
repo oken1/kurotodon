@@ -217,6 +217,7 @@ Contents.timeline = function( cp )
 		// API呼び出し
 		SendRequest(
 			{
+				method: 'GET',
 				action: 'api_call',
 				instance: g_cmn.account[cp.param['account_id']].instance,
 				access_token: g_cmn.account[cp.param['account_id']].access_token,
@@ -898,11 +899,11 @@ console.log( res );
 
 				SendRequest(
 					{
+						method: 'POST',
 						action: 'api_call',
 						instance: g_cmn.account[cp.param['account_id']].instance,
 						access_token: g_cmn.account[cp.param['account_id']].access_token,
 						api: api,
-						post: {}
 					},
 					function( res )
 					{
@@ -931,15 +932,42 @@ console.log( res );
 			////////////////////////////////////////
 			else if ( targ.hasClass( 'timeline_del' ) )
 			{
-			
-			
-			
-			
-			
-			
-			
-			
-			
+				var item = targ.closest( '.item' );
+				
+				if ( confirm( i18nGetMessage( 'i18n_0224' ) ) )
+				{
+					Blackout( true );
+					$( '#blackout' ).activity( { color: '#808080', width: 8, length: 14 } );
+
+					SendRequest(
+						{
+							method: 'DELETE',
+							action: 'api_call',
+							instance: g_cmn.account[cp.param['account_id']].instance,
+							access_token: g_cmn.account[cp.param['account_id']].access_token,
+							api: 'statuses/' + item.attr( 'status_id' ),
+						},
+						function( res )
+						{
+							if ( res.status === undefined )
+							{
+								item.fadeOut( 'fast', function() {
+									delete status_ids[item.attr( 'status_id' ) + '@' + item.attr( 'instance' )];
+									$( this ).remove();
+
+									StatusCountUpdate( cp.param['account_id'], 1 );
+								} );
+							}
+							else
+							{
+								ApiError( res );
+							}
+
+							Blackout( false );
+							$( '#blackout' ).activity( false );
+						}
+					);
+				}
 			}
 			////////////////////////////////////////
 			// ☆クリック処理
@@ -961,11 +989,11 @@ console.log( res );
 
 				SendRequest(
 					{
+						method: 'POST',
 						action: 'api_call',
 						instance: g_cmn.account[cp.param['account_id']].instance,
 						access_token: g_cmn.account[cp.param['account_id']].access_token,
 						api: api,
-						post: {}
 					},
 					function( res )
 					{

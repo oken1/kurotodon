@@ -266,11 +266,12 @@ Contents.tootbox = function( cp )
 
 			SendRequest(
 				{
+					method: 'POST',
 					action: 'api_call',
 					instance: g_cmn.account[cp.param['account_id']].instance,
 					api: 'statuses',
 					access_token: g_cmn.account[cp.param['account_id']].access_token,
-					post: {
+					param: {
 						status: cont.find( '.text' ).val(),
 						media_ids: media_ids,
 					}
