@@ -8,6 +8,7 @@ Contents.tootbox = function( cp )
 	var p = $( '#' + cp.id );
 	var cont = p.find( 'div.contents' );
 	var uploading = 0;
+	var pv = 0;
 
 	cp.SetIcon( 'icon-pencil' );
 
@@ -21,6 +22,10 @@ Contents.tootbox = function( cp )
 		// トゥートボタンのツールチップを設定に合わせる
 		var _tips = new Array( 'Ctrl+Enter', 'Shift+Enter', 'Enter' );
 		cont.find( '.toot' ).attr( 'tooltip', i18nGetMessage( 'i18n_0367' ) + '(' + _tips[g_cmn.cmn_param.tootkey] + ')' );
+
+		cont.find( '.cw' ).hide();
+		cont.find( '.nsfw' ).hide();
+		cont.find( '.pvselect' ).hide();
 
 		////////////////////////////////////////
 		// ファイルドロップ時の処理
@@ -96,6 +101,7 @@ Contents.tootbox = function( cp )
 			{
 				cont.height( cont.height() - height );
 				p.height( p.height() - height );
+				cont.find( '.nsfw' ).hide();
 			}
 
 			ImageFileReset();
@@ -165,6 +171,8 @@ Contents.tootbox = function( cp )
 
 							var height = tootimages.find( '.imageitem:last' ).outerHeight( true );
 
+							cont.find( '.nsfw' ).show();
+
 							if ( _itemcnt == 0 )
 							{
 								cont.height( cont.height() + height );
@@ -197,13 +205,14 @@ Contents.tootbox = function( cp )
 		// リサイズ処理
 		////////////////////////////////////////
 		cont.on( 'contents_resize', function() {
+			var cw_h = ( cont.find( '.cw' ).css( 'display' ) != 'none' ) ? cont.find( '.cw' ).outerHeight() : 0;
 			var acc_h = cont.find( '.account_select' ).outerHeight();
 			var opt_h = cont.find( '.tootimages' ).outerHeight();
 			var btn_h = cont.find( '.cnt_buttons' ).outerHeight();
 			var padd = parseInt( cont.find( '.tootbox_box' ).css( 'padding-top' ) );
 
 			cont.find( '.tootbox_box' ).css( 'height', cont.outerHeight() - acc_h - opt_h );
-			cont.find( '.text' ).css( 'height', cont.find( '.tootbox_box' ).outerHeight() - btn_h - padd * 2 );
+			cont.find( '.text' ).css( 'height', cont.find( '.tootbox_box' ).outerHeight() - cw_h - btn_h - padd * 2 );
 		} );
 
 		cont.trigger( 'contents_resize' );
@@ -235,9 +244,60 @@ Contents.tootbox = function( cp )
 			if ( cp.param['account_id'] != cont.find( '.tootimages' ).attr( 'account_id' ) )
 			{
 				cont.find( '.tootimages' ).find( '.imageitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
+				cont.find( '.nsfw' ).hide();
 			}
 		} );
 
+		////////////////////////////////////////
+		// プライバシー設定ボタンクリック処理
+		////////////////////////////////////////
+		cont.find( '.privacy' ).click( function( e ) {
+			if ( cont.find( '.pvselect' ).css( 'display' ) == 'none' )
+			{
+				cont.find( '.pvselect' ).show().css( 'left', $( this ).position().left );
+
+				cont.find( '.pvselect > div' ).removeClass( 'selected' );
+				cont.find( '.pvselect > div:eq(' + pv + ')' ).addClass( 'selected' );
+			}
+			else
+			{
+				cont.find( '.pvselect' ).hide();
+			}
+		} );
+
+		////////////////////////////////////////
+		// プライバシー設定変更処理
+		////////////////////////////////////////
+		cont.find( '.pvselect > div' ).click( function( e ) {
+			var icons = new Array( 'icon-earth', 'icon-unlocked', 'icon-lock', 'icon-envelop' );
+			var pvbtn = cont.find( '.privacy' );
+
+			pvbtn.removeClass( icons[pv] );
+
+			pv = cont.find( '.pvselect > div' ).index( this );
+			pvbtn.addClass( icons[pv] );
+
+			cont.find( '.pvselect' ).hide();
+		} );
+
+		////////////////////////////////////////
+		// CWボタンクリック処理
+		////////////////////////////////////////
+		cont.find( '.contentwarning' ).click( function( e ) {
+			if ( cont.find( '.cw' ).css( 'display' ) == 'none' )
+			{
+				cont.find( '.cw' ).show()
+					.find( 'input[type=text]' ).focus();
+			}
+			else
+			{
+				cont.find( '.cw' ).hide();
+				cont.find( '.text' ).focus();
+			}
+			
+			cont.trigger( 'contents_resize' );
+		} );
+		
 		////////////////////////////////////////
 		// トゥートボタンクリック処理
 		////////////////////////////////////////
@@ -264,6 +324,8 @@ Contents.tootbox = function( cp )
 				media_ids.push( $( this ).attr( 'attachment_id' ) );
 			} );
 
+			var visibility = new Array( 'public', 'unlisted', 'private', 'direct' );
+
 			SendRequest(
 				{
 					method: 'POST',
@@ -274,6 +336,9 @@ Contents.tootbox = function( cp )
 					param: {
 						status: cont.find( '.text' ).val(),
 						media_ids: media_ids,
+						spoiler_text: ( cont.find( '.cw' ).css( 'display' ) != 'none' ) ? cont.find( '.cw input[type=text]' ).val() : '',
+						sensitive: ( cont.find( '.nfsw' ).css( 'display' ) != 'none' ) ? ( cont.find( '.nsfw input[type=checkbox]' ).prop( 'checked' ) ) ? true : false : false,
+						visibility: visibility[pv],
 					}
 				},
 				function( res )
@@ -284,10 +349,18 @@ Contents.tootbox = function( cp )
 						cont.find( '.text' ).val( '' )
 							.trigger( 'keyup' );
 
+						cont.find( '.text' ).SetPos( 'start' );
+
 						// 添付画像をクリア
 						cont.find( '.tootimages' ).find( '.imageitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
 
-						cont.find( '.text' ).SetPos( 'start' );
+						// NSFW設定をクリア
+						cont.find( '.nsfw input[type=checkbox]' ).prop( 'checked', false )
+						cont.find( '.nsfw' ).hide();
+
+						// CW設定をクリア
+						cont.find( '.cw input[type=text]' ).val( '' );
+						cont.find( '.cw' ).hide();
 
 						StatusesCountUpdate( cp.param['account_id'], 1 );
 					}
@@ -392,5 +465,6 @@ Contents.tootbox = function( cp )
 	this.stop = function() {
 		// 添付画像をクリア
 		cont.find( '.tootimages' ).find( '.imageitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
+		cont.find( '.nsfw' ).hide();
 	};
 }

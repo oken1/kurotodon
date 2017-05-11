@@ -15,6 +15,15 @@ div.contents.tootbox {
 	padding: 8px 4px;
 }
 
+/* CW */
+.tootbox_box .cw {
+	width: 100%;
+}
+
+.tootbox_box .cw > input[type=text] {
+	width: 100%;
+}
+
 /* テキストエリア */
 .tootbox_box .text {
 	height: 60px;
@@ -54,6 +63,28 @@ div.contents.tootbox {
 
 .tootbox_box .imageattach_input {
 	visibility: hidden;
+}
+
+.tootbox_box .pvselect {
+	position: absolute;
+	z-index: 8900;
+	border: 1px solid #101010;
+	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
+	background: #2e2e2e;
+}
+
+.tootbox_box .pvselect > div {
+	text-align: left;
+	padding: 4px;
+}
+
+.tootbox_box .pvselect > div.selected {
+	background: #406080;
+}
+
+.tootbox_box .pvselect > div:hover {
+	background: #204060;
+	cursor: pointer;
 }
 
 /* 添付画像 */

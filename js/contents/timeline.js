@@ -955,7 +955,7 @@ console.log( res );
 									delete status_ids[item.attr( 'status_id' ) + '@' + item.attr( 'instance' )];
 									$( this ).remove();
 
-									StatusCountUpdate( cp.param['account_id'], 1 );
+									StatusesCountUpdate( cp.param['account_id'], 1 );
 								} );
 							}
 							else

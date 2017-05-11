@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?83zpo1');
-  src:  url('fonts/icomoon.eot?83zpo1#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?83zpo1') format('truetype'),
-    url('fonts/icomoon.woff?83zpo1') format('woff'),
-    url('fonts/icomoon.svg?83zpo1#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?vj8lwd');
+  src:  url('fonts/icomoon.eot?vj8lwd#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?vj8lwd') format('truetype'),
+    url('fonts/icomoon.woff?vj8lwd') format('woff'),
+    url('fonts/icomoon.svg?vj8lwd#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -26,6 +26,12 @@
 
 .icon-notifications:before {
   content: "\e7f4";
+}
+.icon-camera:before {
+  content: "\e90f";
+}
+.icon-unlocked:before {
+  content: "\e990";
 }
 .icon-bubbles2:before {
   content: "\e902";

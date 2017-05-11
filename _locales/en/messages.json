@@ -747,7 +747,7 @@
 	},
 
 	"i18n_0201": {
-		"message": "Image attached"
+		"message": "Add media"
 	},
 
 	"i18n_0202": {
@@ -1482,6 +1482,61 @@
 	"i18n_0374": {
 		"message": " boosted your status"
 	},
+
+	"i18n_0375": {
+		"message": "Content warning"
+	},
+
+	"i18n_0376": {
+		"message": "What is on your mind?"
+	},
+
+	"i18n_0377": {
+		"message": "Adjust status privacy"
+	},
+
+	"i18n_0378": {
+		"message": "Hide text behind warning"
+	},
+
+	"i18n_0379": {
+		"message": "Mark media as sensitive"
+	},
+
+	"i18n_0380": {
+		"message": "Public"
+	},
+
+	"i18n_0381": {
+		"message": "Unlisted"
+	},
+
+	"i18n_0382": {
+		"message": "Followers-only"
+	},
+
+	"i18n_0383": {
+		"message": "Direct"
+	},
+
+	"i18n_0384": {
+		"message": "Post to public timelines"
+	},
+
+	"i18n_0385": {
+		"message": "Do not post to public timelines"
+	},
+
+	"i18n_0386": {
+		"message": "Post to followers only"
+	},
+
+	"i18n_0387": {
+		"message": "Post to mentioned users only"
+	},
+
+
+
 
 
 
