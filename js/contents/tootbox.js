@@ -77,6 +77,21 @@ Contents.tootbox = function( cp )
 		);
 
 		////////////////////////////////////////
+		// 返信削除ボタンクリック処理
+		////////////////////////////////////////
+		var ReplyDelClick = function() {
+			var replyitem = $( this ).parent().parent();
+			var height = replyitem.outerHeight( true );
+			
+			
+			replyitem.remove();
+			delete cp.param['reply'];
+			
+			cont.height( cont.height() - height );
+			p.height( p.height() - height );
+		};
+
+		////////////////////////////////////////
 		// 添付画像削除ボタンクリック処理
 		////////////////////////////////////////
 		var ImageDelClick = function() {
@@ -207,7 +222,7 @@ Contents.tootbox = function( cp )
 		cont.on( 'contents_resize', function() {
 			var cw_h = ( cont.find( '.cw' ).css( 'display' ) != 'none' ) ? cont.find( '.cw' ).outerHeight() : 0;
 			var acc_h = cont.find( '.account_select' ).outerHeight();
-			var opt_h = cont.find( '.tootimages' ).outerHeight();
+			var opt_h = cont.find( '.tootreply' ).outerHeight() + cont.find( '.tootimages' ).outerHeight();
 			var btn_h = cont.find( '.cnt_buttons' ).outerHeight();
 			var padd = parseInt( cont.find( '.tootbox_box' ).css( 'padding-top' ) );
 
@@ -240,12 +255,56 @@ Contents.tootbox = function( cp )
 		// アカウント変更時処理
 		////////////////////////////////////////
 		cont.on( 'account_changed', function() {
-			// 添付画像をクリア
+			// 添付画像、返信をクリア
 			if ( cp.param['account_id'] != cont.find( '.tootimages' ).attr( 'account_id' ) )
 			{
 				cont.find( '.tootimages' ).find( '.imageitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
 				cont.find( '.nsfw' ).hide();
+
+				cont.find( '.tootreply' ).find( '.replyitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
 			}
+		} );
+
+		////////////////////////////////////////
+		// リプライ設定
+		////////////////////////////////////////
+		cont.on( 'setreply', function( e, account_id, status_id ) {
+			SendRequest(
+				{
+					method: 'GET',
+					action: 'api_call',
+					instance: g_cmn.account[account_id].instance,
+					access_token: g_cmn.account[account_id].access_token,
+					api: 'statuses/' + status_id,
+				},
+				function( res )
+				{
+					if ( res.status === undefined )
+					{
+						cont.find( '.tootreply' ).find( '.replyitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
+
+						cp.param['account_id'] = account_id;
+						cont.trigger( 'account_update' );
+
+						cp.param['reply'] = res.id;
+
+						cont.find( '.tootreply' ).html( OutputTPL( 'tootbox_reply', {
+							avatar: res.account.avatar,
+							status: res.content.replace( /<("[^"]*"|'[^']*'|[^'">])*>/g, '' ),
+						} ) );
+
+						var height = cont.find( '.tootreply' ).find( '.replyitem' ).outerHeight( true );
+						cont.height( cont.height() + height );
+						p.height( p.height() + height );
+
+						cont.find( '.tootreply' ).find( '.del' ).find( 'span' ).on( 'click', ReplyDelClick );
+					}
+					else
+					{
+						ApiError( res );
+					}
+				}
+			);
 		} );
 
 		////////////////////////////////////////
@@ -326,6 +385,35 @@ Contents.tootbox = function( cp )
 
 			var visibility = new Array( 'public', 'unlisted', 'private', 'direct' );
 
+			// パラメータ設定
+			var param = {
+				status: cont.find( '.text' ).val(),
+				media_ids: media_ids,
+				visibility: visibility[pv],
+			}
+			
+			if ( cont.find( '.cw' ).css( 'display' ) != 'none' )
+			{
+				param.spoiler_text = cont.find( '.cw input[type=text]' ).val();
+			}
+
+			if ( cont.find( '.nfsw' ).css( 'display' ) != 'none' )
+			{
+				if ( cont.find( '.nsfw input[type=checkbox]' ).prop( 'checked' ) )
+				{
+					param.sensitive = true;
+				}
+				else
+				{
+					param.sensitive = false;
+				}
+			}
+
+			if ( cp.param['reply'] )
+			{
+				param.in_reply_to_id = cp.param['reply'];
+			}
+
 			SendRequest(
 				{
 					method: 'POST',
@@ -333,13 +421,7 @@ Contents.tootbox = function( cp )
 					instance: g_cmn.account[cp.param['account_id']].instance,
 					api: 'statuses',
 					access_token: g_cmn.account[cp.param['account_id']].access_token,
-					param: {
-						status: cont.find( '.text' ).val(),
-						media_ids: media_ids,
-						spoiler_text: ( cont.find( '.cw' ).css( 'display' ) != 'none' ) ? cont.find( '.cw input[type=text]' ).val() : '',
-						sensitive: ( cont.find( '.nfsw' ).css( 'display' ) != 'none' ) ? ( cont.find( '.nsfw input[type=checkbox]' ).prop( 'checked' ) ) ? true : false : false,
-						visibility: visibility[pv],
-					}
+					param: param
 				},
 				function( res )
 				{
@@ -361,6 +443,9 @@ Contents.tootbox = function( cp )
 						// CW設定をクリア
 						cont.find( '.cw input[type=text]' ).val( '' );
 						cont.find( '.cw' ).hide();
+
+						// 返信をクリア
+						cont.find( '.tootreply' ).find( '.replyitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
 
 						StatusesCountUpdate( cp.param['account_id'], 1 );
 					}
@@ -463,8 +548,8 @@ Contents.tootbox = function( cp )
 	// 終了処理
 	////////////////////////////////////////////////////////////
 	this.stop = function() {
-		// 添付画像をクリア
 		cont.find( '.tootimages' ).find( '.imageitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
+		cont.find( '.tootreply' ).find( '.replyitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
 		cont.find( '.nsfw' ).hide();
 	};
 }

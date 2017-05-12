@@ -860,18 +860,32 @@ console.log( res );
 			////////////////////////////////////////
 			else if ( targ.hasClass( 'timeline_reply' ) )
 			{
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+				var item = targ.closest( '.item' );
+				
+				var pid = IsUnique( 'tootbox' );
+
+				if ( pid == null )
+				{
+					var _cp = new CPanel( null, null, 324, 240 );
+					_cp.SetType( 'tootbox' );
+					_cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
+					_cp.SetParam( { account_id: cp.param['account_id'] } );
+					_cp.Start( function() {
+						$( '#' + pid ).find( 'div.contents' ).trigger( 'setreply', [ cp.param['account_id'], item.attr( 'status_id' ) ] );
+					} );
+				}
+				else
+				{
+					SetFront( $( '#' + pid ) );
+
+					// 最小化している場合は元に戻す
+					if ( GetPanel( pid ).minimum.minimum == true )
+					{
+						$( '#' + pid ).find( 'div.titlebar' ).find( '.minimum' ).trigger( 'click' );
+					}
+
+					$( '#' + pid ).find( 'div.contents' ).trigger( 'setreply', [ cp.param['account_id'], item.attr( 'status_id' ) ] );
+				}
 			}
 			////////////////////////////////////////
 			// ブーストボタンクリック

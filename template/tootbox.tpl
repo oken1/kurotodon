@@ -25,5 +25,7 @@
 	</div>
 	<span><input type='file' class='imageattach_input' accept='image/jpeg,image/png,image/gif' name='media'></span>
 </div>
+<div class='tootreply'>
+</div>
 <div class='tootimages'>
 </div>

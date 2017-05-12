@@ -88,11 +88,11 @@ div.contents.tootbox {
 }
 
 /* 添付画像 */
-.tootbox_box > div.tootimages {
+.tootimages {
 	display: block;
 }
 
-.imageitem {
+.tootimages .imageitem {
 	display: inline-block;
 	padding: 2px;
 	margin: 0 auto;
@@ -100,7 +100,7 @@ div.contents.tootbox {
 	text-align: left;
 }
 
-.imageitem > div {
+.tootimages .imageitem > div {
 	display: inline-block;
 	vertical-align: middle;
 	word-break: break-all;
@@ -108,11 +108,11 @@ div.contents.tootbox {
 	white-space: normal;
 }
 
-.imageitem > div.del {
+.tootimages .imageitem > div.del {
 	vertical-align: top;
 }
 
-.imageitem > div.icon img {
+.tootimages .imageitem > div.icon img {
 	width: 40px;
 	height: 40px;
 	margin: 2px 0px 0px 4px;
@@ -120,22 +120,66 @@ div.contents.tootbox {
 }
 
 /* 削除ボタン */
-.imageitem > div.del span {
+.tootimages .imageitem > div.del span {
 	width: 12px;
 	height: 12px;
 	padding-right: 4px;
 	font-size: 8px;
 }
 
-.imageitem > div.del span:hover {
+.tootimages .imageitem > div.del span:hover {
 	cursor: pointer;
 }
 
-.imageitem > div.filename {
+.tootimages .imageitem > div.filename {
 	padding-left: 4px;
 	width: 100%;
 }
 
-.imageitem > div.filename > span {
+.tootimages .imageitem > div.filename > span {
 	font-size: 0.8rem;
+}
+
+/* 返信 */
+.tootreply {
+	display: block;
+}
+
+.tootreply .replyitem {
+	width: 100%;
+	display: table;
+	table-layout: fixed;
+}
+
+.tootreply .replyitem > div {
+	display: table-cell;
+	vertical-align: middle;
+	word-break: break-all;
+	word-wrap: break-word;
+	padding: 4px;
+}
+
+.tootreply .replyitem .avatar {
+	width: 32px;
+	text-align: center;
+}
+
+.tootreply .replyitem .avatar > img {
+	width: 24px;
+	height: 24px;
+}
+
+.tootreply .replyitem .reply {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	width: auto;
+}
+
+.tootreply .replyitem .del span:hover {
+	cursor: pointer;
+}
+
+.tootreply .replyitem .del {
+	width: 32px;
 }

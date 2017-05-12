@@ -297,7 +297,7 @@ panel div.titlebar {
 	display: table;
 	width: 100%;
 	border-collapse: separate;
-	border-spacing: 4px 6px;
+	border-spacing: 4px 0px;
 	border-bottom: 1px solid #101010;	/* color set: 固定(titlebar) */
 	background-color: #606060;	/* color set: タイトルバーのBG */
 	color: #ffffff;			/* color set: タイトルバーのフォント */
@@ -309,6 +309,7 @@ panel div.titlebar > span {
 	display: table-cell;
 	vertical-align: middle;
 	overflow: hidden;
+	padding: 6px 0;
 }
 
 /* タイトルアイコン */
@@ -639,13 +640,9 @@ input[type=file] {
 panel div.titlebar .badge {
 	padding: 0px 2px;
 	font-weight: bold;
-	font-size: 0.8rem;
 	text-align: center;
-	vertical-align: middle;
 	color: #ffffff;
 	background-color: #dc2d2d;
-	border: #606060 solid;
-	border-width: 4px 0;
 }
 
 panel div.titlebar .badge:hover {
