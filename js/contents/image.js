@@ -85,8 +85,14 @@ Contents.image = function( cp )
 
 			nh = nh + p.find( 'div.titlebar' ).outerHeight() + 24;
 
-			p.css( { width: nw, height: nh, left: ( $( 'body' ).outerWidth() - nw ) / 2 + $( document ).scrollLeft() } )
-				.trigger( 'resize' );
+			p.css( {
+				boxSizing: 'content-box',
+				width: nw,
+				height: nh,
+				left: ( $( 'body' ).outerWidth() - nw ) / 2 + $( document ).scrollLeft()
+			 } )
+			.trigger( 'resize' );
+
 
 			// 初期表示
 			cont.find( '.img_panelsize' ).trigger( 'click' );

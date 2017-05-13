@@ -2016,19 +2016,29 @@ function AvatarURLConvert( account, account_id )
 ////////////////////////////////////////////////////////////////////////////////
 function OpenUserTimeline( account_id, id, username, display_name, instance )
 {
-	var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
-	_cp.SetType( 'timeline' );
-
-	_cp.SetParam( {
+	var dupchk = DuplicateCheck( { param: {
 		account_id: account_id,
 		timeline_type: 'user',
 		id: id,
-		username: username,
-		display_name: display_name,
-		instance: instance,
-		reload_time: g_cmn.cmn_param['reload_time'],
-	} );
-	_cp.Start();
+		instance: instance
+	} } );
+
+	if ( dupchk == -1 )
+	{
+		var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+		_cp.SetType( 'timeline' );
+
+		_cp.SetParam( {
+			account_id: account_id,
+			timeline_type: 'user',
+			id: id,
+			username: username,
+			display_name: display_name,
+			instance: instance,
+			reload_time: g_cmn.cmn_param['reload_time'],
+		} );
+		_cp.Start();
+	}
 }
 
 
@@ -2037,16 +2047,25 @@ function OpenUserTimeline( account_id, id, username, display_name, instance )
 ////////////////////////////////////////////////////////////////////////////////
 function OpenHashtagTimeline( account_id, hashtag )
 {
-	var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
-	_cp.SetType( 'timeline' );
-
-	_cp.SetParam( {
+	var dupchk = DuplicateCheck( { param: {
 		account_id: account_id,
 		timeline_type: 'hashtag',
 		hashtag: hashtag.replace( /^#/, '' ),
-		reload_time: g_cmn.cmn_param['reload_time'],
-	} );
-	_cp.Start();
+	} } );
+
+	if ( dupchk == -1 )
+	{
+		var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+		_cp.SetType( 'timeline' );
+
+		_cp.SetParam( {
+			account_id: account_id,
+			timeline_type: 'hashtag',
+			hashtag: hashtag.replace( /^#/, '' ),
+			reload_time: g_cmn.cmn_param['reload_time'],
+		} );
+		_cp.Start();
+	}
 }
 
 
@@ -2134,6 +2153,58 @@ function StatusesCountUpdate( account_id, num )
 	{
 		$( '#' + pid ).find( 'div.contents' ).trigger( 'account_update' );
 	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// 重複タイムラインチェック
+////////////////////////////////////////////////////////////////////////////////
+function DuplicateCheck( cp )
+{
+	var dupchk = -1;
+
+	for ( var i = 0 ; i < g_cmn.panel.length ; i++ )
+	{
+		if ( g_cmn.panel[i].type == 'timeline' )
+		{
+			if ( g_cmn.panel[i].param.timeline_type == cp.param.timeline_type &&
+				 g_cmn.panel[i].param.account_id == cp.param.account_id )
+			{
+				switch ( cp.param.timeline_type )
+				{
+					case 'home':
+					case 'local':
+					case 'federated':
+					case 'notifications':
+						dupchk = i;
+
+						break;
+					case 'user':
+						if ( g_cmn.panel[i].param.id == cp.param.id &&
+							 g_cmn.panel[i].param.instance == cp.param.instance )
+						{
+							dupchk = i;
+						}
+
+						break;
+					case 'hashtag':
+						if ( g_cmn.panel[i].param.hashtag == cp.param.hashtag )
+						{
+							dupchk = i;
+						}
+
+						break;
+				}
+			}
+		}
+	}
+
+	if ( dupchk > -1 )
+	{
+		SetFront( $( '#' + g_cmn.panel[dupchk].id ) );
+	}
+	
+	return dupchk;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -509,6 +509,20 @@ console.log( res );
 			case 'home':
 				cp.SetTitle( i18nGetMessage( 'i18n_0152' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-home' );
+				
+				SendRequest(
+					{
+						action: 'streaming_start',
+						instance: account.instance,
+						access_token: account.access_token,
+						account_id: cp.param.account_id,
+						type: 'user',
+					},
+					function( res )
+					{
+					}
+				);
+
 				break;
 			case 'local':
 				cp.SetTitle( i18nGetMessage( 'i18n_0365' ) + ' (' + account.display_name + '@' + account.instance + ')', true );

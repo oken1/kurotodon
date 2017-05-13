@@ -150,15 +150,23 @@ Contents.account = function( cp )
 								$( this ).hasClass( 'federated' ) ? 'federated' :
 								'notifications';
 
-			var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
-			_cp.SetType( 'timeline' );
-			_cp.SetParam( {
+			var dupchk = DuplicateCheck( { param: {
 				account_id: account_id,
 				timeline_type: timeline_type,
-				reload_time: g_cmn.cmn_param['reload_time'],
-			} );
-			_cp.Start();
+			} } );
 
+			if ( dupchk == -1 )
+			{
+				var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+				_cp.SetType( 'timeline' );
+				_cp.SetParam( {
+					account_id: account_id,
+					timeline_type: timeline_type,
+					reload_time: g_cmn.cmn_param['reload_time'],
+				} );
+				_cp.Start();
+			}
+			
 			e.stopPropagation();
 		} );
 	};
@@ -256,8 +264,27 @@ Contents.account = function( cp )
 				return;
 			}
 
-			if ( confirm( i18nGetMessage( 'i18n_0185', [g_cmn.account[$( this ).attr( 'delid' )].display_name] ) ) )
+			var account_id = $( this ).attr( 'delid' );
+			
+			if ( confirm( i18nGetMessage( 'i18n_0185', [g_cmn.account[account_id].display_name] ) ) )
 			{
+				// ストリーミングを止める
+				var type = new Array( 'home', 'local', 'federated', 'hashtag' );
+
+				for ( var i = 0 ; i < type.length ; i++ )
+				{
+					SendRequest(
+						{
+							action: 'streaming_stop',
+							account_id: account_id,
+							type: type[i],
+						},
+						function()
+						{
+						}
+					);
+				}
+
 				delete g_cmn.account[$( this ).attr( 'delid' )];
 
 				for ( var i = 0, _len = g_cmn.account_order.length ; i < _len ; i++ )
@@ -292,6 +319,26 @@ Contents.account = function( cp )
 
 			if ( confirm( i18nGetMessage( 'i18n_0073' ) ) )
 			{
+				for ( var account_id in g_cmn.account )
+				{
+					// ストリーミングを止める
+					var type = new Array( 'home', 'local', 'federated', 'hashtag' );
+
+					for ( var i = 0 ; i < type.length ; i++ )
+					{
+						SendRequest(
+							{
+								action: 'streaming_stop',
+								account_id: account_id,
+								type: type[i],
+							},
+							function()
+							{
+							}
+						);
+					}
+				}
+
 				g_cmn.account = {};
 				g_cmn.account_order = [];
 

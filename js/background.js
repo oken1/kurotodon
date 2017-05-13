@@ -22,6 +22,13 @@ $.ajaxSetup( {
 
 var tpl_c = {};
 
+// streaming情報
+// streaming[id: account_id@(user/public/federated/hashtag)]
+// {
+//   queue: []
+// }
+var streaming = {};
+
 chrome.browserAction.onClicked.addListener( function( tab ) {
 	chrome.windows.getAll( { populate: true }, function( wins ) {
 		var multi = false;
@@ -209,7 +216,70 @@ chrome.extension.onMessage.addListener(
 				app_tab = null;
 				app_manifest = null;
 
+				// Streamingをすべて止める
+				for ( var id in streaming )
+				{
+					if ( streaming[id].reader != null )
+					{
+						streaming[id].reader.cancel();
+						streaming[id].reader = null;
+					}
+
+					streaming[id].queue = [];
+
+					console.log( 'Streaming stopped.[' + id + ']' );
+				}
+
 				sendres( '' );
+				break;
+
+			// Streaming開始
+			// req: instance
+			//      access_token
+			//      account_id
+			//      type(home/local/federated/hashtag)
+			case 'streaming_start':
+				var _stid = req.account_id + '@' + req.type;
+				
+				if ( streaming[_stid] !== undefined )
+				{
+					sendres( '' );
+					break;
+				}
+
+				streaming[_stid] = {
+					instance: req.instance,
+					access_token: req.access_token,
+					account_id: req.account_id,
+					type: req.type,
+					reader: null,
+					queue: [],
+				}
+
+				console.log( 'Streaming started.[' + _stid + ']' );
+				break;
+
+			// Streaming停止
+			// req: account_id
+			//      type(home/local/federated/hashtag)
+			case 'streaming_stop':
+				var _stid = req.account_id + '@' + req.type;
+
+				if ( streaming[_stid] !== undefined )
+				{
+					if ( streaming[_stid].reader != null )
+					{
+						streaming[_stid].reader.cancel();
+						streaming[_stid].reader = null;
+					}
+
+					streaming[_stid].queue = [];
+
+					delete streaming[_stid];
+					
+					console.log( 'Streaming stopped.[' + _stid + ']' );
+				}
+
 				break;
 
 			// RSS取得
