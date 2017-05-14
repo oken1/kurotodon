@@ -269,13 +269,13 @@ Contents.account = function( cp )
 			if ( confirm( i18nGetMessage( 'i18n_0185', [g_cmn.account[account_id].display_name] ) ) )
 			{
 				// ストリーミングを止める
-				var type = new Array( 'home', 'local', 'federated', 'hashtag' );
+				var type = new Array( 'home', 'local', 'federated', 'hashtag', 'notifications' );
 
 				for ( var i = 0 ; i < type.length ; i++ )
 				{
 					SendRequest(
 						{
-							action: 'streaming_stop',
+							action: 'streaming_pause',
 							account_id: account_id,
 							type: type[i],
 						},
@@ -322,13 +322,13 @@ Contents.account = function( cp )
 				for ( var account_id in g_cmn.account )
 				{
 					// ストリーミングを止める
-					var type = new Array( 'home', 'local', 'federated', 'hashtag' );
+					var type = new Array( 'home', 'local', 'federated', 'hashtag', 'notifications' );
 
 					for ( var i = 0 ; i < type.length ; i++ )
 					{
 						SendRequest(
 							{
-								action: 'streaming_stop',
+								action: 'streaming_pause',
 								account_id: account_id,
 								type: type[i],
 							},

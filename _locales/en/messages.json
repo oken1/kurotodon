@@ -1535,6 +1535,14 @@
 		"message": "Post to mentioned users only"
 	},
 
+	"i18n_0388": {
+		"message": "Streaming start"
+	},
+
+	"i18n_0389": {
+		"message": "Streaming pause"
+	},
+
 
 
 

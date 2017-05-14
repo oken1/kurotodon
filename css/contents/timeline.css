@@ -8,37 +8,25 @@ div.contents.timeline .lines {
 	height: 100%;
 }
 
-/* 検索専用ボタン群 */
-div.contents.timeline .lines .panel_btns > div .search_btns {
-	position: absolute;
-	z-index: 8900;
-	border: 1px solid #101010;
-	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
-	background: #2e2e2e;
-	padding: 8px;
-	left: 8px;
-}
-
-/* 再検索テキスト */
-div.contents.timeline .lines .panel_btns > div .searchagain_text {
-	vertical-align: bottom;
-}
-
-/* UserStream */
-div.contents.timeline .lines .panel_btns .ustbl {
+/* Streaming Control */
+div.contents.timeline .lines .panel_btns .streamctl {
 	text-align: right;
 }
 
-div.contents.timeline .lines .panel_btns .streamuse {
-	display: inline-block;
-	color: #30cf70;
-	margin-right: 4px;
-	vertical-align: middle;
-	font-size: 1.1rem;
+div.contents.timeline .lines .panel_btns .streamctl > a {
+	padding: 0 12px 0 0;
 }
 
-div.contents.timeline .lines .panel_btns .streamuse.reconnect {
-	color: #dc4d4d;
+div.contents.timeline .lines .panel_btns .streamctl > a:hover {
+	cursor: pointer;
+}
+
+div.contents.timeline .lines .panel_btns .streamctl > a.on {
+	opacity: 1.0;
+}
+
+div.contents.timeline .lines .panel_btns .streamctl > a.off {
+	opacity: 0.5;
 }
 
 /* リスト部 */

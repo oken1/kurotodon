@@ -21,8 +21,8 @@ Contents.timeline = function( cp )
 	var scrollPos = null;
 	var scrollHeight = null;
 	var loading = false;
-	var stream_queue = new Array();
 	var cursor_on_option = false;
+	var streaming = false;
 
 	////////////////////////////////////////////////////////////
 	// 読み込み済みステータスID数を取得
@@ -182,14 +182,12 @@ Contents.timeline = function( cp )
 			// 初期
 			case 'init':
 				loading = true;
-				stream_queue = [];
 				status_ids = {};
 
 				break;
 			// 更新
 			case 'reload':
 				loading = true;
-				stream_queue = [];
 				status_ids = {};
 
 				break;
@@ -509,20 +507,6 @@ console.log( res );
 			case 'home':
 				cp.SetTitle( i18nGetMessage( 'i18n_0152' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-home' );
-				
-				SendRequest(
-					{
-						action: 'streaming_start',
-						instance: account.instance,
-						access_token: account.access_token,
-						account_id: cp.param.account_id,
-						type: 'user',
-					},
-					function( res )
-					{
-					}
-				);
-
 				break;
 			case 'local':
 				cp.SetTitle( i18nGetMessage( 'i18n_0365' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
@@ -545,6 +529,10 @@ console.log( res );
 				}
 
 				cp.SetIcon( 'icon-user' );
+				
+				// ユーザータイムラインはストリーミングなし
+				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
+				
 				break;
 			case 'hashtag':
 				cp.SetTitle( cp.param['hashtag'] + ' (' + account.display_name + '@' + account.instance + ')', true );
@@ -665,7 +653,10 @@ console.log( res );
 			}
 
 			tm = setInterval( function() {
-				ListMake( cp.param['get_count'], 'new' );
+				if ( !streaming )
+				{
+					ListMake( cp.param['get_count'], 'new' );
+				}
 			}, cp.param['reload_time'] * 1000 );
 		} );
 
@@ -689,6 +680,54 @@ console.log( res );
 		////////////////////////////////////////
 		lines.find( '.sctbl' ).find( 'a:last' ).click( function( e ) {
 			timeline_list.scrollTop( timeline_list.prop( 'scrollHeight' ) );
+		} );
+
+		////////////////////////////////////////
+		// ストリーミング開始
+		////////////////////////////////////////
+		lines.find( '.stm_start' ).click( function( e ) {
+			var account = g_cmn.account[cp.param.account_id];
+
+			SendRequest(
+				{
+					action: 'streaming_start',
+					instance: account.instance,
+					access_token: account.access_token,
+					account_id: cp.param.account_id,
+					type: cp.param.timeline_type,
+				},
+				function( res )
+				{
+					if ( res.status == 'success' )
+					{
+						streaming = true;
+						lines.find( '.stm_start' ).removeClass( 'off' ).addClass( 'on' );
+						lines.find( '.stm_pause' ).removeClass( 'on' ).addClass( 'off' );
+					}
+				}
+			);
+		} );
+
+		////////////////////////////////////////
+		// ストリーミング停止
+		////////////////////////////////////////
+		lines.find( '.stm_pause' ).click( function( e ) {
+			SendRequest(
+				{
+					action: 'streaming_pause',
+					account_id: cp.param.account_id,
+					type: cp.param.timeline_type,
+				},
+				function( res )
+				{
+					if ( res.status == 'success' )
+					{
+						streaming = false;
+						lines.find( '.stm_start' ).removeClass( 'on' ).addClass( 'off' );
+						lines.find( '.stm_pause' ).removeClass( 'off' ).addClass( 'on' );
+					}
+				}
+			);
 		} );
 
 		////////////////////////////////////////
@@ -1270,5 +1309,7 @@ console.log( res );
 			clearTimeout( tm );
 			tm = null;
 		}
+
+		lines.find( '.stm_pause' ).trigger( 'click' );
 	};
 }

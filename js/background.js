@@ -23,7 +23,7 @@ $.ajaxSetup( {
 var tpl_c = {};
 
 // streaming情報
-// streaming[id: account_id@(user/public/federated/hashtag)]
+// streaming[id: account_id@(user/public/federated/hashtag/notifications)]
 // {
 //   queue: []
 // }
@@ -237,13 +237,15 @@ chrome.extension.onMessage.addListener(
 			// req: instance
 			//      access_token
 			//      account_id
-			//      type(home/local/federated/hashtag)
+			//      type(home/local/federated/hashtag/notifications)
 			case 'streaming_start':
 				var _stid = req.account_id + '@' + req.type;
 				
 				if ( streaming[_stid] !== undefined )
 				{
-					sendres( '' );
+					sendres( {
+						staus: 'success'
+					} );
 					break;
 				}
 
@@ -257,12 +259,85 @@ chrome.extension.onMessage.addListener(
 				}
 
 				console.log( 'Streaming started.[' + _stid + ']' );
+
+				var api = 'https://' + streaming[_stid].instance + '/api/v1/streaming/';
+				
+				switch ( req.type )
+				{
+					case 'home':
+					case 'notifications':
+						api += 'user';
+						break;
+					case 'local':
+						api += 'public/local';
+						break;
+					case 'federated':
+						api += 'public';
+						break;
+					case 'hashtag':
+						api += 'hashtag';
+						breal
+				}
+
+				var headers = new Headers();
+				headers.set( 'Authorization', 'Bearer ' + req.access_token );
+
+				fetch( api, {
+					method: 'GET',
+					mode: 'cors',
+					headers: headers,
+				} ).then( function( res ) {
+					sendres( {
+						status: 'success',
+					} );
+
+					console.log( 'set reader[' + _stid + ']' );
+					console.log( res );
+					streaming[_stid].reader = res.body.getReader();
+					var chunk = 0;
+					var decoder = new TextDecoder();
+
+					streaming[_stid].reader.read().then( function processResult( result ) {
+						if ( result.done )
+						{
+							console.log( 'Fetch complete[' + _stid + ']' );
+							sendres( {
+								status: 'success',
+							} );
+							return;
+						}
+						
+						var txt = decoder.decode( result.value || new Uint8Array, { stream: !result.done } );
+						var data = txt.split( /\n/ );
+						
+						console.log( data );
+						console.log( '--------------------------------' );
+						
+						for ( var i = 0 ; i < data.length ; i++ )
+						{
+							if ( data[i].match( /^data: {/ ) )	//}
+							{
+								var json = JSON.parse( data[i].replace( /^data: /, '' ) );
+								console.log( json );
+							}
+						}
+						
+						return streaming[_stid].reader.read().then( processResult );
+					} ).catch( function( err ) {
+						console.log( 'reader.read() error[' + _stid + ']' );
+						console.log( err );
+					} );
+				} ).catch( function( err ) {
+					console.log( 'Fetch error[' + _stid + ']' );
+					console.log( err );
+				} );
+
 				break;
 
 			// Streaming停止
 			// req: account_id
-			//      type(home/local/federated/hashtag)
-			case 'streaming_stop':
+			//      type(home/local/federated/hashtag/notifications)
+			case 'streaming_pause':
 				var _stid = req.account_id + '@' + req.type;
 
 				if ( streaming[_stid] !== undefined )
@@ -276,10 +351,12 @@ chrome.extension.onMessage.addListener(
 					streaming[_stid].queue = [];
 
 					delete streaming[_stid];
-					
 					console.log( 'Streaming stopped.[' + _stid + ']' );
 				}
 
+				sendres( {
+					status: 'success',
+				} );
 				break;
 
 			// RSS取得
