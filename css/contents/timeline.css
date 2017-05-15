@@ -15,6 +15,7 @@ div.contents.timeline .lines .panel_btns .streamctl {
 
 div.contents.timeline .lines .panel_btns .streamctl > a {
 	padding: 0 12px 0 0;
+	opacity: 0.5;
 }
 
 div.contents.timeline .lines .panel_btns .streamctl > a:hover {
@@ -25,9 +26,6 @@ div.contents.timeline .lines .panel_btns .streamctl > a.on {
 	opacity: 1.0;
 }
 
-div.contents.timeline .lines .panel_btns .streamctl > a.off {
-	opacity: 0.5;
-}
 
 /* リスト部 */
 div.contents.timeline .lines .timeline_list {

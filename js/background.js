@@ -228,6 +228,8 @@ chrome.extension.onMessage.addListener(
 					streaming[id].queue = [];
 
 					console.log( 'Streaming stopped.[' + id + ']' );
+
+					chrome.tabs.sendMessage( app_tab.id, { action: 'stream_stopped', id: id, json: {} } );
 				}
 
 				sendres( '' );
@@ -243,9 +245,7 @@ chrome.extension.onMessage.addListener(
 				
 				if ( streaming[_stid] !== undefined )
 				{
-					sendres( {
-						staus: 'success'
-					} );
+					sendres( '' );
 					break;
 				}
 
@@ -276,7 +276,7 @@ chrome.extension.onMessage.addListener(
 						break;
 					case 'hashtag':
 						api += 'hashtag';
-						breal
+						break;
 				}
 
 				var headers = new Headers();
@@ -287,49 +287,68 @@ chrome.extension.onMessage.addListener(
 					mode: 'cors',
 					headers: headers,
 				} ).then( function( res ) {
-					sendres( {
-						status: 'success',
-					} );
+					chrome.tabs.sendMessage( app_tab.id, { action: 'stream_started', id: _stid, json: {} } );
 
-					console.log( 'set reader[' + _stid + ']' );
-					console.log( res );
+console.log( 'set reader[' + _stid + ']' );
+console.log( res );
 					streaming[_stid].reader = res.body.getReader();
-					var chunk = 0;
 					var decoder = new TextDecoder();
+					var txt = '';
 
 					streaming[_stid].reader.read().then( function processResult( result ) {
 						if ( result.done )
 						{
 							console.log( 'Fetch complete[' + _stid + ']' );
-							sendres( {
-								status: 'success',
-							} );
+
+							streaming[_stid].reader = null;
+							streaming[_stid].queue = [];
+							chrome.tabs.sendMessage( app_tab.id, { action: 'stream_stopped', id: _stid, json: {} } );
+							delete streaming[_stid];
+
 							return;
 						}
-						
-						var txt = decoder.decode( result.value || new Uint8Array, { stream: !result.done } );
+
+						// データ処理
+						txt += decoder.decode( result.value || new Uint8Array, { stream: true } );
+console.log( txt );
 						var data = txt.split( /\n/ );
-						
-						console.log( data );
-						console.log( '--------------------------------' );
-						
+						txt = '';
+
 						for ( var i = 0 ; i < data.length ; i++ )
 						{
 							if ( data[i].match( /^data: {/ ) )	//}
 							{
-								var json = JSON.parse( data[i].replace( /^data: /, '' ) );
-								console.log( json );
+								try {
+									var json = JSON.parse( data[i].replace( /^data: /, '' ) );
+
+									chrome.tabs.sendMessage( app_tab.id, { action: 'stream_recieved', id: _stid, json: json } );
+								}
+								catch( e )
+								{
+console.log( '*************** ERROR Data ***************' );
+									txt += data[i];
+								}
 							}
 						}
-						
+
 						return streaming[_stid].reader.read().then( processResult );
 					} ).catch( function( err ) {
 						console.log( 'reader.read() error[' + _stid + ']' );
 						console.log( err );
+
+						streaming[_stid].reader = null;
+						streaming[_stid].queue = [];
+						chrome.tabs.sendMessage( app_tab.id, { action: 'stream_stopped', id: _stid, json: {} } );
+						delete streaming[_stid];
 					} );
 				} ).catch( function( err ) {
 					console.log( 'Fetch error[' + _stid + ']' );
 					console.log( err );
+
+					streaming[_stid].reader = null;
+					streaming[_stid].queue = [];
+					chrome.tabs.sendMessage( app_tab.id, { action: 'stream_stopped', id: _stid, json: {} } );
+					delete streaming[_stid];
 				} );
 
 				break;
@@ -345,18 +364,12 @@ chrome.extension.onMessage.addListener(
 					if ( streaming[_stid].reader != null )
 					{
 						streaming[_stid].reader.cancel();
-						streaming[_stid].reader = null;
 					}
 
-					streaming[_stid].queue = [];
-
-					delete streaming[_stid];
 					console.log( 'Streaming stopped.[' + _stid + ']' );
 				}
 
-				sendres( {
-					status: 'success',
-				} );
+				sendres( '' );
 				break;
 
 			// RSS取得

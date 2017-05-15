@@ -688,6 +688,11 @@ console.log( res );
 		lines.find( '.stm_start' ).click( function( e ) {
 			var account = g_cmn.account[cp.param.account_id];
 
+			if ( lines.find( '.stm_start' ).hasClass( 'on' ) )
+			{
+				return;
+			}
+
 			SendRequest(
 				{
 					action: 'streaming_start',
@@ -698,12 +703,6 @@ console.log( res );
 				},
 				function( res )
 				{
-					if ( res.status == 'success' )
-					{
-						streaming = true;
-						lines.find( '.stm_start' ).removeClass( 'off' ).addClass( 'on' );
-						lines.find( '.stm_pause' ).removeClass( 'on' ).addClass( 'off' );
-					}
 				}
 			);
 		} );
@@ -712,6 +711,12 @@ console.log( res );
 		// ストリーミング停止
 		////////////////////////////////////////
 		lines.find( '.stm_pause' ).click( function( e ) {
+
+			if ( lines.find( '.stm_pause' ).hasClass( 'on' ) )
+			{
+				return;
+			}
+
 			SendRequest(
 				{
 					action: 'streaming_pause',
@@ -720,14 +725,88 @@ console.log( res );
 				},
 				function( res )
 				{
-					if ( res.status == 'success' )
-					{
-						streaming = false;
-						lines.find( '.stm_start' ).removeClass( 'on' ).addClass( 'off' );
-						lines.find( '.stm_pause' ).removeClass( 'off' ).addClass( 'on' );
-					}
 				}
 			);
+		} );
+
+		////////////////////////////////////////
+		// ストリーミング処理
+		////////////////////////////////////////
+		cont.on( 'streaming', function( e, data ) {
+			if ( data.action == 'stream_started' )
+			{
+				lines.find( '.stm_start' ).addClass( 'on' );
+				lines.find( '.stm_pause' ).removeClass( 'on' );
+				streaming = true;
+			}
+			else if ( data.action == 'stream_stopped' )
+			{
+				lines.find( '.stm_start' ).removeClass( 'on' );
+				lines.find( '.stm_pause' ).addClass( 'on' );
+				streaming = false;
+			}
+			else if ( data.action == 'stream_recieved' )
+			{
+				var addcnt = 0;
+				
+				if ( cp.param.timeline_type != 'notifications' )
+				{
+					timeline_list.prepend( MakeTimeline( data.json, cp.param.account_id ) );
+
+					var instance = GetInstanceFromAcct( data.json.account.acct, cp.param.account_id );
+					
+					status_ids[data.json.id + '@' + instance] = true;
+
+					var users = {};
+					users[data.json.account.id + '@' + instance] = {
+						avatar: data.json.account.avatar,
+						display_name: data.json.account.display_name,
+						created_at: data.json.account.created_at,
+					};
+					
+					UserInfoUpdate( users );
+					addcnt++;
+
+					last_status_id = data.json.id;
+				}
+
+				if ( addcnt > 0 )
+				{
+					var _sctop = timeline_list.scrollTop();
+
+					// 新着ツイートにスクロールする
+					if ( g_cmn.cmn_param['newscroll'] == 1 && _sctop == 0 )
+					{
+					}
+					else
+					{
+						var scheight = timeline_list.prop( 'scrollHeight' );
+						timeline_list.scrollTop( _sctop + ( timeline_list.find( '>div.item:eq(0)' ).outerHeight() ) );
+					}
+
+					timeline_list.find( '> div.item:lt(1)' ).addClass( 'new' );
+					newitems = $( timeline_list.find( '> div.item.new' ).get() );
+
+					badge.html( ( newitems.length > 999 ) ? '999+' : newitems.length ).show();
+					$( '#panellist' ).find( '> .lists > div[panel_id=' + cp.id + ']' ).find( 'span.badge' ).html( ( newitems.length > 999 ) ? '999+' : newitems.length ).show();
+
+					timeline_list.trigger( 'scroll' );
+
+					// "表示最大数を超えている件数
+					var itemcnt = StatusIDCount();
+
+					if ( itemcnt - cp.param['max_count'] > 0 )
+					{
+						// 新着で読み込んだ分だけ削除
+						timeline_list.find( '> div.item:gt(' + ( itemcnt - addcnt - 1 ) + ')' ).each( function() {
+							delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'instance' )];
+							$( this ).remove();
+						} );
+
+						first_status_id = timeline_list.find( '> div.item:last' ).attr( 'status_id' );
+					}
+				}
+			}
 		} );
 
 		////////////////////////////////////////
@@ -903,6 +982,15 @@ console.log( res );
 						}
 
 						e.stopPropagation();
+					} );
+					
+					menubox.find( '> a.speech' ).on( 'click', function( e ) {
+
+						var text = item.find( '.toot' ).find( '.toot_text' ).text();
+						var uttr = new SpeechSynthesisUtterance( text );
+						uttr.lang = 'ja-JP';
+
+						speechSynthesis.speak( uttr );
 					} );
 				}
 

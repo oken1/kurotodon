@@ -1534,6 +1534,22 @@ function ApiError( res )
 function SetBackgroundConnect()
 {
 	chrome.extension.onMessage.addListener( function( req, sender, sendres ) {
+		var id = req.id.split( /@/ );
+		var account_id = id[0] + '@' + id[1];
+		var timeline_type = id[2];
+
+		for ( var i = 0, _len = g_cmn.panel.length ; i < _len ; i++ )
+		{
+			if ( g_cmn.panel[i].type == 'timeline' )
+			{
+				if ( g_cmn.panel[i].param['timeline_type'] == timeline_type &&
+					 g_cmn.panel[i].param['account_id'] == account_id )
+				{
+					$( '#' + g_cmn.panel[i].id ).find( '.contents' ).trigger( 'streaming', req );
+				}
+			}
+		}
+
 		return true;
 	} );
 }
