@@ -683,50 +683,45 @@ console.log( res );
 		} );
 
 		////////////////////////////////////////
-		// ストリーミング開始
+		// ストリーミング開始/停止
 		////////////////////////////////////////
-		lines.find( '.stm_start' ).click( function( e ) {
+		lines.find( '.streamctl > a' ).click( function( e ) {
 			var account = g_cmn.account[cp.param.account_id];
 
-			if ( lines.find( '.stm_start' ).hasClass( 'on' ) )
+			// 開始
+			if ( $( this ).hasClass( 'off' ) )
 			{
-				return;
+				$( this ).removeClass( 'off' ).addClass( 'try' );
+
+				SendRequest(
+					{
+						action: 'streaming_start',
+						instance: account.instance,
+						access_token: account.access_token,
+						account_id: cp.param.account_id,
+						type: cp.param.timeline_type,
+					},
+					function( res )
+					{
+					}
+				);
 			}
-
-			SendRequest(
-				{
-					action: 'streaming_start',
-					instance: account.instance,
-					access_token: account.access_token,
-					account_id: cp.param.account_id,
-					type: cp.param.timeline_type,
-				},
-				function( res )
-				{
-				}
-			);
-		} );
-
-		////////////////////////////////////////
-		// ストリーミング停止
-		////////////////////////////////////////
-		lines.find( '.stm_pause' ).click( function( e ) {
-
-			if ( lines.find( '.stm_pause' ).hasClass( 'on' ) )
+			// 停止
+			else if( $( this ).hasClass( 'on' ) )
 			{
-				return;
-			}
+				$( this ).removeClass( 'on' ).addClass( 'try' );
 
-			SendRequest(
-				{
-					action: 'streaming_pause',
-					account_id: cp.param.account_id,
-					type: cp.param.timeline_type,
-				},
-				function( res )
-				{
-				}
-			);
+				SendRequest(
+					{
+						action: 'streaming_pause',
+						account_id: cp.param.account_id,
+						type: cp.param.timeline_type,
+					},
+					function( res )
+					{
+					}
+				);
+			}
 		} );
 
 		////////////////////////////////////////
@@ -735,23 +730,22 @@ console.log( res );
 		cont.on( 'streaming', function( e, data ) {
 			if ( data.action == 'stream_started' )
 			{
-				lines.find( '.stm_start' ).addClass( 'on' );
-				lines.find( '.stm_pause' ).removeClass( 'on' );
+				lines.find( '.streamctl > a' ).removeClass( 'try' ).addClass( 'on' );
 				streaming = true;
 			}
 			else if ( data.action == 'stream_stopped' )
 			{
-				lines.find( '.stm_start' ).removeClass( 'on' );
-				lines.find( '.stm_pause' ).addClass( 'on' );
+				lines.find( '.streamctl > a' ).removeClass( 'try' ).addClass( 'off' );
 				streaming = false;
 			}
 			else if ( data.action == 'stream_recieved' )
 			{
 				var addcnt = 0;
-				
-				if ( cp.param.timeline_type != 'notifications' )
+
+				if ( ( cp.param.timeline_type != 'notifications' && data.json.event == 'update' ) ||
+					 ( cp.param.timeline_type == 'notifications' && data.json.event == 'notification' ) )
 				{
-					timeline_list.prepend( MakeTimeline( data.json, cp.param.account_id ) );
+					timeline_list.prepend( MakeTimeline( data.json, cp.param.account_id ) ).children( ':first' ).hide().fadeIn();;
 
 					var instance = GetInstanceFromAcct( data.json.account.acct, cp.param.account_id );
 					
@@ -1009,7 +1003,6 @@ console.log( res );
 				{
 					var _cp = new CPanel( null, null, 324, 240 );
 					_cp.SetType( 'tootbox' );
-					_cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
 					_cp.SetParam( { account_id: cp.param['account_id'] } );
 					_cp.Start( function() {
 						$( '#' + pid ).find( 'div.contents' ).trigger( 'setreply', [ cp.param['account_id'], item.attr( 'status_id' ) ] );
@@ -1398,6 +1391,9 @@ console.log( res );
 			tm = null;
 		}
 
-		lines.find( '.stm_pause' ).trigger( 'click' );
+		if ( lines.find( '.streamctl > a' ).hasClass( 'on' ) )
+		{
+			lines.find( '.streamctl > a' ).trigger( 'click' );
+		}
 	};
 }

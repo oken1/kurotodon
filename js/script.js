@@ -72,13 +72,6 @@ function Init()
 		e.stopPropagation();
 	} );
 
-	// 言語ファイル設定
-	SetLocaleFile();
-
-	// ツールバー
-	$( '#head' ).html( OutputTPL( 'header', {} ) );
-	$( '#head' ).find( '.header_sub' ).hide();
-
 	// パネルリスト
 	$( '#panellist' ).resizable( {
 		handles: 'e',
@@ -149,6 +142,13 @@ function Init()
 
 						g_cmn.cmn_param[p] = _g_cmn.cmn_param[p];
 					}
+
+					// 言語ファイル設定
+					SetLocaleFile();
+
+					// ツールバー
+					$( '#head' ).html( OutputTPL( 'header', {} ) );
+					$( '#head' ).find( '.header_sub' ).hide();
 
 					// フォントサイズ
 					SetFont();
@@ -374,6 +374,13 @@ function Init()
 
 					// 初回起動
 
+					// 言語ファイル設定
+					SetLocaleFile();
+
+					// ツールバー
+					$( '#head' ).html( OutputTPL( 'header', {} ) );
+					$( '#head' ).find( '.header_sub' ).hide();
+
 					// フォントサイズ
 					SetFont();
 
@@ -454,7 +461,7 @@ function Init()
 	////////////////////////////////////////////////////////////
 	// ツールボタンのクリック処理
 	////////////////////////////////////////////////////////////
-	$( '#head_tool' ).click( function( e ) {
+	$( document ).on( 'click', '#head_tool', function( e ) {
 		// disabledなら処理しない
 		if ( $( this ).hasClass( 'disabled' ) )
 		{
@@ -468,7 +475,7 @@ function Init()
 	////////////////////////////////////////////////////////////
 	// ツールメニューのクリック処理
 	////////////////////////////////////////////////////////////
-	$( '#head_tool_sub' ).click( function( e ) {
+	$( document ).on( 'click', '#head_tool_sub', function( e ) {
 		switch ( $( e.target ).index() )
 		{
 			// RSSパネル一覧
@@ -479,7 +486,6 @@ function Init()
 				{
 					var _cp = new CPanel( null, null, 320, 360 );
 					_cp.SetType( 'rsslist' );
-					_cp.SetTitle( i18nGetMessage( 'i18n_0032' ), false );
 					_cp.SetParam( {} );
 					_cp.Start();
 				}
@@ -503,7 +509,6 @@ function Init()
 				{
 					var _cp = new CPanel( null, null, 360, 240 );
 					_cp.SetType( 'nowbrowsing' );
-					_cp.SetTitle( i18nGetMessage( 'i18n_0029' ), false );
 					_cp.SetParam( {} );
 					_cp.Start();
 				}
@@ -527,7 +532,6 @@ function Init()
 				{
 					var _cp = new CPanel( null, null, 360, 240 );
 					_cp.SetType( 'impexp' );
-					_cp.SetTitle( i18nGetMessage( 'i18n_0052' ) + '/' + i18nGetMessage( 'i18n_0053' ), false );
 					_cp.SetParam( {} );
 					_cp.Start();
 				}
@@ -549,43 +553,9 @@ function Init()
 	} );
 
 	////////////////////////////////////////////////////////////
-	// 検索ボタンのクリック処理
-	////////////////////////////////////////////////////////////
-	$( '#head_search' ).click( function( e ) {
-		// disabledなら処理しない
-		if ( $( this ).hasClass( 'disabled' ) )
-		{
-			return;
-		}
-
-		var pid = IsUnique( 'searchbox' );
-
-		if ( pid == null )
-		{
-			var _cp = new CPanel( null, null, 320, 140 );
-			_cp.SetType( 'searchbox' );
-			_cp.SetTitle( i18nGetMessage( 'i18n_0206' ), false );
-			_cp.SetParam( { account_id: '', } );
-			_cp.Start();
-		}
-		else
-		{
-			SetFront( $( '#' + pid ) );
-
-			// 最小化している場合は元に戻す
-			if ( GetPanel( pid ).minimum.minimum == true )
-			{
-				$( '#' + pid ).find( 'div.titlebar' ).find( '.minimum' ).trigger( 'click' );
-			}
-
-			$( '#searchbox_text' ).focus();
-		}
-	});
-
-	////////////////////////////////////////////////////////////
 	// トゥートボタンのクリック処理
 	////////////////////////////////////////////////////////////
-	$( '#head_toot' ).click( function( e ) {
+	$( document ).on( 'click', '#head_toot', function( e ) {
 		// disabledなら処理しない
 		if ( $( this ).hasClass( 'disabled' ) )
 		{
@@ -598,7 +568,6 @@ function Init()
 		{
 			var _cp = new CPanel( null, null, 324, 240 );
 			_cp.SetType( 'tootbox' );
-			_cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
 			_cp.SetParam( { account_id: '' } );
 			_cp.Start();
 		}
@@ -617,14 +586,13 @@ function Init()
 	////////////////////////////////////////////////////////////
 	// アカウントボタンのクリック処理
 	////////////////////////////////////////////////////////////
-	$( '#head_account' ).click( function( e ) {
+	$( document ).on( 'click', '#head_account', function( e ) {
 		var pid = IsUnique( 'account' );
 
 		if ( pid == null )
 		{
 			var _cp = new CPanel( null, null, 360, 240 );
 			_cp.SetType( 'account' );
-			_cp.SetTitle( i18nGetMessage( 'i18n_0044' ), false );
 			_cp.SetParam( {} );
 			_cp.Start();
 		}
@@ -643,14 +611,13 @@ function Init()
 	////////////////////////////////////////////////////////////
 	// 設定ボタンのクリック処理
 	////////////////////////////////////////////////////////////
-	$( '#head_setting' ).click( function( e ) {
+	$( document ).on( 'click', '#head_setting', function( e ) {
 		var pid = IsUnique( 'cmnsetting' );
 
 		if ( pid == null )
 		{
 			var _cp = new CPanel( null, null, 360, 360 );
 			_cp.SetType( 'cmnsetting' );
-			_cp.SetTitle( i18nGetMessage( 'i18n_0242' ), false );
 			_cp.SetParam( {} );
 			_cp.Start();
 		}
@@ -669,7 +636,7 @@ function Init()
 	////////////////////////////////////////////////////////////
 	// アカウント数変更時の処理
 	////////////////////////////////////////////////////////////
-	$( '#head' ).on( 'account_update', function()
+	$( document ).on( 'account_update', '#head', function()
 		{
 			// ツイート、検索ボタンの有効/無効
 			if ( AccountCount() > 0 )
@@ -691,7 +658,7 @@ function Init()
 	////////////////////////////////////////////////////////////////////////////////
 	// パネルリスト表示
 	////////////////////////////////////////////////////////////////////////////////
-	$( '#head_panellist' ).on( 'click', function() {
+	$( document ).on( 'click', '#head_panellist', function() {
 		if ( $( '#panellist' ).css( 'display' ) == 'none' )
 		{
 			// パネルリストを被せない対応
@@ -1537,6 +1504,7 @@ function SetBackgroundConnect()
 		var id = req.id.split( /@/ );
 		var account_id = id[0] + '@' + id[1];
 		var timeline_type = id[2];
+		var cnt = 0;
 
 		for ( var i = 0, _len = g_cmn.panel.length ; i < _len ; i++ )
 		{
@@ -1546,10 +1514,25 @@ function SetBackgroundConnect()
 					 g_cmn.panel[i].param['account_id'] == account_id )
 				{
 					$( '#' + g_cmn.panel[i].id ).find( '.contents' ).trigger( 'streaming', req );
+					cnt++;
 				}
 			}
 		}
 
+		// 送り先パネルがないときは、強制切断
+		if ( cnt == 0 && req.action == 'stream_recieved' )
+		{
+			SendRequest(
+				{
+					action: 'streaming_pause',
+					account_id: account_id,
+					type: timeline_type,
+				},
+				function( res )
+				{
+				}
+			);
+		}
 		return true;
 	} );
 }
@@ -2093,7 +2076,6 @@ function OpenUserProfile( id, instance, account_id )
 	var _cp = new CPanel( null, null, 400, 360 );
 	_cp.SetType( 'profile' );
 
-	_cp.SetTitle( chrome.i18n.getMessage( 'i18n_0107' ), false );
 	_cp.SetParam( {
 		id: id,
 		instance: instance,

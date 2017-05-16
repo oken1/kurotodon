@@ -53,6 +53,8 @@ Contents.impexp = function( cp )
 		cont.addClass( 'impexp' )
 			.html( OutputTPL( 'impexp', {} ) );
 
+		cp.SetTitle( i18nGetMessage( 'i18n_0052' ) + '/' + i18nGetMessage( 'i18n_0053' ), false );
+
 		$( '#import .item .btn.exec' ).addClass( 'disabled' );
 
 		////////////////////////////////////////

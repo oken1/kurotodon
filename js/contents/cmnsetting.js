@@ -51,8 +51,13 @@ Contents.cmnsetting = function( cp )
 				param: g_cmn.cmn_param,
 			} ) );
 
+		cp.SetTitle( i18nGetMessage( 'i18n_0242' ), false );
+
 		$( '#cmnsetting_apply' ).addClass( 'disabled' );
 
+		// 言語内設定
+		$( '#cset_locale' ).val( g_cmn.cmn_param['locale'] );
+		
 		// 現行値設定(スライダー)
 		$( '#cset_font_size' ).slider( {
 			min: 10,
@@ -69,6 +74,10 @@ Contents.cmnsetting = function( cp )
 		// 設定変更時処理
 		////////////////////////////////////////
 		cont.find( 'input' ).change( function( e ) {
+			$( '#cmnsetting_apply' ).removeClass( 'disabled' );
+		} );
+
+		$( '#cset_locale' ).change( function() {
 			$( '#cmnsetting_apply' ).removeClass( 'disabled' );
 		} );
 
@@ -95,6 +104,9 @@ Contents.cmnsetting = function( cp )
 			{
 				return;
 			}
+
+			// 言語
+			g_cmn.cmn_param['locale'] = $( '#cset_locale' ).val();
 
 			// フォントサイズ
 			g_cmn.cmn_param['font_size'] = $( '#cset_font_size' ).slider( 'value' );

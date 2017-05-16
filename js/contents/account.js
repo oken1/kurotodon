@@ -179,6 +179,8 @@ Contents.account = function( cp )
 		cont.addClass( 'account' )
 			.html( OutputTPL( 'account', {} ) );
 
+		cp.SetTitle( i18nGetMessage( 'i18n_0044' ), false );
+
 		MakePullDown();
 
 		////////////////////////////////////////

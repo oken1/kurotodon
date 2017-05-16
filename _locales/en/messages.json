@@ -1536,14 +1536,12 @@
 	},
 
 	"i18n_0388": {
-		"message": "Streaming start"
+		"message": "Streaming"
 	},
 
 	"i18n_0389": {
-		"message": "Streaming pause"
+		"message": "Language(restart required)"
 	},
-
-
 
 
 

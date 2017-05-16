@@ -19,6 +19,8 @@ Contents.tootbox = function( cp )
 		cont.addClass( 'tootbox' )
 			.html( OutputTPL( 'tootbox' ) );
 
+		cp.SetTitle( i18nGetMessage( 'i18n_0367' ), false );
+
 		// トゥートボタンのツールチップを設定に合わせる
 		var _tips = new Array( 'Ctrl+Enter', 'Shift+Enter', 'Enter' );
 		cont.find( '.toot' ).attr( 'tooltip', i18nGetMessage( 'i18n_0367' ) + '(' + _tips[g_cmn.cmn_param.tootkey] + ')' );

@@ -8,6 +8,17 @@
 	<div class='kinditems'>
 		<div class='group'>
 			<div class='title'>
+				(i18n_0389)
+			</div>
+			<div class='selectboxcontainer'>
+				<select id='cset_locale'>
+					<option value='en'>English</option>
+					<option value='ja'>日本語</option>
+				</select>
+			</div>
+		</div>
+		<div class='group'>
+			<div class='title'>
 				(i18n_0136)
 			</div>
 			<div class='slidercontainer'>

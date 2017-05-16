@@ -21,6 +21,8 @@ Contents.rsslist = function( cp )
 		rsslist_list.html( OutputTPL( 'rsslist_list', { items: g_cmn.rss_panel } ) )
 			.scrollTop( 0 );
 
+		cp.SetTitle( i18nGetMessage( 'i18n_0032' ), false );
+
 		////////////////////////////////////////
 		// タイトルクリック
 		////////////////////////////////////////
