@@ -40,6 +40,9 @@ var g_saveend = true;
 
 var g_testmode = true;
 
+// manifest
+var manifest;
+
 ////////////////////////////////////////////////////////////////////////////////
 // 初期化処理
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,9 +86,6 @@ function Init()
 			$( '#main' ).css( { position: 'absolute', left: g_cmn.panellist_width } );
 		},
 	} );
-
-	// バージョン表示
-	var manifest;
 
 	$.ajax( {
 		type: 'GET',
@@ -450,9 +450,6 @@ function Init()
 			g_bgstarted = true;
 			chrome.extension.getBackgroundPage().app_tab = tab;
 			chrome.extension.getBackgroundPage().app_manifest = manifest;
-
-			// バックグラウンドとの通信用
-			SetBackgroundConnect();
 
 			LoadData();
 		} );
@@ -1495,54 +1492,101 @@ function ApiError( res )
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// バックグラウンドとの通信用
-////////////////////////////////////////////////////////////////////////////////
-function SetBackgroundConnect()
-{
-	chrome.extension.onMessage.addListener( function( req, sender, sendres ) {
-		var id = req.id.split( /@/ );
-		var account_id = id[0] + '@' + id[1];
-		var timeline_type = id[2];
-		var cnt = 0;
 
-		for ( var i = 0, _len = g_cmn.panel.length ; i < _len ; i++ )
-		{
-			if ( g_cmn.panel[i].type == 'timeline' )
+////////////////////////////////////////////////////////////////////////////////
+// 外部通信
+////////////////////////////////////////////////////////////////////////////////
+function SendRequest( req, callback )
+{
+	switch ( req.action )
+	{
+		// アプリ登録
+		// req : instance
+		case 'register_app':
+			$.ajax( {
+				url: 'https://' + req.instance + '/api/v1/apps',
+				dataType: 'json',
+				type: 'POST',
+				data: {
+					client_name: manifest.name,
+					redirect_uris: 'urn:ietf:wg:oauth:2.0:oob',
+					scopes: 'read write follow'
+				}
+			} ).done( function( data ) {
+				callback( data );
+			} ).fail( function( data ) {
+				callback( data );
+			} );
+
+			break;
+
+		// アクセストークン取得
+		// req : instance
+		//       client_id
+		//       client_secret
+		//       username
+		//       password
+		case 'get_access_token':
+			$.ajax( {
+				url: 'https://' + req.instance + '/oauth/token',
+				dataType: 'json',
+				type: 'POST',
+				data: {
+					client_id: req.client_id,
+					client_secret: req.client_secret,
+					grant_type: 'password',
+					username: req.username,
+					password: req.password,
+					scope: 'read write follow',
+				}
+			} ).done( function( data ) {
+				callback( data );
+			} ).fail( function( data ) {
+				callback( data );
+			} );
+
+			break;
+	
+		case 'api_call':
+			var query = new URLSearchParams();
+
+			if ( req.method == 'GET' && req.param )
 			{
-				if ( g_cmn.panel[i].param['timeline_type'] == timeline_type &&
-					 g_cmn.panel[i].param['account_id'] == account_id )
+				for ( var i in req.param )
 				{
-					$( '#' + g_cmn.panel[i].id ).find( '.contents' ).trigger( 'streaming', req );
-					cnt++;
+					query.set( i, req.param[i] );
 				}
 			}
-		}
 
-		// 送り先パネルがないときは、強制切断
-		if ( cnt == 0 && req.action == 'stream_recieved' )
-		{
-			SendRequest(
-				{
-					action: 'streaming_pause',
-					account_id: account_id,
-					type: timeline_type,
-				},
-				function( res )
-				{
+			var url = 'https://' + req.instance + '/api/v1/' + req.api;
+			
+			if ( query.toString().length )
+			{
+				url += '?' + query.toString();
+			}
+
+			console.log( url );
+
+			$.ajax( {
+				url: url,
+				dataType: 'json',
+				type: req.method,
+				data: ( req.method == 'POST' ) ? req.param : {},
+				headers: {
+					'Authorization': 'Bearer ' + req.access_token
 				}
-			);
-		}
-		return true;
-	} );
-}
+			} ).done( function( data ) {
+				callback( data );
+			} ).fail( function( data ) {
+				data.url = url;
+				callback( data );
+			} );
 
-////////////////////////////////////////////////////////////////////////////////
-// バックグラウンドに要求送信
-////////////////////////////////////////////////////////////////////////////////
-function SendRequest( param, callback )
-{
-	chrome.extension.sendMessage( param, callback );
+			break;
+		default:
+			chrome.extension.sendMessage( req, callback );
+			break;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1818,7 +1862,7 @@ function SetLocaleFile()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// 言語選択対応chrome.getMessageもどき
+// 言語選択対応i18n.getMessageもどき
 ////////////////////////////////////////////////////////////////////////////////
 function i18nGetMessage( id, options )
 {

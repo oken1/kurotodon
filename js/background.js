@@ -1,8 +1,5 @@
 "use strict";
 
-// UserStreamオブジェクト
-var userstream;
-
 // 短縮URL展開
 var shorturls;
 
@@ -21,13 +18,6 @@ $.ajaxSetup( {
 } );
 
 var tpl_c = {};
-
-// streaming情報
-// streaming[id: account_id@(user/public/federated/hashtag/notifications)]
-// {
-//   queue: []
-// }
-var streaming = {};
 
 chrome.browserAction.onClicked.addListener( function( tab ) {
 	chrome.windows.getAll( { populate: true }, function( wins ) {
@@ -73,17 +63,6 @@ chrome.browserAction.onClicked.addListener( function( tab ) {
 } );
 
 ////////////////////////////////////////////////////////////////////////////////
-// アプリ画面との通信
-////////////////////////////////////////////////////////////////////////////////
-function SendMessage( data )
-{
-	if ( app_tab != null )
-	{
-		chrome.tabs.sendMessage( app_tab.id, data );
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // コンテントスクリプトからの要求を受け付ける
 ////////////////////////////////////////////////////////////////////////////////
 chrome.extension.onMessage.addListener(
@@ -91,96 +70,6 @@ chrome.extension.onMessage.addListener(
 	{
 		switch( req.action )
 		{
-			// アプリ登録
-			// req : instance
-			case 'register_app':
-				$.ajax( {
-					url: 'https://' + req.instance + '/api/v1/apps',
-					dataType: 'json',
-					type: 'POST',
-					data: {
-						client_name: app_manifest.name,
-						redirect_uris: 'urn:ietf:wg:oauth:2.0:oob',
-						scopes: 'read write follow'
-					}
-				} ).done( function( data ) {
-					sendres( data );
-				} ).fail( function( data ) {
-					sendres( data );
-				} );
-
-				break;
-
-			// アクセストークン取得
-			// req : instance
-			//       client_id
-			//       client_secret
-			//       username
-			//       password
-			case 'get_access_token':
-				$.ajax( {
-					url: 'https://' + req.instance + '/oauth/token',
-					dataType: 'json',
-					type: 'POST',
-					data: {
-						client_id: req.client_id,
-						client_secret: req.client_secret,
-						grant_type: 'password',
-						username: req.username,
-						password: req.password,
-						scope: 'read write follow',
-					}
-				} ).done( function( data ) {
-					sendres( data );
-				} ).fail( function( data ) {
-					sendres( data );
-				} );
-
-				break;
-
-			// API呼び出し
-			// req : instance
-			//       api
-			//       access_token
-			//       method
-			//       param
-			case 'api_call':
-				var query = new URLSearchParams();
-
-				if ( req.method == 'GET' && req.param )
-				{
-					for ( var i in req.param )
-					{
-						query.set( i, req.param[i] );
-					}
-				}
-
-				var url = 'https://' + req.instance + '/api/v1/' + req.api;
-				
-				if ( query.toString().length )
-				{
-					url += '?' + query.toString();
-				}
-
-				console.log( url );
-
-				$.ajax( {
-					url: url,
-					dataType: 'json',
-					type: req.method,
-					data: ( req.method == 'POST' ) ? req.param : {},
-					headers: {
-						'Authorization': 'Bearer ' + req.access_token
-					}
-				} ).done( function( data ) {
-					sendres( data );
-				} ).fail( function( data ) {
-					data.url = url;
-					sendres( data );
-				} );
-
-				break;
-
 			// mediaアップロード
 			// req : instance
 			//       access_token
@@ -226,179 +115,6 @@ chrome.extension.onMessage.addListener(
 				// 変数をクリア
 				app_tab = null;
 				app_manifest = null;
-
-				console.log( 'exit_routine' );
-
-				// Streamingをすべて止める
-				for ( var id in streaming )
-				{
-					streaming[id].alive = false;
-
-					clearInterval( streaming[id].tm );
-					streaming[id].queue = [];
-
-					if ( streaming[id].reader != null )
-					{
-						streaming[id].reader.cancel();
-					}
-
-					console.log( 'Streaming stopped.[' + id + ']' );
-				}
-
-				sendres( '' );
-				break;
-
-			// Streaming開始
-			// req: instance
-			//      access_token
-			//      account_id
-			//      type(home/local/federated/hashtag/notifications)
-			case 'streaming_start':
-				var _stid = req.account_id + '@' + req.type;
-				
-				if ( streaming[_stid] !== undefined )
-				{
-					sendres( '' );
-					break;
-				}
-
-				streaming[_stid] = {
-					alive: true,
-					instance: req.instance,
-					access_token: req.access_token,
-					account_id: req.account_id,
-					type: req.type,
-					reader: null,
-					queue: [],
-					tm: null,
-					delete_streaming: function( _stid ) {
-						streaming[_stid].reader = null;
-						streaming[_stid].queue = [];
-						clearInterval( streaming[_stid].tm );
-
-						SendMessage( { action: 'stream_stopped', id: _stid, json: {} } );
-						delete streaming[_stid];
-					}
-				}
-
-				console.log( 'Streaming started.[' + _stid + ']' );
-
-				var api = 'https://' + streaming[_stid].instance + '/api/v1/streaming/';
-				
-				switch ( req.type )
-				{
-					case 'home':
-					case 'notifications':
-						api += 'user';
-						break;
-					case 'local':
-						api += 'public/local';
-						break;
-					case 'federated':
-						api += 'public';
-						break;
-					case 'hashtag':
-						api += 'hashtag';
-						break;
-				}
-
-				var headers = new Headers();
-				headers.set( 'Authorization', 'Bearer ' + req.access_token );
-
-				fetch( api, {
-					method: 'GET',
-					mode: 'cors',
-					headers: headers,
-				} ).then( function( res ) {
-				
-					SendMessage( { action: 'stream_started', id: _stid, json: {} } );
-
-					// キュー排出
-					streaming[_stid].tm = setInterval( function() {
-						if ( streaming[_stid].queue === undefined )
-						{
-							return;
-						}
-
-						var json = streaming[_stid].queue.shift();
-
-						if ( json !== undefined )
-						{
-							SendMessage( { action: 'stream_recieved', id: _stid, json: json } );
-						}
-					}, 200 );
-
-					streaming[_stid].reader = res.body.getReader();
-					var decoder = new TextDecoder();
-					var txt = '';
-					var json = {};
-
-					streaming[_stid].reader.read().then( function processResult( result ) {
-						if ( result.done )
-						{
-							console.log( 'Fetch complete[' + _stid + ']' );
-							streaming[_stid].alive = false;
-							streaming[_stid].delete_streaming( _stid );
-							return;
-						}
-
-						if ( streaming[_stid].alive == false )
-						{
-							streaming[_stid].reader.cancel();
-						}
-
-						// データ処理
-						txt += decoder.decode( result.value || new Uint8Array, { stream: true } );
-						var data = txt.split( /\n/ );
-						txt = '';
-
-						for ( var i = 0 ; i < data.length ; i++ )
-						{
-							if ( data[i].match( /^data: {/ ) )
-							{
-								try {
-									Object.assign( json, JSON.parse( data[i].replace( /^data: /, '' ) ) );
-
-									streaming[_stid].queue.push( json );
-									json = {};
-								}
-								catch( e )
-								{
-									txt += data[i];
-								}
-							}
-							else
-							{
-								if ( data[i].match( /^event: (.*)$/ ) )
-								{
-									json = { event: RegExp.$1 };
-								}
-							}
-						}
-
-						return streaming[_stid].reader.read().then( processResult );
-					} ).catch( function( err ) {
-						console.log( 'reader.read() error[' + _stid + ']' );
-						console.log( err );
-						streaming[_stid].alive = false;
-						streaming[_stid].delete_streaming( _stid );
-					} );
-				} ).catch( function( err ) {
-					console.log( 'Fetch error[' + _stid + ']' );
-					console.log( err );
-					streaming[_stid].alive = false;
-					streaming[_stid].delete_streaming( _stid );
-				} );
-
-				break;
-
-			// Streaming停止
-			// req: account_id
-			//      type(home/local/federated/hashtag/notifications)
-			case 'streaming_pause':
-				var _stid = req.account_id + '@' + req.type;
-
-				streaming[_stid].alive = false;
 
 				sendres( '' );
 				break;

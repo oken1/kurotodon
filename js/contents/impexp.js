@@ -25,7 +25,7 @@ Contents.impexp = function( cp )
 				console.log( e );
 				if ( !stopflg )
 				{
-					MessageBox( chrome.i18n.getMessage( 'i18n_0347' ) );
+					MessageBox( i18nGetMessage( 'i18n_0347' ) );
 				}
 			} );
 		}, function( e ) {
@@ -36,7 +36,7 @@ Contents.impexp = function( cp )
 
 				if ( !stopflg )
 				{
-					MessageBox( chrome.i18n.getMessage( 'i18n_0347' ) );
+					MessageBox( i18nGetMessage( 'i18n_0347' ) );
 				}
 			}
 			else
@@ -79,7 +79,7 @@ Contents.impexp = function( cp )
 
 			if ( file.type != 'text/plain' )
 			{
-				MessageBox( chrome.i18n.getMessage( 'i18n_0348' ) );
+				MessageBox( i18nGetMessage( 'i18n_0348' ) );
 				return;
 			}
 
@@ -92,13 +92,13 @@ Contents.impexp = function( cp )
 					}
 					catch( e ) {
 						console.log( e );
-						MessageBox( chrome.i18n.getMessage( 'i18n_0348' ) );
+						MessageBox( i18nGetMessage( 'i18n_0348' ) );
 						return;
 					}
 
 					if ( _g_cmn.current_version == undefined )
 					{
-						MessageBox( chrome.i18n.getMessage( 'i18n_0348' ) );
+						MessageBox( i18nGetMessage( 'i18n_0348' ) );
 						return;
 					}
 
@@ -111,7 +111,7 @@ Contents.impexp = function( cp )
 					}
 					catch( e ) {
 						console.log( e );
-						MessageBox( chrome.i18n.getMessage( 'i18n_0348' ) );
+						MessageBox( i18nGetMessage( 'i18n_0348' ) );
 						return;
 					}
 
@@ -151,12 +151,12 @@ Contents.impexp = function( cp )
 					}, function( e ) {
 						console.log( 'createWriter' );
 						console.log( e );
-						MessageBox( chrome.i18n.getMessage( 'i18n_0347' ) );
+						MessageBox( i18nGetMessage( 'i18n_0347' ) );
 					} );
 				}, function( e ) {
 					console.log( 'getFile' );
 					console.log( e );
-					MessageBox( chrome.i18n.getMessage( 'i18n_0347' ) );
+					MessageBox( i18nGetMessage( 'i18n_0347' ) );
 				} );
 			};
 
@@ -191,7 +191,7 @@ Contents.impexp = function( cp )
 			else
 			{
 				$( '#import .item .btn.exec' ).addClass( 'disabled' );
-				$( '#importfile' ).html( chrome.i18n.getMessage( 'i18n_0119' ) );
+				$( '#importfile' ).html( i18nGetMessage( 'i18n_0119' ) );
 			}
 
 			e.stopPropagation();

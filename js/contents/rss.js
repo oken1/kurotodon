@@ -226,7 +226,7 @@ Contents.rss = function( cp )
 			animate: 'fast',
 			slide: function( e, ui ) {
 				setting.find( '.rsssetting_apply' ).removeClass( 'disabled' );
-				setting.find( '.set_reload_time' ).parent().find( '.value_disp' ).html( ui.value + chrome.i18n.getMessage( 'i18n_0272' ) );
+				setting.find( '.set_reload_time' ).parent().find( '.value_disp' ).html( ui.value + i18nGetMessage( 'i18n_0272' ) );
 			},
 		} );
 
@@ -239,7 +239,7 @@ Contents.rss = function( cp )
 			animate: 'fast',
 			slide: function( e, ui ) {
 				setting.find( '.rsssetting_apply' ).removeClass( 'disabled' );
-				setting.find( '.set_count' ).parent().find( '.value_disp' ).html( ui.value + chrome.i18n.getMessage( 'i18n_0205' ) );
+				setting.find( '.set_count' ).parent().find( '.value_disp' ).html( ui.value + i18nGetMessage( 'i18n_0205' ) );
 			},
 		} );
 
@@ -279,7 +279,7 @@ Contents.rss = function( cp )
 
 			if ( title.length <= 0 )
 			{
-				MessageBox( chrome.i18n.getMessage( 'i18n_0076' ) );
+				MessageBox( i18nGetMessage( 'i18n_0076' ) );
 				setting.find( '.set_title' ).focus();
 				return false;
 			}
@@ -358,7 +358,7 @@ Contents.rss = function( cp )
 			{
 				if ( cp.param['urls'][i].url == url )
 				{
-					MessageBox( chrome.i18n.getMessage( 'i18n_0257' ) );
+					MessageBox( i18nGetMessage( 'i18n_0257' ) );
 					setting.find( '.set_feed' ).focus();
 					return;
 				}
@@ -378,7 +378,7 @@ Contents.rss = function( cp )
 				{
 					if ( res.items[0].feedtitle == '' || res.items[0].feedlink == '' )
 					{
-						MessageBox( chrome.i18n.getMessage( 'i18n_0064' ) );
+						MessageBox( i18nGetMessage( 'i18n_0064' ) );
 						setting.find( '.set_feed' ).focus();
 						setting.find( '.feed_append' ).removeClass( 'disabled' );
 

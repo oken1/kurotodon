@@ -73,19 +73,19 @@ function DateConv( src, type, digit )
 
 		if ( relt < 0 )
 		{
-			return '0' + chrome.i18n.getMessage( 'i18n_0270' );
+			return '0' + i18nGetMessage( 'i18n_0270' );
 		}
 		else if ( relt < 60 )
 		{
-			return relt + chrome.i18n.getMessage( 'i18n_0270' );
+			return relt + i18nGetMessage( 'i18n_0270' );
 		}
 		else if ( relt < 60 * 60 )
 		{
-			return Math.floor( relt / 60 ) + chrome.i18n.getMessage( 'i18n_0272' );
+			return Math.floor( relt / 60 ) + i18nGetMessage( 'i18n_0272' );
 		}
 		else if ( relt < 60 * 60 * 24 )
 		{
-			return Math.floor( relt / 60 / 60 ) + chrome.i18n.getMessage( 'i18n_0299' );
+			return Math.floor( relt / 60 / 60 ) + i18nGetMessage( 'i18n_0299' );
 		}
 		else
 		{

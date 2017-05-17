@@ -22,8 +22,8 @@ Contents.timeline = function( cp )
 	var scrollHeight = null;
 	var loading = false;
 	var cursor_on_option = false;
-	var streaming = false;
-
+	var reader = null;
+	
 	////////////////////////////////////////////////////////////
 	// 読み込み済みステータスID数を取得
 	////////////////////////////////////////////////////////////
@@ -586,7 +586,6 @@ console.log( res );
 			}
 			else
 			{
-				//var firstdate = Date.parse( timeline_list.find( '> item:first' ).attr( 'created_at' ).replace( '+', 'GMT+' ) );
 				var firstdate = new Date();
 				var lastdate = Date.parse( timeline_list.find( '> div.item:last' ).attr( 'created_at' ).replace( '+', 'GMT+' ) );
 
@@ -653,7 +652,7 @@ console.log( res );
 			}
 
 			tm = setInterval( function() {
-				if ( !streaming )
+				if ( reader == null )
 				{
 					ListMake( cp.param['get_count'], 'new' );
 				}
@@ -685,42 +684,109 @@ console.log( res );
 		////////////////////////////////////////
 		// ストリーミング開始/停止
 		////////////////////////////////////////
+		function SetStreamStatus( status )
+		{
+			lines.find( '.streamctl > a' ).removeClass( 'on off try' ).addClass( status );
+		}
+		
 		lines.find( '.streamctl > a' ).click( function( e ) {
 			var account = g_cmn.account[cp.param.account_id];
 
 			// 開始
-			if ( $( this ).hasClass( 'off' ) )
+			if ( lines.find( '.streamctl > a' ).hasClass( 'off' ) )
 			{
-				$( this ).removeClass( 'off' ).addClass( 'try' );
+				SetStreamStatus( 'try' );
 
-				SendRequest(
-					{
-						action: 'streaming_start',
-						instance: account.instance,
-						access_token: account.access_token,
-						account_id: cp.param.account_id,
-						type: cp.param.timeline_type,
-					},
-					function( res )
-					{
-					}
-				);
+				var api = 'https://' + account.instance + '/api/v1/streaming/';
+
+				switch( cp.param.timeline_type )
+				{
+					case 'home':
+					case 'notifications':
+						api += 'user';
+						break;
+					case 'local':
+						api += 'public/local';
+						break;
+					case 'federated':
+						api += 'public';
+						break;
+					case 'hashtag':
+						api += 'hashtag?tag=' + encodeURIComponent( cp.param['hashtag'] );
+						break;
+				}
+				
+				var headers = new Headers();
+				headers.set( 'Authorization', 'Bearer ' + account.access_token );
+
+				fetch( api, {
+					method: 'GET',
+					mode: 'cors',
+					headers: headers,
+				} ).then( function( res ) {
+					reader = res.body.getReader();
+					var decoder = new TextDecoder();
+					var txt = '';
+					var json = {};
+
+					SetStreamStatus( 'on' );
+
+					reader.read().then( function processResult( result ) {
+						if ( result.done )
+						{
+							reader = null;
+							SetStreamStatus( 'off' );
+							return;
+						}
+
+						txt += decoder.decode( result.value || new Uint8Array, { stream: true } );
+						var data = txt.split( /\n/ );
+						txt = '';
+						
+						for ( var i = 0 ; i < data.length ; i++ )
+						{
+							if ( data[i].match( /^data: {/ ) )
+							{
+								try {
+									Object.assign( json, JSON.parse( data[i].replace( /^data: /, '' ) ) );
+
+									cont.trigger( 'streaming', [{ action: 'stream_recieved', json: json}] );
+									json = {};
+								}
+								catch( e )
+								{
+									txt += data[i];
+								}
+							}
+							else
+							{
+								if ( data[i].match( /^event: (.*)$/ ) )
+								{
+									json = { event: RegExp.$1 };
+								}
+							}
+						}
+
+						return reader.read().then( processResult );
+					} ).catch( function( err ) {
+						console.log( 'reader.read() error' );
+						console.log( err );
+						reader = null;
+						SetStreamStatus( 'off' );
+					} );
+				} ).catch( function( err ) {
+					console.log( 'fetch error' );
+					console.log( err );
+					reader = null;
+					SetStreamStatus( 'off' );
+				} );
 			}
 			// 停止
 			else if( $( this ).hasClass( 'on' ) )
 			{
-				$( this ).removeClass( 'on' ).addClass( 'try' );
+				$( this ).removeClass( 'on,off' ).addClass( 'try' );
 
-				SendRequest(
-					{
-						action: 'streaming_pause',
-						account_id: cp.param.account_id,
-						type: cp.param.timeline_type,
-					},
-					function( res )
-					{
-					}
-				);
+				reader.cancel();
 			}
 		} );
 
@@ -728,17 +794,7 @@ console.log( res );
 		// ストリーミング処理
 		////////////////////////////////////////
 		cont.on( 'streaming', function( e, data ) {
-			if ( data.action == 'stream_started' )
-			{
-				lines.find( '.streamctl > a' ).removeClass( 'try' ).addClass( 'on' );
-				streaming = true;
-			}
-			else if ( data.action == 'stream_stopped' )
-			{
-				lines.find( '.streamctl > a' ).removeClass( 'try' ).addClass( 'off' );
-				streaming = false;
-			}
-			else if ( data.action == 'stream_recieved' )
+			if ( data.action == 'stream_recieved' )
 			{
 				var addcnt = 0;
 
@@ -1391,9 +1447,9 @@ console.log( res );
 			tm = null;
 		}
 
-		if ( lines.find( '.streamctl > a' ).hasClass( 'on' ) )
+		if ( reader != null )
 		{
-			lines.find( '.streamctl > a' ).trigger( 'click' );
+			reader.cancel();
 		}
 	};
 }

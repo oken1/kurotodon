@@ -155,7 +155,7 @@ Contents.cmnsetting = function( cp )
 
 			// トゥートボタンのツールチップを設定に合わせる
 			var _tips = new Array( 'Ctrl+Enter', 'Shift+Enter', 'Enter' );
-			$( '.tootbox .toot' ).attr( 'tooltip', chrome.i18n.getMessage( 'i18n_0367' ) + '(' + _tips[g_cmn.cmn_param.tootkey] + ')' );
+			$( '.tootbox .toot' ).attr( 'tooltip', i18nGetMessage( 'i18n_0367' ) + '(' + _tips[g_cmn.cmn_param.tootkey] + ')' );
 
 			e.stopPropagation();
 		} );

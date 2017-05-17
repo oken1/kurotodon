@@ -63,7 +63,7 @@ Contents.rsslist = function( cp )
 				return;
 			}
 
-			if ( confirm( chrome.i18n.getMessage( 'i18n_0224' ) ) )
+			if ( confirm( i18nGetMessage( 'i18n_0224' ) ) )
 			{
 				var item = $( this ).parent().parent();
 				var id = item.attr( 'id' );

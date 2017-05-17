@@ -217,7 +217,7 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 			{
 				if ( GetPanel( id ).status.no_move == true )
 				{
-					if ( !confirm( chrome.i18n.getMessage( 'i18n_0116' ) ) )
+					if ( !confirm( i18nGetMessage( 'i18n_0116' ) ) )
 					{
 						return;
 					}
@@ -448,7 +448,7 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 		// titlenameのタグのみを有効化
 		titlediv.html(
 			titlediv.html().replace( /\&lt;span class=\"titlename\"\&gt;(.*)\&lt;\/span\&gt;/,
-			'<span class="titlename tooltip" tooltip="' + chrome.i18n.getMessage( 'i18n_0048' ) + '">$1</span>' )
+			'<span class="titlename tooltip" tooltip="' + i18nGetMessage( 'i18n_0048' ) + '">$1</span>' )
 		);
 
 		// バッジを隠す"
