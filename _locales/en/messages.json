@@ -1543,6 +1543,15 @@
 		"message": "Language(restart required)"
 	},
 
+	"i18n_0390": {
+		"message": "Clear notifications"
+	},
+
+	"i18n_0391": {
+		"message": "Are you sure you want to permanently clear all your notifications?"
+	},
+
+
 
 
 

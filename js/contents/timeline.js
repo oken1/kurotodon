@@ -502,6 +502,8 @@ console.log( res );
 		// タイトル&ボタン設定
 		var account = g_cmn.account[cp.param['account_id']];
 
+		cont.find( '.panel_btns' ).find( '.clear_notification' ).hide();
+
 		switch ( cp.param['timeline_type'] )
 		{
 			case 'home':
@@ -541,6 +543,8 @@ console.log( res );
 			case 'notifications':
 				cp.SetTitle( i18nGetMessage( 'i18n_0093' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-notifications' );
+
+				cont.find( '.panel_btns' ).find( '.clear_notification' ).show();
 				break;
 
 		}
@@ -668,6 +672,41 @@ console.log( res );
 		} );
 
 		////////////////////////////////////////
+		// 通知消去ボタンクリック
+		////////////////////////////////////////
+		lines.find( '.panel_btns' ).find( '.clear_notification' ).click( function() {
+			if ( confirm( i18nGetMessage( 'i18n_0390' ) ) )
+			{
+				Blackout( true );
+				$( '#blackout' ).activity( { color: '#808080', width: 8, length: 14 } );
+
+				SendRequest(
+					{
+						method: 'POST',
+						action: 'api_call',
+						instance: g_cmn.account[cp.param['account_id']].instance,
+						access_token: g_cmn.account[cp.param['account_id']].access_token,
+						api: 'notifications/clear',
+					},
+					function( res )
+					{
+						if ( res.status === undefined )
+						{
+							ListMake( cp.param['get_count'], 'init' );
+						}
+						else
+						{
+							ApiError( res );
+						}
+
+						Blackout( false );
+						$( '#blackout' ).activity( false );
+					}
+				);
+			}
+		} );
+
+		////////////////////////////////////////
 		// 一番上へ
 		////////////////////////////////////////
 		lines.find( '.sctbl' ).find( 'a:first' ).click( function( e ) {
@@ -784,8 +823,7 @@ console.log( res );
 			// 停止
 			else if( $( this ).hasClass( 'on' ) )
 			{
-				$( this ).removeClass( 'on,off' ).addClass( 'try' );
-
+				SetStreamStatus( 'try' );
 				reader.cancel();
 			}
 		} );
@@ -797,6 +835,8 @@ console.log( res );
 			if ( data.action == 'stream_recieved' )
 			{
 				var addcnt = 0;
+
+				var _sctop = timeline_list.scrollTop();
 
 				if ( ( cp.param.timeline_type != 'notifications' && data.json.event == 'update' ) ||
 					 ( cp.param.timeline_type == 'notifications' && data.json.event == 'notification' ) )
@@ -822,7 +862,6 @@ console.log( res );
 
 				if ( addcnt > 0 )
 				{
-					var _sctop = timeline_list.scrollTop();
 
 					// 新着ツイートにスクロールする
 					if ( g_cmn.cmn_param['newscroll'] == 1 && _sctop == 0 )
@@ -1391,26 +1430,6 @@ console.log( res );
 		////////////////////////////////////////
 		setting.find( 'input' ).change( function( e ) {
 			setting.find( '.tlsetting_apply' ).removeClass( 'disabled' );
-		} );
-
-		////////////////////////////////////////
-		// 適用ボタンクリック処理
-		////////////////////////////////////////
-		setting.find( '.tlsetting_apply' ).click( function( e ) {
-			// disabedなら処理しない
-			if ( $( this ).hasClass( 'disabled' ) )
-			{
-				return;
-			}
-
-			// 新着あり通知
-			cp.param['notify_new'] = ( setting.find( '.set_notify_new' ).prop( 'checked' ) ) ? 1 : 0;
-
-			setting.find( '.tlsetting_apply' ).addClass( 'disabled' );
-
-			SaveData();
-
-			e.stopPropagation();
 		} );
 
 		////////////////////////////////////////

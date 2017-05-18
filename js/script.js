@@ -29,9 +29,6 @@ var g_cmn = {
 	current_version: '',			// 現在のバージョン
 };
 
-// バックグラウンド開始済みフラグ
-var g_bgstarted = false;
-
 // データ読み込み完了フラグ
 var g_loaded = false;
 
@@ -116,344 +113,284 @@ function Init()
 	// 保存データを読み込み、アカウント、パネルを復元する
 	////////////////////////////////////////////////////////////
 	var LoadData = function() {
-		// バックグラウンドに開始を伝える
-		SendRequest(
-			{
-				action: 'start_routine',
-			},
-			function( res )
-			{
-				// localStorageからデータ読み込み
-				var text = getUserInfo( 'g_cmn_V1' );
+		// localStorageからデータ読み込み
+		var text = getUserInfo( 'g_cmn_V1' );
 
-				if ( text != '' )
+		if ( text != '' )
+		{
+			text = decodeURIComponent( text );
+			var _g_cmn = JSON.parse( text );
+
+			// 共通パラメータの復元
+			for ( var p in _g_cmn.cmn_param )
+			{
+				// 削除されたパラメータは無視
+				if ( g_cmn.cmn_param[p] == undefined )
 				{
-					text = decodeURIComponent( text );
-					var _g_cmn = JSON.parse( text );
+					continue;
+				}
 
-					// 共通パラメータの復元
-					for ( var p in _g_cmn.cmn_param )
+				g_cmn.cmn_param[p] = _g_cmn.cmn_param[p];
+			}
+
+			// 言語ファイル設定
+			SetLocaleFile();
+
+			// ツールバー
+			$( '#head' ).html( OutputTPL( 'header', {} ) );
+			$( '#head' ).find( '.header_sub' ).hide();
+
+			// フォントサイズ
+			SetFont();
+
+			// ページ全体のスクロールバー
+			$( 'body' ).css( { 'overflow-y': ( g_cmn.cmn_param['scroll_vertical'] == 1 ) ? 'auto' : 'hidden' } );
+			$( 'body' ).css( { 'overflow-x': ( g_cmn.cmn_param['scroll_horizontal'] == 1 ) ? 'auto' : 'hidden' } );
+
+			////////////////////////////////////////
+			// 後続処理
+			// （アカウントの復元後に実行する）
+			////////////////////////////////////////
+			var Subsequent = function() {
+				// ツールバーユーザの復元
+				if ( _g_cmn.toolbar_user != undefined )
+				{
+					g_cmn.toolbar_user = _g_cmn.toolbar_user;
+				}
+
+				UpdateToolbarUser();
+
+				// RSSパネルの復元
+				if ( _g_cmn.rss_panel != undefined )
+				{
+					g_cmn.rss_panel = _g_cmn.rss_panel;
+				}
+
+				// アカウントの並び順
+				if ( _g_cmn.account_order != undefined )
+				{
+					g_cmn.account_order = _g_cmn.account_order;
+
+					// 削除されているアカウントを取り除く
+					for ( var i = 0, _len = g_cmn.account_order.length ; i < _len ; i++ )
 					{
-						// 削除されたパラメータは無視
-						if ( g_cmn.cmn_param[p] == undefined )
+						if ( g_cmn.account[g_cmn.account_order[i]] == undefined )
 						{
-							continue;
+							g_cmn.account_order.splice( i, 1 );
+							i--;
 						}
-
-						g_cmn.cmn_param[p] = _g_cmn.cmn_param[p];
-					}
-
-					// 言語ファイル設定
-					SetLocaleFile();
-
-					// ツールバー
-					$( '#head' ).html( OutputTPL( 'header', {} ) );
-					$( '#head' ).find( '.header_sub' ).hide();
-
-					// フォントサイズ
-					SetFont();
-
-					// ページ全体のスクロールバー
-					$( 'body' ).css( { 'overflow-y': ( g_cmn.cmn_param['scroll_vertical'] == 1 ) ? 'auto' : 'hidden' } );
-					$( 'body' ).css( { 'overflow-x': ( g_cmn.cmn_param['scroll_horizontal'] == 1 ) ? 'auto' : 'hidden' } );
-
-					////////////////////////////////////////
-					// 後続処理
-					// （アカウントの復元後に実行する）
-					////////////////////////////////////////
-					var Subsequent = function() {
-						// ツールバーユーザの復元
-						if ( _g_cmn.toolbar_user != undefined )
-						{
-							g_cmn.toolbar_user = _g_cmn.toolbar_user;
-						}
-
-						UpdateToolbarUser();
-
-						// RSSパネルの復元
-						if ( _g_cmn.rss_panel != undefined )
-						{
-							g_cmn.rss_panel = _g_cmn.rss_panel;
-						}
-
-						// アカウントの並び順
-						if ( _g_cmn.account_order != undefined )
-						{
-							g_cmn.account_order = _g_cmn.account_order;
-
-							// 削除されているアカウントを取り除く
-							for ( var i = 0, _len = g_cmn.account_order.length ; i < _len ; i++ )
-							{
-								if ( g_cmn.account[g_cmn.account_order[i]] == undefined )
-								{
-									g_cmn.account_order.splice( i, 1 );
-									i--;
-								}
-							}
-						}
-						else
-						{
-							for ( var id in g_cmn.account )
-							{
-								g_cmn.account_order.push( id.toString() );
-							}
-						}
-
-						// パネルリストの幅
-						if ( _g_cmn.panellist_width != undefined )
-						{
-							 g_cmn.panellist_width = _g_cmn.panellist_width;
-						}
-
-						// 現在のバージョン
-						if ( _g_cmn.current_version != undefined )
-						{
-							 g_cmn.current_version = _g_cmn.current_version;
-						}
-
-						if ( g_cmn.current_version != '' )
-						{
-							if ( g_cmn.current_version != manifest.version )
-							{
-								MessageBox( i18nGetMessage( 'i18n_0345', [g_cmn.current_version, manifest.version] ) +
-									'<br><br>' +
-									'<a class="anchor" href="http://www.jstwi.com/kurotodon/update.html" rel="nofollow noopener noreferrer" target="_blank">http://www.jstwi.com/kurotodon/update.html</a>',
-									5 * 1000 );
-							}
-						}
-
-						g_cmn.current_version = manifest.version;
-
-						// パネルの復元
-						var cp;
-
-						for ( var i = 0, _len = _g_cmn.panel.length ; i < _len ; i++ )
-						{
-							cp = new CPanel( _g_cmn.panel[i].x, _g_cmn.panel[i].y,
-											 _g_cmn.panel[i].w, _g_cmn.panel[i].h,
-											 _g_cmn.panel[i].id.replace( /^panel_/, '' ),
-											 _g_cmn.panel[i].minimum,
-											 _g_cmn.panel[i].zindex,
-											 _g_cmn.panel[i].status,
-											 true );
-
-							if ( _g_cmn.panel[i].type == null )
-							{
-								continue;
-							}
-
-							cp.SetType( _g_cmn.panel[i].type );
-							cp.SetTitle( _g_cmn.panel[i].title, _g_cmn.panel[i].setting );
-							cp.SetParam( _g_cmn.panel[i].param );
-							cp.Start();
-						}
-
-						g_loaded = true;
-					};
-
-					// アカウントの復元
-					var _cnt = 0;
-					var _comp = 0;
-					var account_order = [];
-
-					for ( var id in _g_cmn.account )
-					{
-						_cnt++;
-						account_order.push( id );
-					}
-
-					// アカウント情報なし
-					if ( _cnt == 0 )
-					{
-						// 後続処理を実行
-						Blackout( false );
-						$( '#blackout' ).activity( false );
-						Subsequent();
-					}
-					// アカウント情報あり
-					else
-					{
-						var _comp = 0;
-
-						// アカウント情報を更新
-						Blackout( true );
-						$( '#blackout' ).activity( { color: '#ffffff' } );
-
-						function GetAccountInfo()
-						{
-							var account_id = account_order[_comp];
-
-							// アカウント情報初期設定値
-							g_cmn.account[account_id] = {
-								client_id: '',
-								client_secret: '',
-								instance: '',
-								access_token: '',
-								id: '',
-								username: '',
-								display_name: '',
-								avatar: '',
-								notsave: {},
-							};
-
-							for ( var p in _g_cmn.account[account_id] )
-							{
-								// 削除されたパラメータは無視
-								if ( g_cmn.account[account_id][p] == undefined )
-								{
-									continue;
-								}
-
-								g_cmn.account[account_id][p] = _g_cmn.account[account_id][p];
-							}
-
-							$( '#blackout' ).append( OutputTPL( 'blackoutinfo', {
-								id: 'info0_' + _comp,
-								msg: i18nGetMessage( 'i18n_0046' ) + '(' + g_cmn.account[account_id]['display_name'] +
-									 '@' + g_cmn.account[account_id]['instance'] + ')' } ) );
-
-							SendRequest(
-								{
-									method: 'GET',
-									action: 'api_call',
-									instance: g_cmn.account[account_id].instance,
-									api: 'accounts/verify_credentials',
-									access_token: g_cmn.account[account_id].access_token,
-								},
-								function( res )
-								{
-									if ( res.status === undefined )
-									{
-										g_cmn.account[account_id].username = res.username;
-										g_cmn.account[account_id].display_name = res.display_name;
-										g_cmn.account[account_id].avatar = res.avatar;
-										g_cmn.account[account_id].notsave.statuses_count = res.statuses_count;
-										g_cmn.account[account_id].notsave.following_count = res.following_count;
-										g_cmn.account[account_id].notsave.followers_count = res.followers_count;
-									}
-									else
-									{
-										ApiError( res );
-									}
-
-									$( '#info0_' + _comp ).append( ' ... completed' ).fadeOut( 'slow', function() { $( this ).remove() } );
-									_comp++;
-
-									if ( _comp >= _cnt )
-									{
-										var _next = function() {
-											if ( $( '#blackout' ).find( 'div.info' ).length == 0 )
-											{
-												Blackout( false );
-												$( '#blackout' ).activity( false );
-												Subsequent();
-												$( '#head' ).trigger( 'account_update' );
-											}
-											else
-											{
-												setTimeout( function() { _next(); }, 100 );
-											}
-										};
-
-										_next();
-									}
-									else
-									{
-										GetAccountInfo();
-									}
-								}
-							);
-						}
-						
-						GetAccountInfo();
 					}
 				}
 				else
 				{
-					g_loaded = true;
-
-					// 初回起動
-
-					// 言語ファイル設定
-					SetLocaleFile();
-
-					// ツールバー
-					$( '#head' ).html( OutputTPL( 'header', {} ) );
-					$( '#head' ).find( '.header_sub' ).hide();
-
-					// フォントサイズ
-					SetFont();
-
-					// アカウント画面を開く
-					Blackout( false );
-					$( '#blackout' ).activity( false );
-					$( '#head_account' ).trigger( 'click' );
-				}
-
-				// 設定/状態保存の定期実行
-				var AutoSave = function() {
-					SaveData();
-
-					setTimeout( AutoSave, 30 * 1000 );
-				};
-
-				setTimeout( AutoSave, 30 * 1000 );
-			}
-		);
-	};
-
-	var current_tab;
-
-	// カレントタブを取得
-	chrome.tabs.getCurrent( function( tab ) {
-		current_tab = tab;
-
-		// 全タブを取得して起動中ならそこにフォーカス移動＆このタブは消す
-		chrome.windows.getAll( { populate: true }, function( wins ) {
-			var tab = null;
-
-			Blackout( true );
-			$( '#blackout' ).activity( { color: '#808080', width: 8, length: 14 } );
-
-			for ( var wi = 0, _len = wins.length ; wi < _len ; wi++ )
-			{
-				for ( var ti = 0, __len = wins[wi].tabs.length ; ti < __len ; ti++ )
-				{
-					if ( wins[wi].tabs[ti].url.match( /^chrome-extension:\/\// ) &&
-						 wins[wi].tabs[ti].title == 'Kurotodon' )
+					for ( var id in g_cmn.account )
 					{
-						// 多重
-						if ( wins[wi].tabs[ti].id != current_tab.id )
-						{
-							chrome.windows.update( wins[wi].id, { focused: true } );
-							chrome.tabs.update( wins[wi].tabs[ti].id, { selected: true } );
-							chrome.tabs.remove( current_tab.id );
-							$( '#blackout' ).activity( false );
-							return;
-						}
-						// カレント
-						else
-						{
-							tab = wins[wi].tabs[ti];
-						}
+						g_cmn.account_order.push( id.toString() );
 					}
 				}
-			}
 
-			if ( tab == null )
+				// パネルリストの幅
+				if ( _g_cmn.panellist_width != undefined )
+				{
+					 g_cmn.panellist_width = _g_cmn.panellist_width;
+				}
+
+				// 現在のバージョン
+				if ( _g_cmn.current_version != undefined )
+				{
+					 g_cmn.current_version = _g_cmn.current_version;
+				}
+
+				if ( g_cmn.current_version != '' )
+				{
+					if ( g_cmn.current_version != manifest.version )
+					{
+						MessageBox( i18nGetMessage( 'i18n_0345', [g_cmn.current_version, manifest.version] ) +
+							'<br><br>' +
+							'<a class="anchor" href="http://www.jstwi.com/kurotodon/update.html" rel="nofollow noopener noreferrer" target="_blank">http://www.jstwi.com/kurotodon/update.html</a>',
+							5 * 1000 );
+					}
+				}
+
+				g_cmn.current_version = manifest.version;
+
+				// パネルの復元
+				var cp;
+
+				for ( var i = 0, _len = _g_cmn.panel.length ; i < _len ; i++ )
+				{
+					cp = new CPanel( _g_cmn.panel[i].x, _g_cmn.panel[i].y,
+									 _g_cmn.panel[i].w, _g_cmn.panel[i].h,
+									 _g_cmn.panel[i].id.replace( /^panel_/, '' ),
+									 _g_cmn.panel[i].minimum,
+									 _g_cmn.panel[i].zindex,
+									 _g_cmn.panel[i].status,
+									 true );
+
+					if ( _g_cmn.panel[i].type == null )
+					{
+						continue;
+					}
+
+					cp.SetType( _g_cmn.panel[i].type );
+					cp.SetTitle( _g_cmn.panel[i].title, _g_cmn.panel[i].setting );
+					cp.SetParam( _g_cmn.panel[i].param );
+					cp.Start();
+				}
+
+				g_loaded = true;
+			};
+
+			// アカウントの復元
+			var _cnt = 0;
+			var _comp = 0;
+			var account_order = [];
+
+			for ( var id in _g_cmn.account )
 			{
-				$( '#blackout' ).activity( false );
-				return;
+				_cnt++;
+				account_order.push( id );
 			}
 
-			// バックグラウンドの変数にアプリを開いているタブ、manifest.jsonを設定
-			g_bgstarted = true;
-			chrome.extension.getBackgroundPage().app_tab = tab;
-			chrome.extension.getBackgroundPage().app_manifest = manifest;
+			// アカウント情報なし
+			if ( _cnt == 0 )
+			{
+				// 後続処理を実行
+				Blackout( false );
+				$( '#blackout' ).activity( false );
+				Subsequent();
+			}
+			// アカウント情報あり
+			else
+			{
+				var _comp = 0;
 
-			LoadData();
-		} );
-	} );
+				// アカウント情報を更新
+				Blackout( true );
+				$( '#blackout' ).activity( { color: '#ffffff' } );
+
+				function GetAccountInfo()
+				{
+					var account_id = account_order[_comp];
+
+					// アカウント情報初期設定値
+					g_cmn.account[account_id] = {
+						client_id: '',
+						client_secret: '',
+						instance: '',
+						access_token: '',
+						id: '',
+						username: '',
+						display_name: '',
+						avatar: '',
+						notsave: {},
+					};
+
+					for ( var p in _g_cmn.account[account_id] )
+					{
+						// 削除されたパラメータは無視
+						if ( g_cmn.account[account_id][p] == undefined )
+						{
+							continue;
+						}
+
+						g_cmn.account[account_id][p] = _g_cmn.account[account_id][p];
+					}
+
+					$( '#blackout' ).append( OutputTPL( 'blackoutinfo', {
+						id: 'info0_' + _comp,
+						msg: i18nGetMessage( 'i18n_0046' ) + '(' + g_cmn.account[account_id]['display_name'] +
+							 '@' + g_cmn.account[account_id]['instance'] + ')' } ) );
+
+					SendRequest(
+						{
+							method: 'GET',
+							action: 'api_call',
+							instance: g_cmn.account[account_id].instance,
+							api: 'accounts/verify_credentials',
+							access_token: g_cmn.account[account_id].access_token,
+						},
+						function( res )
+						{
+							if ( res.status === undefined )
+							{
+								g_cmn.account[account_id].username = res.username;
+								g_cmn.account[account_id].display_name = res.display_name;
+								g_cmn.account[account_id].avatar = res.avatar;
+								g_cmn.account[account_id].notsave.statuses_count = res.statuses_count;
+								g_cmn.account[account_id].notsave.following_count = res.following_count;
+								g_cmn.account[account_id].notsave.followers_count = res.followers_count;
+							}
+							else
+							{
+								ApiError( res );
+							}
+
+							$( '#info0_' + _comp ).append( ' ... completed' ).fadeOut( 'slow', function() { $( this ).remove() } );
+							_comp++;
+
+							if ( _comp >= _cnt )
+							{
+								var _next = function() {
+									if ( $( '#blackout' ).find( 'div.info' ).length == 0 )
+									{
+										Blackout( false );
+										$( '#blackout' ).activity( false );
+										Subsequent();
+										$( '#head' ).trigger( 'account_update' );
+									}
+									else
+									{
+										setTimeout( function() { _next(); }, 100 );
+									}
+								};
+
+								_next();
+							}
+							else
+							{
+								GetAccountInfo();
+							}
+						}
+					);
+				}
+				
+				GetAccountInfo();
+			}
+		}
+		else
+		{
+			g_loaded = true;
+
+			// 初回起動
+
+			// 言語ファイル設定
+			SetLocaleFile();
+
+			// ツールバー
+			$( '#head' ).html( OutputTPL( 'header', {} ) );
+			$( '#head' ).find( '.header_sub' ).hide();
+
+			// フォントサイズ
+			SetFont();
+
+			// アカウント画面を開く
+			Blackout( false );
+			$( '#blackout' ).activity( false );
+			$( '#head_account' ).trigger( 'click' );
+		}
+
+		// 設定/状態保存の定期実行
+		var AutoSave = function() {
+			SaveData();
+
+			setTimeout( AutoSave, 30 * 1000 );
+		};
+
+		setTimeout( AutoSave, 30 * 1000 );
+	};
+
+	LoadData();
 
 	////////////////////////////////////////////////////////////
 	// ツールボタンのクリック処理
@@ -747,19 +684,6 @@ window.onunload = window.onbeforeunload = function( e ) {
 		{
 			g_cmn.panel[i].contents.stop();
 		}
-	}
-
-	// バックグラウンドに終了を伝える
-	if ( g_bgstarted == true )
-	{
-		SendRequest(
-			{
-				action: 'exit_routine',
-			},
-			function( res )
-			{
-			}
-		);
 	}
 
 	if ( !g_saveend )
@@ -1583,18 +1507,78 @@ function SendRequest( req, callback )
 			} );
 
 			break;
+		// mediaアップロード
+		// req : instance
+		//       access_token
+		//       data
+		case 'media_upload':
+			var url = 'https://' + req.instance + '/api/v1/media';
+
+			console.log( url );
+
+			var fd = new FormData();
+
+			fd.append( 'file', req.uploadFile );
+
+			$.ajax( {
+				url: url,
+				dataType: 'json',
+				type: 'POST',
+				data: fd,
+				cache: false,
+				contentType: false,
+				processData: false,
+				headers: {
+					'Authorization': 'Bearer ' + req.access_token
+				}
+			} ).done( function( data ) {
+				callback( data );
+			} ).fail( function( data ) {
+				data.url = url;
+				callback( data );
+			} );
+
+			break;
+		case 'feed':
+			var res = {
+				items: [],
+				url: req.url,
+				index: req.index,
+			};
+
+			res.items.push( { feedtitle: '', feedlink: '' } );
+
+			$.ajax( {
+				url: req.url,
+				dataType: 'xml',
+				type: 'GET',
+			} ).done( function( data ) {
+				res.items[0].feedtitle = $( 'channel', data ).find( '> title' ).text();
+				res.items[0].feedlink = $( 'channel', data ).find( '> link' ).text();
+
+				var item = $( 'item', data );
+
+				for ( var i = 0, _len = req.count ; i < _len ; i++ )
+				{
+					if ( i < item.length )
+					{
+						res.items.push( {
+							title: $( item[i] ).find ( '> title' ).text(),
+							link: $( item[i] ).find ( '> link' ).text(),
+							description: $( item[i] ).find( '> description' ).text().replace( /(<([^>]+)>)/ig, '' ),
+						} );
+					}
+				}
+
+				callback( res );
+			} ).fail( function( data ) {
+				callback( res );
+			} );
+
+			break;
 		default:
-			chrome.extension.sendMessage( req, callback );
 			break;
 	}
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// インポートファイル設定
-////////////////////////////////////////////////////////////////////////////////
-function SetImportFile( file )
-{
-	chrome.extension.getBackgroundPage().importFile = file;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

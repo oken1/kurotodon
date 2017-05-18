@@ -159,8 +159,6 @@ Contents.tootbox = function( cp )
 
 			if ( f.type.match( 'image.*' ) || f.type.match( 'video.*' ) )
 			{
-				chrome.extension.getBackgroundPage().uploadFile = f;
-
 				Blackout( true );
 				$( '#account_list' ).activity( { color: '#ffffff' } );
 
@@ -171,6 +169,7 @@ Contents.tootbox = function( cp )
 						action: 'media_upload',
 						instance: g_cmn.account[cp.param['account_id']].instance,
 						access_token: g_cmn.account[cp.param['account_id']].access_token,
+						uploadFile: f,
 					},
 					function( res )
 					{

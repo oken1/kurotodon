@@ -2,6 +2,7 @@
 	"manifest_version": 2,
 	"name": "Kurotodon",
 	"version": "0.0.0.1",
+	"author": "KEN1",
 	"description": "__MSG_manifest_description__",
 	"default_locale": "en",
 	"content_security_policy": "script-src 'self'; object-src 'self'",
@@ -22,7 +23,8 @@
 	},
 
 	"background" : {
-		"scripts": ["js/lib/jquery.js", "js/util.js", "js/background.js"]
+		"scripts": ["js/lib/jquery.js", "js/util.js", "js/background.js"],
+		"persistent": false
 	},
 
 	"permissions": [

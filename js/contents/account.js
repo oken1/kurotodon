@@ -86,7 +86,6 @@ Contents.account = function( cp )
 			{
 				$( '#account_list' ).find( 'div.item[account_id="' + $( '#account_del' ).attr( 'delid' ) + '"]' ).addClass( 'select' );
 				$( '#account_del' ).removeClass( 'disabled' );
-				$( '#account_setting' ).removeClass( 'disabled' );
 				$( '#account_posup' ).removeClass( 'disabled' );
 				$( '#account_posdown' ).removeClass( 'disabled' );
 			}
@@ -100,8 +99,6 @@ Contents.account = function( cp )
 			$( this ).addClass( 'select' );
 			$( '#account_del' )
 				.attr( 'delid', $( this ).attr( 'account_id' ) )
-				.removeClass( 'disabled' );
-			$( '#account_setting' )
 				.removeClass( 'disabled' );
 			$( '#account_posup' )
 				.removeClass( 'disabled' );
@@ -220,9 +217,6 @@ Contents.account = function( cp )
 		cont.on( 'account_update', function() {
 			// 削除ボタン
 			$( '#account_del' ).addClass( 'disabled' );
-
-			// 設定ボタン
-			$( '#account_setting' ).addClass( 'disabled' );
 
 			// ▲▼ボタン
 			$( '#account_posup' ).addClass( 'disabled' );
@@ -348,44 +342,6 @@ Contents.account = function( cp )
 
 				UpdateToolbarUser();
 			}
-		} );
-
-		////////////////////////////////////////
-		// アカウント設定ボタンクリック処理
-		////////////////////////////////////////
-		$( '#account_setting' ).click( function( e ) {
-			// disabledなら処理しない
-			if ( $( this ).hasClass( 'disabled' ) )
-			{
-				return;
-			}
-
-			var pid = IsUnique( 'accountset' );
-
-			var account_id = $( '#account_del' ).attr( 'delid' );
-			
-			if ( pid == null )
-			{
-				var _cp = new CPanel( null, null, 360, 420 );
-				_cp.SetType( 'accountset' );
-				_cp.SetTitle( i18nGetMessage( 'i18n_0047' ) + '(' + g_cmn.account[account_id].display_name + '@' + g_cmn.account[account_id].instance + ')', false );
-				_cp.SetParam( {
-					account_id: account_id,
-				} );
-				_cp.Start();
-			}
-			else
-			{
-				var _cp = GetPanel( pid );
-				_cp.SetType( 'accountset' );
-				_cp.SetTitle( i18nGetMessage( 'i18n_0047' ) + '(' + g_cmn.account[account_id].display_name + '@' + g_cmn.account[account_id].instance + ')', false );
-				_cp.SetParam( {
-					account_id: account_id,
-				} );
-				$( '#' + pid ).find( 'div.contents' ).trigger( 'account_change' );
-			}
-
-			e.stopPropagation();
 		} );
 
 		////////////////////////////////////////
