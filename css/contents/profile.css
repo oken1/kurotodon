@@ -1,6 +1,6 @@
 /* profile */
 div.contents.profile {
-	overflow-y: auto;
+	overflow-y: hidden;
 	overflow-x: hidden;
 	word-break: break-all;
 	word-wrap: break-word;
@@ -9,6 +9,7 @@ div.contents.profile {
 
 div.contents.profile .profilebase {
 	position: relative;
+	width: 100%;
 }
 
 div.contents.profile .profilebase:after {
@@ -40,6 +41,59 @@ div.contents.profile .profilebase > div.display_name span {
 div.contents.profile .profilebase > div.acct span {
 }
 
+div.contents.profile .profilebase > div.note div {
+	line-height: 1.5rem;
+}
+
 div.contents.profile .profilebase > div.note div a {
 	color: #ffffff;
 }
+
+div.contents.profile .profilebase > div.stats {
+	border-top: 1px solid #c0c0c0;
+	display: table;
+	width: 100%;
+}
+
+div.contents.profile .profilebase > div.stats > div {
+	display: table-cell;
+}
+
+div.contents.profile .profilebase > div.stats > div > span {
+	display: block;
+}
+
+div.contents.profile .profilebase > div.stats > div > span:last-child {
+	font-weight: bold;
+}
+
+div.contents.profile .profilebase > div.relationships {
+	border-top: 1px solid #c0c0c0;
+	display: table;
+	width: 100%;
+	background: #000000;
+}
+
+div.contents.profile .profilebase > div.relationships > div {
+	display: table-cell;
+}
+
+div.contents.profile .profilebase > div.relationships > div > span {
+	font-size: 32px;
+}
+
+div.contents.profile .profilebase > div.relationships > div > span {
+	color: #808080;
+	opacity: 0.5;
+}
+
+div.contents.profile .profilebase > div.relationships > div > span:hover {
+	cursor: pointer;
+	opacity: 1.0;
+}
+
+div.contents.profile .profilebase > div.relationships > div > span.on {
+	color: #3ba0e9;
+	opacity: 1.0;
+}
+

@@ -1551,6 +1551,34 @@
 		"message": "Are you sure you want to permanently clear all your notifications?"
 	},
 
+	"i18n_0392": {
+		"message": "Follow"
+	},
+
+	"i18n_0393": {
+		"message": "Unfollow"
+	},
+
+	"i18n_0394": {
+		"message": "Mute"
+	},
+
+	"i18n_0395": {
+		"message": "Unmute"
+	},
+
+	"i18n_0396": {
+		"message": "Block"
+	},
+
+	"i18n_0397": {
+		"message": "Unblock"
+	},
+
+	"i18n_0398": {
+		"message": "Are you sure you want to block?"
+	},
+
 
 
 

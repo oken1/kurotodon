@@ -1434,7 +1434,8 @@ function SendRequest( req, callback )
 				data: {
 					client_name: manifest.name,
 					redirect_uris: 'urn:ietf:wg:oauth:2.0:oob',
-					scopes: 'read write follow'
+					scopes: 'read write follow',
+					website: 'https://github.com/oken1/kurotodon',
 				}
 			} ).done( function( data ) {
 				callback( data );
@@ -2101,15 +2102,24 @@ function OpenHashtagTimeline( account_id, hashtag )
 ////////////////////////////////////////////////////////////////////////////////
 function OpenUserProfile( id, instance, account_id )
 {
-	var _cp = new CPanel( null, null, 400, 360 );
-	_cp.SetType( 'profile' );
-
-	_cp.SetParam( {
+	var dupchk = DuplicateCheck( { param: {
+		account_id: account_id,
 		id: id,
-		instance: instance,
-		account_id: account_id
-	} );
-	_cp.Start();
+		instance: instance
+	} } );
+
+	if ( dupchk == -1 )
+	{
+		var _cp = new CPanel( null, null, 400, 360 );
+		_cp.SetType( 'profile' );
+
+		_cp.SetParam( {
+			id: id,
+			instance: instance,
+			account_id: account_id
+		} );
+		_cp.Start();
+	}
 }
 
 
@@ -2183,7 +2193,7 @@ function StatusesCountUpdate( account_id, num )
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// 重複タイムラインチェック
+// 重複パネルチェック
 ////////////////////////////////////////////////////////////////////////////////
 function DuplicateCheck( cp )
 {
@@ -2221,6 +2231,16 @@ function DuplicateCheck( cp )
 
 						break;
 				}
+			}
+		}
+		else if ( g_cmn.panel[i].type == 'profile' )
+		{
+			if ( g_cmn.panel[i].param.account_id == cp.param.account_id &&
+				 g_cmn.panel[i].param.id == cp.param.id &&
+				 g_cmn.panel[i].param.instance == cp.param.instance )
+			{
+				dupchk = i;
+				break;
 			}
 		}
 	}

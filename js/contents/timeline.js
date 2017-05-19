@@ -382,8 +382,13 @@ console.log( res );
 
 				lines.activity( false );
 				loading = false;
-
-				$( 'panel' ).find( 'div.contents' ).trigger( 'api_remaining_update', [cp.param['account_id']] );
+				
+				// ストリーミングをONにする
+				if ( type == 'init' )
+				{
+					lines.find( '.streamctl > a' ).trigger( 'click' );
+				}
+				
 			}
 		);
 	};
@@ -542,7 +547,7 @@ console.log( res );
 				break;
 			case 'notifications':
 				cp.SetTitle( i18nGetMessage( 'i18n_0093' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
-				cp.SetIcon( 'icon-notifications' );
+				cp.SetIcon( 'icon-bell' );
 
 				cont.find( '.panel_btns' ).find( '.clear_notification' ).show();
 				break;
@@ -692,7 +697,7 @@ console.log( res );
 					{
 						if ( res.status === undefined )
 						{
-							ListMake( cp.param['get_count'], 'init' );
+							ListMake( cp.param['get_count'], 'reload' );
 						}
 						else
 						{
@@ -731,6 +736,11 @@ console.log( res );
 		lines.find( '.streamctl > a' ).click( function( e ) {
 			var account = g_cmn.account[cp.param.account_id];
 
+			if ( lines.find( '.streamctl' ).css( 'display' ) == 'none' )
+			{
+				return;
+			}
+			
 			// 開始
 			if ( lines.find( '.streamctl > a' ).hasClass( 'off' ) )
 			{
