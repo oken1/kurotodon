@@ -97,17 +97,8 @@ function Init()
 			manifest.name + ' version ' + manifest.version + '</a></div>' );
 	} );
 
-	// Activity Indicator dummy
-	$.fn.activity = function( opts ) {
-		if ( opts == false )
-		{
-			$( '#loading' ).hide();
-		}
-		else
-		{
-			$( '#loading' ).show();
-		}
-	};
+	Blackout( true );
+	Loading( true, 'loaddata' );
 
 	////////////////////////////////////////////////////////////
 	// 保存データを読み込み、アカウント、パネルを復元する
@@ -257,7 +248,7 @@ function Init()
 			{
 				// 後続処理を実行
 				Blackout( false );
-				$( '#blackout' ).activity( false );
+				Loading( false, 'loaddata' );
 				Subsequent();
 			}
 			// アカウント情報あり
@@ -267,7 +258,6 @@ function Init()
 
 				// アカウント情報を更新
 				Blackout( true );
-				$( '#blackout' ).activity( { color: '#ffffff' } );
 
 				function GetAccountInfo()
 				{
@@ -316,7 +306,7 @@ function Init()
 							{
 								g_cmn.account[account_id].username = res.username;
 								g_cmn.account[account_id].display_name = res.display_name;
-								g_cmn.account[account_id].avatar = res.avatar;
+								g_cmn.account[account_id].avatar = ImageURLConvert( res.avatar, res.acct, account_id );
 								g_cmn.account[account_id].notsave.statuses_count = res.statuses_count;
 								g_cmn.account[account_id].notsave.following_count = res.following_count;
 								g_cmn.account[account_id].notsave.followers_count = res.followers_count;
@@ -335,7 +325,7 @@ function Init()
 									if ( $( '#blackout' ).find( 'div.info' ).length == 0 )
 									{
 										Blackout( false );
-										$( '#blackout' ).activity( false );
+										Loading( false, 'loaddata' );
 										Subsequent();
 										$( '#head' ).trigger( 'account_update' );
 									}
@@ -376,7 +366,7 @@ function Init()
 
 			// アカウント画面を開く
 			Blackout( false );
-			$( '#blackout' ).activity( false );
+			Loading( false, 'loaddata' );
 			$( '#head_account' ).trigger( 'click' );
 		}
 
@@ -741,13 +731,8 @@ $( document ).on( 'mouseenter mouseleave', '.tooltip', function( e ) {
 ////////////////////////////////////////////////////////////////////////////////
 // ブラックアウト
 ////////////////////////////////////////////////////////////////////////////////
-function Blackout( flg, special )
+function Blackout( flg )
 {
-	if ( special == false )
-	{
-		return;
-	}
-
 	if ( flg )
 	{
 		$( '#blackout' ).show();
@@ -1031,7 +1016,7 @@ function MakeTimeline( json, account_id )
 				instance: GetInstanceFromAcct( json.account.acct, account_id ),
 				id: json.account.id,
 				display_name: json.account.display_name,
-				avatar: AvatarURLConvert( json.account, account_id ),
+				avatar: ImageURLConvert( json.account.avatar, json.account.acct, account_id ),
 				username: json.account.username,
 				status_id: json.id,
 				created_at: json.created_at,
@@ -1051,7 +1036,7 @@ function MakeTimeline( json, account_id )
 	var bt_instance = GetInstanceFromAcct( json.account.acct, account_id );
 	var bt_display_name = json.account.display_name;
 	var bt_username = json.account.username;
-	var bt_avatar = AvatarURLConvert( json.account, account_id );
+	var bt_avatar = ImageURLConvert( json.account.avatar, json.account.acct, account_id );
 
 	if ( bt_flg )
 	{
@@ -1061,16 +1046,12 @@ function MakeTimeline( json, account_id )
 
 	var instance = GetInstanceFromAcct( json.account.acct, account_id );
 
-	// 相互、一方フォローマーク
-	var isfriend = IsFriend( account_id, json.account.id, instance );
-	var isfollower = IsFollower( account_id, json.account.id, instance );
-
 	var assign = {
 		id: json.account.id,
 		status_id: json.id,
 		created_at: json.created_at,
 
-		avatar: AvatarURLConvert( json.account, account_id ),
+		avatar: ImageURLConvert( json.account.avatar, json.account.acct, account_id ),
 		statuses_count: NumFormat( json.account.statuses_count ),
 		following: NumFormat( json.account.following_count ),
 		followers: NumFormat( json.account.followers_count ),
@@ -1090,9 +1071,6 @@ function MakeTimeline( json, account_id )
 		instance: instance,
 		acct: json.account.acct,
 		application: json.application,
-
-		isfriend: isfriend,
-		isfollower: isfollower,
 
 		btcnt: json.reblogs_count,
 		favcnt: json.favourites_count,
@@ -2024,17 +2002,17 @@ function GetInstanceFromAcct( acct, account_id ) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// 初期アイコンのURL変換
+// missing.png対応
 ////////////////////////////////////////////////////////////////////////////////
-function AvatarURLConvert( account, account_id )
+function ImageURLConvert( imgurl, acct, account_id )
 {
-	if ( account.avatar == "/avatars/original/missing.png" )
+	if ( imgurl.match( /missing.png$/ ) )
 	{
-		return 'https://' + GetInstanceFromAcct( account.acct, account_id ) + account.avatar;
+		return 'https://' + GetInstanceFromAcct( acct, account_id ) + imgurl;
 	}
 	else
 	{
-		return account.avatar;
+		return imgurl;
 	}
 }
 
@@ -2044,12 +2022,15 @@ function AvatarURLConvert( account, account_id )
 ////////////////////////////////////////////////////////////////////////////////
 function OpenUserTimeline( account_id, id, username, display_name, instance )
 {
-	var dupchk = DuplicateCheck( { param: {
-		account_id: account_id,
-		timeline_type: 'user',
-		id: id,
-		instance: instance
-	} } );
+	var dupchk = DuplicateCheck( {
+		type: 'timeline',
+		param: {
+			account_id: account_id,
+			timeline_type: 'user',
+			id: id,
+			instance: instance
+		}
+	} );
 
 	if ( dupchk == -1 )
 	{
@@ -2075,11 +2056,14 @@ function OpenUserTimeline( account_id, id, username, display_name, instance )
 ////////////////////////////////////////////////////////////////////////////////
 function OpenHashtagTimeline( account_id, hashtag )
 {
-	var dupchk = DuplicateCheck( { param: {
-		account_id: account_id,
-		timeline_type: 'hashtag',
-		hashtag: hashtag.replace( /^#/, '' ),
-	} } );
+	var dupchk = DuplicateCheck( {
+		type: 'timeline',
+		param: {
+			account_id: account_id,
+			timeline_type: 'hashtag',
+			hashtag: hashtag.replace( /^#/, '' ),
+		}
+	} );
 
 	if ( dupchk == -1 )
 	{
@@ -2102,11 +2086,14 @@ function OpenHashtagTimeline( account_id, hashtag )
 ////////////////////////////////////////////////////////////////////////////////
 function OpenUserProfile( id, instance, account_id )
 {
-	var dupchk = DuplicateCheck( { param: {
-		account_id: account_id,
-		id: id,
-		instance: instance
-	} } );
+	var dupchk = DuplicateCheck( {
+		type: 'profile',
+		param: {
+			account_id: account_id,
+			id: id,
+			instance: instance
+		}
+	} );
 
 	if ( dupchk == -1 )
 	{
@@ -2122,58 +2109,6 @@ function OpenUserProfile( id, instance, account_id )
 	}
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-// フレンドかチェック
-////////////////////////////////////////////////////////////////////////////////
-function IsFriend( account_id, id, instance )
-{
-/*
-	var account = g_cmn.account[account_id];
-
-	if ( account.notsave.friends == undefined )
-	{
-		return false;
-	}
-
-	for ( var i = 0, _len = account.notsave.friends.length ; i < _len ; i++ )
-	{
-		if ( user_id == account.notsave.friends[i] )
-		{
-			return true;
-		}
-	}
-
-	return false;
-*/
-	return true; // 仮
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// フォロワーかチェック
-////////////////////////////////////////////////////////////////////////////////
-function IsFollower( account_id, id, instance )
-{
-/*
-	var account = g_cmn.account[account_id];
-
-	if ( account.notsave.followers == undefined )
-	{
-		return false;
-	}
-
-	for ( var i = 0, _len = account.notsave.followers.length ; i < _len ; i++ )
-	{
-		if ( user_id == account.notsave.followers[i] )
-		{
-			return true;
-		}
-	}
-
-	return false;
-*/
-	return true; // 仮
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // トゥート数表示の更新
@@ -2201,7 +2136,7 @@ function DuplicateCheck( cp )
 
 	for ( var i = 0 ; i < g_cmn.panel.length ; i++ )
 	{
-		if ( g_cmn.panel[i].type == 'timeline' )
+		if ( g_cmn.panel[i].type == cp.type && cp.type == 'timeline' )
 		{
 			if ( g_cmn.panel[i].param.timeline_type == cp.param.timeline_type &&
 				 g_cmn.panel[i].param.account_id == cp.param.account_id )
@@ -2233,7 +2168,7 @@ function DuplicateCheck( cp )
 				}
 			}
 		}
-		else if ( g_cmn.panel[i].type == 'profile' )
+		else if ( g_cmn.panel[i].type == cp.type && cp.type == 'profile' )
 		{
 			if ( g_cmn.panel[i].param.account_id == cp.param.account_id &&
 				 g_cmn.panel[i].param.id == cp.param.id &&
@@ -2251,6 +2186,29 @@ function DuplicateCheck( cp )
 	}
 	
 	return dupchk;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Loading
+////////////////////////////////////////////////////////////////////////////////
+var loading_queue = {};
+
+function Loading( flg, id )
+{
+	if ( flg == false )
+	{
+		delete loading_queue[id];
+
+		if ( Object.keys( loading_queue ).length == 0 )
+		{
+			$( '#loading' ).hide();
+		}
+	}
+	else
+	{
+		$( '#loading' ).show();
+		loading_queue[id] = true;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

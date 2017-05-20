@@ -16,7 +16,7 @@ Contents.rsslist = function( cp )
 	// リスト部作成
 	////////////////////////////////////////////////////////////
 	var ListMake = function( type ) {
-		cont.activity( { color: '#ffffff' } );
+		Loading( true, 'rsslist' );
 
 		rsslist_list.html( OutputTPL( 'rsslist_list', { items: g_cmn.rss_panel } ) )
 			.scrollTop( 0 );
@@ -83,7 +83,7 @@ Contents.rsslist = function( cp )
 
 		cont.trigger( 'contents_resize' );
 
-		cont.activity( false );
+		Loading( false, 'rsslist' );
 	};
 
 	////////////////////////////////////////////////////////////

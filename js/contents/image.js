@@ -18,7 +18,7 @@ Contents.image = function( cp )
 	////////////////////////////////////////////////////////////
 	this.start = function() {
 		cp.SetTitle( i18nGetMessage( 'i18n_0199' ), false );
-		setTimeout( function() { cont.activity( { color: '#ffffff' } ); }, 0 );
+		setTimeout( function() { Loading( true, 'image_load' ); }, 0 );
 
 		if ( types[cp.param['index']] == 'image' )
 		{
@@ -55,7 +55,7 @@ Contents.image = function( cp )
 				nh = e.target.videoHeight;
 			}
 
-			setTimeout( function() {cont.activity( false ); }, 0 );
+			setTimeout( function() { Loading( false, 'image_load' ); }, 0 );
 
 			// 巨大画像の表示抑止
 			var mainw = $( window ).width() * 0.95;
@@ -256,7 +256,7 @@ Contents.image = function( cp )
 		// 読み込み失敗
 		////////////////////////////////////////
 		var ErrorEvent = function() {
-			setTimeout( function() { cont.activity( false ); }, 0 );
+			setTimeout( function() { Loading( false, 'image_load' ); }, 0 );
 		};
 
 		cont.find( 'img.image' ).on( 'error', function() {

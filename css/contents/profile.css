@@ -34,6 +34,10 @@ div.contents.profile .profilebase > div.avatar img {
 	width: 30%;
 }
 
+div.contents.profile .profilebase > div.display_name {
+	line-height: 2rem;
+}
+
 div.contents.profile .profilebase > div.display_name span {
 	font-size: 2rem;
 }

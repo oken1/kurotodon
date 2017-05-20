@@ -147,10 +147,13 @@ Contents.account = function( cp )
 								$( this ).hasClass( 'federated' ) ? 'federated' :
 								'notifications';
 
-			var dupchk = DuplicateCheck( { param: {
-				account_id: account_id,
-				timeline_type: timeline_type,
-			} } );
+			var dupchk = DuplicateCheck( {
+				type: 'timeline',
+				param: {
+					account_id: account_id,
+					timeline_type: timeline_type,
+				}
+			} );
 
 			if ( dupchk == -1 )
 			{
@@ -485,7 +488,7 @@ Contents.account = function( cp )
 			};
 
 			Blackout( true );
-			$( '#account_list' ).activity( { color: '#ffffff' } );
+			Loading( true, 'login' );
 
 			var instance = $( '#login_instance' ).val();
 			var email = $( '#login_email' ).val();
@@ -525,7 +528,7 @@ Contents.account = function( cp )
 						else
 						{
 							ApiError( res );
-							$( '#account_list' ).activity( false );
+							Loading( false, 'login' );
 							Blackout( false );
 						}
 					}
@@ -579,6 +582,8 @@ Contents.account = function( cp )
 										
 										g_cmn.account[res.id + '@' + instance] = $.extend( true, {}, _account );
 
+										g_cmn.account[res.id + '@' + instance].avatar = ImageURLConvert( res.avatar, res.acct, res.id + '@' + instance );
+
 										$( '#head' ).trigger( 'account_update' );
 										UpdateToolbarUser();
 										
@@ -589,7 +594,7 @@ Contents.account = function( cp )
 										ApiError( res );
 									}
 
-									$( '#account_list' ).activity( false );
+									Loading( false, 'login' );
 									Blackout( false );
 								}
 							);
@@ -597,7 +602,7 @@ Contents.account = function( cp )
 						else
 						{
 							ApiError( res );
-							$( '#account_list' ).activity( false );
+							Loading( false, 'login' );
 							Blackout( false );
 						}
 					}

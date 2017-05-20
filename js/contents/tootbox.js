@@ -160,7 +160,7 @@ Contents.tootbox = function( cp )
 			if ( f.type.match( 'image.*' ) || f.type.match( 'video.*' ) )
 			{
 				Blackout( true );
-				$( '#account_list' ).activity( { color: '#ffffff' } );
+				Loading( true, 'append_attachfile' );
 
 				uploading++;
 
@@ -205,7 +205,7 @@ Contents.tootbox = function( cp )
 							ApiError( res );
 						}
 						
-						$( '#account_list' ).activity( false );
+						Loading( false, 'append_attachfile' );
 						Blackout( false );
 					}
 				);
@@ -290,7 +290,7 @@ Contents.tootbox = function( cp )
 						cp.param['reply'] = res.id;
 
 						cont.find( '.tootreply' ).html( OutputTPL( 'tootbox_reply', {
-							avatar: res.account.avatar,
+							avatar: ImageURLConvert( res.account.avatar, res.account.acct, account_id ),
 							status: res.content.replace( /<("[^"]*"|'[^']*'|[^'">])*>/g, '' ),
 						} ) );
 
@@ -415,6 +415,8 @@ Contents.tootbox = function( cp )
 				param.in_reply_to_id = cp.param['reply'];
 			}
 
+			Loading( true, 'toot' );
+
 			SendRequest(
 				{
 					method: 'POST',
@@ -455,8 +457,7 @@ Contents.tootbox = function( cp )
 						ApiError( res );
 					}
 
-					Blackout( false, false );
-					$( '#blackout' ).activity( false );
+					Loading( false, 'toot' );
 				}
 			);
 

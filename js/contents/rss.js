@@ -36,7 +36,7 @@ Contents.rss = function( cp )
 			return;
 		}
 
-		lines.activity( { color: '#ffffff' } );
+		Loading( true, 'rss' );
 		loadcnt = len;
 		loadhtml = [];
 
@@ -64,7 +64,7 @@ Contents.rss = function( cp )
 						loadhtml = [];
 						cont.trigger( 'contents_resize' );
 
-						lines.activity( false );
+						Loading( false, 'rss' );
 					}
 				}
 			);
@@ -364,7 +364,7 @@ Contents.rss = function( cp )
 				}
 			}
 
-			setting.find( '.rsssetting_items .kinditems:last' ).activity( { color: '#ffffff' } );
+			Loading( true, 'feed_append' );
 			setting.find( '.feed_append' ).addClass( 'disabled' );
 
 			SendRequest(
@@ -381,8 +381,6 @@ Contents.rss = function( cp )
 						MessageBox( i18nGetMessage( 'i18n_0064' ) );
 						setting.find( '.set_feed' ).focus();
 						setting.find( '.feed_append' ).removeClass( 'disabled' );
-
-						setting.find( '.rsssetting_items .kinditems:last' ).activity( false );
 					}
 					else
 					{
@@ -401,9 +399,9 @@ Contents.rss = function( cp )
 						}
 
 						FeedList();
-
-						setting.find( '.rsssetting_items .kinditems:last' ).activity( false );
 					}
+
+					Loading( false, 'feed_append' );
 				}
 			);
 

@@ -17,7 +17,7 @@ Contents.profile = function( cp )
 		cont.html( '' )
 			.addClass( 'profile' );
 
-		cont.activity( { color: '#ffffff' } );
+		Loading( true, 'profile' );
 		cp.SetTitle( i18nGetMessage( 'i18n_0107' ) + 
 			'(' + g_cmn.account[cp.param['account_id']].display_name + '@' + g_cmn.account[cp.param['account_id']].instance + ')', false );
 
@@ -36,12 +36,21 @@ Contents.profile = function( cp )
 					cp.SetTitle( res.display_name + ' ' + i18nGetMessage( 'i18n_0107' ) + 
 						'(' + g_cmn.account[cp.param['account_id']].display_name + '@' + g_cmn.account[cp.param['account_id']].instance + ')', false );
 
+					// day
+					var dt = new Date();
+					var cr = DateConv( res.created_at, 0 );
+					var compdate = NumFormat( CompareDate( dt.getFullYear(), dt.getMonth() + 1, dt.getDate(),
+									cr.substring( 0, 4 ), cr.substring( 5, 7 ), cr.substring( 8, 10 ) ) );
+
 					cont.html( OutputTPL( 'profile',
 						{
-							avatar: res.avatar,
+							id: res.id,
+							avatar: ImageURLConvert( res.avatar, res.acct, cp.param.account_id ),
 							display_name: res.display_name,
 							acct: res.acct,
 							note: res.note,
+							day: compdate,
+							date: DateConv( res.created_at, 0 ),
 							statuses_count: NumFormat( res.statuses_count ),
 							following_count: NumFormat( res.following_count ),
 							followers_count: NumFormat( res.followers_count ),
@@ -51,12 +60,12 @@ Contents.profile = function( cp )
 					if ( res.header )
 					{
 						cont.find( '.profilebase' ).css( {
-							backgroundImage: 'url("' + res.header + '")',
+							backgroundImage: 'url("' + ImageURLConvert( res.header, res.acct, cp.param.account_id ) + '")',
 							backgroundSize: 'cover'
 						} );
 					}
 
-					cont.activity( { color: '#ffffff' } );
+					Loading( true, 'relationships' );
 
 					SendRequest(
 						{
@@ -86,7 +95,7 @@ Contents.profile = function( cp )
 								ApiError( res );
 							}
 
-							cont.activity( false );
+							Loading( false, 'relationships' );
 							cont.css( {
 								height: cont.find( '.profilebase' ).outerHeight(),
 							} );
@@ -109,7 +118,7 @@ Contents.profile = function( cp )
 									api += 'follow';
 								}
 								
-								cont.activity( { color: '#ffffff' } );
+								Loading( true, 'follow' );
 
 								SendRequest(
 									{
@@ -137,7 +146,7 @@ Contents.profile = function( cp )
 											ApiError( res );
 										}
 
-										cont.activity( false );
+										Loading( false, 'follow' );
 									}
 								);
 							} );
@@ -155,7 +164,7 @@ Contents.profile = function( cp )
 									api += 'mute';
 								}
 								
-								cont.activity( { color: '#ffffff' } );
+								Loading( true, 'mute' );
 
 								SendRequest(
 									{
@@ -183,7 +192,7 @@ Contents.profile = function( cp )
 											ApiError( res );
 										}
 
-										cont.activity( false );
+										Loading( false, 'mute' );
 									}
 								);
 							} );
@@ -192,7 +201,7 @@ Contents.profile = function( cp )
 							cont.find( '.relationships .block' ).on( 'click', function( e ) {
 								var api = 'accounts/' + cp.param.id + '/';
 
-								cont.activity( { color: '#ffffff' } );
+								Loading( true, 'block' );
 
 								var _api_call = function() {
 									SendRequest(
@@ -221,7 +230,7 @@ Contents.profile = function( cp )
 												ApiError( res );
 											}
 
-											cont.activity( false );
+											Loading( false, 'block' );
 										}
 									);
 								}
@@ -249,7 +258,7 @@ Contents.profile = function( cp )
 					ApiError( res );
 				}
 
-				cont.activity( false );
+				Loading( false, 'profile' );
 			}
 		);
 	};

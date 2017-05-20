@@ -210,7 +210,7 @@ Contents.timeline = function( cp )
 				break;
 		}
 
-		lines.activity( { color: '#ffffff' } );
+		Loading( true, 'timeline' );
 
 		// API呼び出し
 		SendRequest(
@@ -251,7 +251,7 @@ console.log( res );
 							if ( users[res[i].account.id + '@' + instance] == undefined )
 							{
 								users[res[i].account.id + '@' + instance] = {
-									avatar: res[i].account.avatar,
+									avatar: ImageURLConvert( res[i].account.avatar, res[i].account.acct, cp.param.account_id ),
 									display_name: res[i].account.display_name,
 									created_at: res[i].account.created_at,
 								};
@@ -380,7 +380,7 @@ console.log( res );
 					}
 				}
 
-				lines.activity( false );
+				Loading( false, 'timeline' );
 				loading = false;
 				
 				// ストリーミングをONにする
@@ -683,7 +683,7 @@ console.log( res );
 			if ( confirm( i18nGetMessage( 'i18n_0390' ) ) )
 			{
 				Blackout( true );
-				$( '#blackout' ).activity( { color: '#808080', width: 8, length: 14 } );
+				Loading( true, 'clear_notification' );
 
 				SendRequest(
 					{
@@ -705,7 +705,7 @@ console.log( res );
 						}
 
 						Blackout( false );
-						$( '#blackout' ).activity( false );
+						Loading( false, 'clear_notification' );
 					}
 				);
 			}
@@ -859,7 +859,7 @@ console.log( res );
 
 					var users = {};
 					users[data.json.account.id + '@' + instance] = {
-						avatar: data.json.account.avatar,
+						avatar: ImageURLConvert( data.json.account.avatar, data.json.account.acct, cp.param.account_id ),
 						display_name: data.json.account.display_name,
 						created_at: data.json.account.created_at,
 					};
@@ -940,7 +940,10 @@ console.log( res );
 			{
 				var item = targ.closest( '.item' );
 
-				OpenUserProfile( item.attr( 'id' ), item.attr( 'instance' ), cp.param['account_id'] );
+				if ( targ.prop( 'tagName' ) == 'IMG' )
+				{
+					OpenUserProfile( item.attr( 'id' ), item.attr( 'instance' ), cp.param['account_id'] );
+				}
 			}
 			////////////////////////////////////////
 			// BTアイコンクリック
@@ -1190,7 +1193,7 @@ console.log( res );
 				if ( confirm( i18nGetMessage( 'i18n_0224' ) ) )
 				{
 					Blackout( true );
-					$( '#blackout' ).activity( { color: '#808080', width: 8, length: 14 } );
+					Loading( true, 'delete_toot' );
 
 					SendRequest(
 						{
@@ -1217,7 +1220,7 @@ console.log( res );
 							}
 
 							Blackout( false );
-							$( '#blackout' ).activity( false );
+							Loading( false, 'delete_toot' );
 						}
 					);
 				}

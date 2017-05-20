@@ -6,10 +6,13 @@
 		<span>{$display_name}</span>
 	</div>
 	<div class='acct'>
-		<span>{$acct}</span>
+		<span>@{$acct}</span><span> (ID:{$id})</span>
 	</div>
 	<div class='note'>
 		<div>{$note}</div>
+	</div>
+	<div class='date'>
+		<span>{$day}days ({$date} - )</span>
 	</div>
 	<div class='stats'>
 		<div>
