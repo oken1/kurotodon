@@ -2178,6 +2178,25 @@ function DuplicateCheck( cp )
 				break;
 			}
 		}
+		else if ( g_cmn.panel[i].type == cp.type && cp.type == 'users' )
+		{
+			if ( g_cmn.panel[i].param.users_type == cp.param.users_type &&
+				 g_cmn.panel[i].param.account_id == cp.param.account_id )
+			{
+				switch ( cp.param.users_type )
+				{
+					case 'following':
+					case 'followers':
+						if ( g_cmn.panel[i].param.id == cp.param.id &&
+							 g_cmn.panel[i].param.instance == cp.param.instance )
+						{
+							dupchk = i;
+						}
+						
+						break;
+				}
+			}
+		}
 	}
 
 	if ( dupchk > -1 )

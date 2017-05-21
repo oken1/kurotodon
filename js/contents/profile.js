@@ -65,6 +65,33 @@ Contents.profile = function( cp )
 						} );
 					}
 
+					// フォロー/フォロワー一覧
+					cont.find( '.stats' ).find( '.following_count,.followers_count' ).on( 'click', function( e ) {
+						var users_type = ( $( this ).hasClass( 'following_count' ) ) ? 'following' : 'followers';
+
+						var dupchk = DuplicateCheck( {
+							type: 'users',
+							param: {
+								account_id: cp.param['account_id'],
+								users_type: users_type,
+								id: res.id,
+								instance: g_cmn.account[cp.param['account_id']].instance
+							}
+						} );
+
+						if ( dupchk == -1 )
+						{
+							var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+							_cp.SetType( 'users' );
+							
+							_cp.SetParam( {
+								account_id: cp.param['account_id'],
+								users_type: users_type,
+								id: res.id,
+							} );
+						}
+					} );
+
 					Loading( true, 'relationships' );
 
 					SendRequest(

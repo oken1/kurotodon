@@ -3,12 +3,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 // ユーザ検索一覧
 ////////////////////////////////////////////////////////////////////////////////
-Contents.usersearch = function( cp )
+Contents.users = function( cp )
 {
 	var p = $( '#' + cp.id );
 	var cont = p.find( 'div.contents' );
 	var page = 1;
-	var usersearch_list;
+	var users_list;
 	var scrollPos = null;
 	var users = {};
 
@@ -104,7 +104,7 @@ Contents.usersearch = function( cp )
 					var AppendReadmore = function() {
 						if ( len > 0 )
 						{
-							usersearch_list.append(
+							users_list.append(
 								'<div class="btn img readmore icon-arrow_down tooltip" tooltip="' + chrome.i18n.getMessage( 'i18n_0157' ) + '"></div>' );
 						}
 					};
@@ -114,8 +114,8 @@ Contents.usersearch = function( cp )
 						// 初期、更新
 						case 'init':
 						case 'reload':
-							usersearch_list.html( s );
-							usersearch_list.scrollTop( 0 );
+							users_list.html( s );
+							users_list.scrollTop( 0 );
 
 							page++;
 							AppendReadmore();
@@ -124,13 +124,13 @@ Contents.usersearch = function( cp )
 						case 'old':
 							if ( len > 0 )
 							{
-								usersearch_list.append( s );
+								users_list.append( s );
 
 								page++;
 								AppendReadmore();
 							}
 
-							usersearch_list.find( '.readmore:first' ).remove();
+							users_list.find( '.readmore:first' ).remove();
 							$( '#tooltip' ).hide();
 
 							break;
@@ -143,7 +143,7 @@ Contents.usersearch = function( cp )
 					// もっと読むで404が返ってきた場合
 					if ( type == 'old' && res.status == 404 )
 					{
-						usersearch_list.find( '.readmore:first' ).remove();
+						users_list.find( '.readmore:first' ).remove();
 						$( '#tooltip' ).hide();
 					}
 					else
@@ -152,7 +152,7 @@ Contents.usersearch = function( cp )
 
 						if ( type == 'old' )
 						{
-							usersearch_list.find( '.readmore' ).removeClass( 'disabled' );
+							users_list.find( '.readmore' ).removeClass( 'disabled' );
 						}
 					}
 				}
@@ -178,7 +178,7 @@ Contents.usersearch = function( cp )
 			{
 				if ( scrollPos == null )
 				{
-					scrollPos = usersearch_list.scrollTop();
+					scrollPos = users_list.scrollTop();
 				}
 			}
 			// 復元
@@ -186,7 +186,7 @@ Contents.usersearch = function( cp )
 			{
 				if ( scrollPos != null )
 				{
-					usersearch_list.scrollTop( scrollPos );
+					users_list.scrollTop( scrollPos );
 					scrollPos = null;
 				}
 			}
@@ -196,7 +196,7 @@ Contents.usersearch = function( cp )
 		// リサイズ処理
 		////////////////////////////////////////
 		cont.on( 'contents_resize', function() {
-			cont.find( '.usersearch_list' ).height( cont.height() - cont.find( '.panel_btns' ).height() - 1 );
+			cont.find( '.users_list' ).height( cont.height() - cont.find( '.panel_btns' ).height() - 1 );
 		} );
 
 		////////////////////////////////////////
@@ -218,7 +218,7 @@ Contents.usersearch = function( cp )
 				$( document ).trigger( 'panellist_changed' );
 
 				// 更新
-				cont.find( '.panel_btns' ).find( '.usersearch_reload' ).trigger( 'click' );
+				cont.find( '.panel_btns' ).find( '.users_reload' ).trigger( 'click' );
 			}
 		} );
 
@@ -266,17 +266,17 @@ Contents.usersearch = function( cp )
 		}
 
 		// 全体を作成
-		cont.addClass( 'usersearch' )
-			.html( OutputTPL( 'usersearch', {} ) );
+		cont.addClass( 'users' )
+			.html( OutputTPL( 'users', {} ) );
 
-		usersearch_list = cont.find( '.usersearch_list' );
+		users_list = cont.find( '.users_list' );
 
 		cp.SetTitle( chrome.i18n.getMessage( 'i18n_0105', [cp.param['q']] ) + ' (<span class="titlename">' + g_cmn.account[cp.param['account_id']]['screen_name'] + '</span>)', false );
 
 		////////////////////////////////////////
 		// 更新ボタンクリック
 		////////////////////////////////////////
-		cont.find( '.panel_btns' ).find( '.usersearch_reload' ).click( function( e ) {
+		cont.find( '.panel_btns' ).find( '.users_reload' ).click( function( e ) {
 			// disabledなら処理しない
 			if ( $( this ).hasClass( 'disabled' ) )
 			{
@@ -289,7 +289,7 @@ Contents.usersearch = function( cp )
 		////////////////////////////////////////
 		// ユーザ名クリック
 		////////////////////////////////////////
-		usersearch_list.on( 'click', $( '> div.item' ).find( '.screen_name' ).selector, function( e ) {
+		users_list.on( 'click', $( '> div.item' ).find( '.screen_name' ).selector, function( e ) {
 			OpenUserTimeline( $( this ).text(), cp.param['account_id'] );
 			e.stopPropagation();
 		} );
@@ -297,7 +297,7 @@ Contents.usersearch = function( cp )
 		////////////////////////////////////////
 		// アイコンクリック処理
 		////////////////////////////////////////
-		usersearch_list.on( 'click', $( '> div.item' ).find( '.icon' ).find( 'img' ).selector, function( e ) {
+		users_list.on( 'click', $( '> div.item' ).find( '.icon' ).find( 'img' ).selector, function( e ) {
 			OpenUserShow( $( this ).parent().parent().attr( 'screen_name' ),
 				$( this ).parent().parent().attr( 'user_id' ),
 				cp.param['account_id'] );
@@ -308,7 +308,7 @@ Contents.usersearch = function( cp )
 		////////////////////////////////////////
 		// もっと読むクリック処理
 		////////////////////////////////////////
-		usersearch_list.on( 'click', $( '> div.readmore' ).selector, function( e ) {
+		users_list.on( 'click', $( '> div.readmore' ).selector, function( e ) {
 			// disabledなら処理しない
 			if ( $( this ).hasClass( 'disabled' ) )
 			{
@@ -325,7 +325,7 @@ Contents.usersearch = function( cp )
 		////////////////////////////////////////
 		// アイコンにカーソルを乗せたとき
 		////////////////////////////////////////
-		usersearch_list.on( 'mouseenter mouseleave', $( '> div.item' ).find( 'div.icon' ).find( '> img' ).selector, function( e ) {
+		users_list.on( 'mouseenter mouseleave', $( '> div.item' ).find( 'div.icon' ).find( '> img' ).selector, function( e ) {
 			if ( e.type == 'mouseenter' )
 			{
 				// Draggableの設定をする
@@ -341,14 +341,14 @@ Contents.usersearch = function( cp )
 		// 一番下までスクロールで
 		// 「もっと読む」クリック
 		////////////////////////////////////////
-		usersearch_list.scroll(
+		users_list.scroll(
 			function()
 			{
 				if ( g_cmn.cmn_param['autoreadmore'] == 1 )
 				{
-					if ( usersearch_list.prop( 'scrollHeight' ) == usersearch_list.scrollTop() + usersearch_list.innerHeight() )
+					if ( users_list.prop( 'scrollHeight' ) == users_list.scrollTop() + users_list.innerHeight() )
 					{
-						usersearch_list.find( '.readmore' ).trigger( 'click' );
+						users_list.find( '.readmore' ).trigger( 'click' );
 					}
 				}
 			}

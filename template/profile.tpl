@@ -21,11 +21,11 @@
 		</div>
 		<div>
 			<span>(i18n_0125)</span>
-			<span>{$following_count}</span>
+			<span class='following_count'>{$following_count}</span>
 		</div>
 		<div>
 			<span>(i18n_0122)</span>
-			<span>{$followers_count}</span>
+			<span class='followers_count'>{$followers_count}</span>
 		</div>
 	</div>
 </div>

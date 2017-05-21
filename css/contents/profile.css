@@ -71,6 +71,12 @@ div.contents.profile .profilebase > div.stats > div > span:last-child {
 	font-weight: bold;
 }
 
+div.contents.profile .profilebase > div.stats > div .followers_count:hover,
+div.contents.profile .profilebase > div.stats > div .following_count:hover
+{
+	cursor: pointer;
+}
+
 div.contents.profile .profilebase > div.relationships {
 	border-top: 1px solid #c0c0c0;
 	display: table;
