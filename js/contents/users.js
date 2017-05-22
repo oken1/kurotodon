@@ -7,105 +7,111 @@ Contents.users = function( cp )
 {
 	var p = $( '#' + cp.id );
 	var cont = p.find( 'div.contents' );
-	var page = 1;
 	var users_list;
 	var scrollPos = null;
 	var users = {};
-
-	cp.SetIcon( 'icon-search' );
+	var limit = 80;
+	var first_id = null;
+	
+	cp.SetIcon( 'icon-users2' );
 
 	////////////////////////////////////////////////////////////
 	// リスト部作成
 	////////////////////////////////////////////////////////////
 	var ListMake = function( type ) {
-		var param = {
-			type: 'GET',
-			url: ApiUrl( '1.1' ) + 'users/search.json',
-			data: {
-				q: cp.param['q'],
-				count: 20,
-				page: page,
-			},
-		};
-
-		if ( type == 'init' || type == 'reload' )
+		var param = {};
+		
+		switch ( cp.param.users_type )
 		{
-			param.data.page = 1;
+			case 'follows':
+				param = {
+					api: 'accounts/' + cp.param.id + '/following',
+					data: {
+						limit: limit
+					}
+				};
+				
+				break;
+			case 'followers':
+				param = {
+					api: 'accounts/' + cp.param.id + '/followers',
+					data: {
+						limit: limit
+					}
+				};
+				
+				break;
 		}
 
-		cont.activity( { color: '#ffffff' } );
+		switch( type )
+		{
+			// 初期
+			case 'init':
+				break;
+			// 更新
+			case 'reload':
+				break;
+			// もっと読む
+			case 'old':
+				param.data.max_id = first_id;
+				break;
+		}
+
+		Loading( true, 'users' );
 
 		SendRequest(
 			{
-				action: 'oauth_send',
-				acsToken: g_cmn.account[cp.param['account_id']]['accessToken'],
-				acsSecret: g_cmn.account[cp.param['account_id']]['accessSecret'],
-				param: param,
-				id: cp.param['account_id']
+				method: 'GET',
+				action: 'api_call',
+				instance: g_cmn.account[cp.param.account_id].instance,
+				access_token: g_cmn.account[cp.param.account_id].access_token,
+				api: param.api,
+				param: param.data
 			},
 			function( res )
 			{
-				if ( res.status == 200 )
+			console.log( res );
+				if ( res.status === undefined )
 				{
 					var s = '';
-					var json = res.json;
 					var items = new Array();
-					var len = 0;
-					var created_at = '';
+					var len = res.length;
 
-					for ( var i = 0, _len = json.length ; i < _len ; i++ )
+					for ( var i = 0 ; i < len ; i++ )
 					{
-						if ( users[json[i].id_str] )
-						{
-							continue;
-						}
-						else
-						{
-							len++;
-							users[json[i].id_str] = true;
-						}
+						var instance = GetInstanceFromAcct( res[i].acct, cp.param.account_id );
 
-						// 日付にはとりあえずアカウントの作成日を設定
-						created_at = json[i].created_at;
-
-						// 最新ツイートが設定されている場合は、そのツイートの日時を設定
-						if ( json[i].status != undefined )
-						{
-							if ( json[i].status.created_at != undefined )
-							{
-								created_at = json[i].status.created_at;
-							}
-						}
-
-						var isfriend = IsFriend( cp.param['account_id'], json[i].id_str );
-						var isfollower = IsFollower( cp.param['account_id'], json[i].id_str );
+						users[res[i].id + '@' + instance] = true;
 
 						items.push( {
-							icon: json[i].profile_image_url_https,
-							screen_name: json[i].screen_name,
-							name: json[i].name,
-							follow: NumFormat( json[i].friends_count ),
-							follower: NumFormat( json[i].followers_count ),
-							count: NumFormat( json[i].statuses_count ),
-							description: json[i].description,
-							verified: json[i].verified,
-							protected: json[i].protected,
-							user_id: json[i].id_str,
-							created_at: created_at,
-							ismutual: isfriend & isfollower,
-							isfriend: isfriend & !isfollower,
-							isfollower: !isfriend & isfollower,
+							avatar: ImageURLConvert( res[i].avatar, res[i].acct, cp.param.account_id ),
+							display_name: res[i].display_name,
+							username: res[i].username,
+							instance: instance,
+							id: res[i].id,
+							statuses_count: NumFormat( res[i].statuses_count ),
+							following_count: NumFormat( res[i].following_count ),
+							followers_count: NumFormat( res[i].followers_count ),
+							created_at: res[i].created_at,
 						} );
 					}
 
-					s = OutputTPL( 'user_list', { items: items } );
+					s = OutputTPL( 'users_list', { items: items } );
+
+					if ( len > 0 )
+					{
+						if ( type == 'init' || type == 'reload' || type == 'old' )
+						{
+							first_id = res[len - 1].id;
+						}
+					}
 
 					// もっと読む
 					var AppendReadmore = function() {
 						if ( len > 0 )
 						{
 							users_list.append(
-								'<div class="btn img readmore icon-arrow_down tooltip" tooltip="' + chrome.i18n.getMessage( 'i18n_0157' ) + '"></div>' );
+								'<div class="btn img readmore icon-arrow_down tooltip" tooltip="' + i18nGetMessage( 'i18n_0157' ) + '"></div>' );
 						}
 					};
 
@@ -116,8 +122,6 @@ Contents.users = function( cp )
 						case 'reload':
 							users_list.html( s );
 							users_list.scrollTop( 0 );
-
-							page++;
 							AppendReadmore();
 							break;
 						// もっと読む
@@ -125,8 +129,6 @@ Contents.users = function( cp )
 							if ( len > 0 )
 							{
 								users_list.append( s );
-
-								page++;
 								AppendReadmore();
 							}
 
@@ -148,18 +150,11 @@ Contents.users = function( cp )
 					}
 					else
 					{
-						ApiError( chrome.i18n.getMessage( 'i18n_0213' ), res );
-
-						if ( type == 'old' )
-						{
-							users_list.find( '.readmore' ).removeClass( 'disabled' );
-						}
+						ApiError( res );
 					}
 				}
 
-				cont.activity( false );
-
-				$( 'panel' ).find( 'div.contents' ).trigger( 'api_remaining_update', [cp.param['account_id']] );
+				Loading( false, 'users' );
 			}
 		);
 	};
@@ -200,29 +195,6 @@ Contents.users = function( cp )
 		} );
 
 		////////////////////////////////////////
-		// アカウント変更
-		////////////////////////////////////////
-		cont.on( 'account_change', function( e, account_id ) {
-			if ( cp.param['account_id'] == account_id )
-			{
-			}
-			else
-			{
-				p.find( 'div.titlebar' ).find( '.titlename' ).text( g_cmn.account[account_id].screen_name );
-				cp.param['account_id'] = account_id;
-
-				cp.title = cp.title.replace( /(<span class=\"titlename\">).*(<\/span>)/,
-					'$1' + g_cmn.account[account_id].screen_name + '$2' );
-
-				// パネルリストの更新"
-				$( document ).trigger( 'panellist_changed' );
-
-				// 更新
-				cont.find( '.panel_btns' ).find( '.users_reload' ).trigger( 'click' );
-			}
-		} );
-
-		////////////////////////////////////////
 		// このパネルを開いたアカウントが
 		// 削除された場合
 		////////////////////////////////////////
@@ -242,22 +214,6 @@ Contents.users = function( cp )
 		////////////////////////////////////////
 		cont.on( 'account_update', function() {
 			AccountAliveCheck();
-
-			// アカウント選択リスト更新
-			var s = '';
-			var id;
-
-			for ( var i = 0, _len = g_cmn.account_order.length ; i < _len ; i++ )
-			{
-				id = g_cmn.account_order[i];
-				s += '<span account_id="' + id + '">' + g_cmn.account[id].screen_name + '</span>';
-			}
-
-			p.find( 'div.titlebar' ).find( '.titlename_list' ).html( s )
-				.find( 'span' ).click( function( e ) {
-					p.find( 'div.contents' ).trigger( 'account_change', [$( this ).attr( 'account_id' )] );
-					$( this ).parent().hide();
-				} );
 		} );
 
 		if ( !AccountAliveCheck() )
@@ -271,7 +227,20 @@ Contents.users = function( cp )
 
 		users_list = cont.find( '.users_list' );
 
-		cp.SetTitle( chrome.i18n.getMessage( 'i18n_0105', [cp.param['q']] ) + ' (<span class="titlename">' + g_cmn.account[cp.param['account_id']]['screen_name'] + '</span>)', false );
+		// タイトル設定
+		var account = g_cmn.account[cp.param['account_id']];
+
+		switch ( cp.param['users_type'] )
+		{
+			case 'follows':
+				cp.SetTitle( cp.param.display_name + ' ' + i18nGetMessage( 'i18n_0399' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
+				cp.SetIcon( 'icon-users-plus' );
+				break;
+			case 'followers':
+				cp.SetTitle( cp.param.display_name + ' ' + i18nGetMessage( 'i18n_0400' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
+				cp.SetIcon( 'icon-users-plus' );
+				break;
+		}
 
 		////////////////////////////////////////
 		// 更新ボタンクリック
@@ -289,18 +258,17 @@ Contents.users = function( cp )
 		////////////////////////////////////////
 		// ユーザ名クリック
 		////////////////////////////////////////
-		users_list.on( 'click', $( '> div.item' ).find( '.screen_name' ).selector, function( e ) {
-			OpenUserTimeline( $( this ).text(), cp.param['account_id'] );
-			e.stopPropagation();
-		} );
+		users_list.on( 'click', '> div.item .display_name, > div.item .username', function( e ) {
+			var item = $( this ).closest( '.item' );
 
-		////////////////////////////////////////
-		// アイコンクリック処理
-		////////////////////////////////////////
-		users_list.on( 'click', $( '> div.item' ).find( '.icon' ).find( 'img' ).selector, function( e ) {
-			OpenUserShow( $( this ).parent().parent().attr( 'screen_name' ),
-				$( this ).parent().parent().attr( 'user_id' ),
-				cp.param['account_id'] );
+			console.log( cp.param.account_id);
+			console.log( item.attr( 'id' ));
+			console.log( item.attr( 'username' ));
+			console.log( item.attr( 'display_name' ));
+			console.log( item.attr( 'instance' ) );
+
+			OpenUserTimeline( cp.param.account_id, item.attr( 'id' ), item.attr( 'username' ),
+				item.attr( 'display_name' ), item.attr( 'instance' ) );
 
 			e.stopPropagation();
 		} );
@@ -308,7 +276,7 @@ Contents.users = function( cp )
 		////////////////////////////////////////
 		// もっと読むクリック処理
 		////////////////////////////////////////
-		users_list.on( 'click', $( '> div.readmore' ).selector, function( e ) {
+		users_list.on( 'click', '> div.readmore', function( e ) {
 			// disabledなら処理しない
 			if ( $( this ).hasClass( 'disabled' ) )
 			{
@@ -325,34 +293,20 @@ Contents.users = function( cp )
 		////////////////////////////////////////
 		// アイコンにカーソルを乗せたとき
 		////////////////////////////////////////
-		users_list.on( 'mouseenter mouseleave', $( '> div.item' ).find( 'div.icon' ).find( '> img' ).selector, function( e ) {
+		users_list.on( 'mouseenter mouseleave', '> div.item div.avatar > img', function( e ) {
 			if ( e.type == 'mouseenter' )
 			{
 				// Draggableの設定をする
-				SetDraggable( $( this ), p, cp );
+				if ( !$( this ).hasClass( 'ui-draggable' ) )
+				{
+					SetDraggable( $( this ), p, cp );
+				}
 			}
 			else
 			{
 				$( '#tooltip' ).hide();
 			}
 		} );
-
-		////////////////////////////////////////
-		// 一番下までスクロールで
-		// 「もっと読む」クリック
-		////////////////////////////////////////
-		users_list.scroll(
-			function()
-			{
-				if ( g_cmn.cmn_param['autoreadmore'] == 1 )
-				{
-					if ( users_list.prop( 'scrollHeight' ) == users_list.scrollTop() + users_list.innerHeight() )
-					{
-						users_list.find( '.readmore' ).trigger( 'click' );
-					}
-				}
-			}
-		);
 
 		// リスト部作成処理
 		ListMake( 'init' );

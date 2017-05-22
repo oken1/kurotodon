@@ -1579,6 +1579,22 @@
 		"message": "Are you sure you want to block?"
 	},
 
+	"i18n_0399": {
+		"message": "Follows"
+	},
+
+	"i18n_0400": {
+		"message": "Followers"
+	},
+
+	"i18n_0401": {
+		"message": "Muted users"
+	},
+
+	"i18n_0402": {
+		"message": "Blocked users"
+	},
+
 
 
 

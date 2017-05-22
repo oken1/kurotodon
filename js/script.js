@@ -1478,7 +1478,8 @@ function SendRequest( req, callback )
 				headers: {
 					'Authorization': 'Bearer ' + req.access_token
 				}
-			} ).done( function( data ) {
+			} ).done( function( data, txt, xhr ) {
+console.log( xhr.getAllResponseHeaders() );
 				callback( data );
 			} ).fail( function( data ) {
 				data.url = url;
@@ -2006,6 +2007,11 @@ function GetInstanceFromAcct( acct, account_id ) {
 ////////////////////////////////////////////////////////////////////////////////
 function ImageURLConvert( imgurl, acct, account_id )
 {
+	if ( imgurl.match( /^https:\/\// ) )
+	{
+		return imgurl;
+	}
+
 	if ( imgurl.match( /missing.png$/ ) )
 	{
 		return 'https://' + GetInstanceFromAcct( acct, account_id ) + imgurl;
@@ -2185,7 +2191,7 @@ function DuplicateCheck( cp )
 			{
 				switch ( cp.param.users_type )
 				{
-					case 'following':
+					case 'follows':
 					case 'followers':
 						if ( g_cmn.panel[i].param.id == cp.param.id &&
 							 g_cmn.panel[i].param.instance == cp.param.instance )

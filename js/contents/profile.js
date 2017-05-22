@@ -67,15 +67,15 @@ Contents.profile = function( cp )
 
 					// フォロー/フォロワー一覧
 					cont.find( '.stats' ).find( '.following_count,.followers_count' ).on( 'click', function( e ) {
-						var users_type = ( $( this ).hasClass( 'following_count' ) ) ? 'following' : 'followers';
+						var users_type = ( $( this ).hasClass( 'following_count' ) ) ? 'follows' : 'followers';
 
 						var dupchk = DuplicateCheck( {
 							type: 'users',
 							param: {
-								account_id: cp.param['account_id'],
+								account_id: cp.param.account_id,
 								users_type: users_type,
 								id: res.id,
-								instance: g_cmn.account[cp.param['account_id']].instance
+								instance: GetInstanceFromAcct( res.acct, cp.param.account_id )
 							}
 						} );
 
@@ -85,11 +85,16 @@ Contents.profile = function( cp )
 							_cp.SetType( 'users' );
 							
 							_cp.SetParam( {
-								account_id: cp.param['account_id'],
+								account_id: cp.param.account_id,
 								users_type: users_type,
 								id: res.id,
+								instance: GetInstanceFromAcct( res.acct, cp.param.account_id ),
+								display_name: res.display_name,
 							} );
+							_cp.Start();
 						}
+
+						e.stopPropagation();
 					} );
 
 					Loading( true, 'relationships' );

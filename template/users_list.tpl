@@ -1,26 +1,16 @@
 	{foreach item=item from=$items}
-	<div class='item' screen_name='{$item->screen_name}' user_id='{$item->user_id}' created_at='{$item->created_at}'>
-		<div class='icon' tooltip='{$item->screen_name}'>
-			<img src='{$item->icon}'>
+	<div class='item' display_name='{$item->display_name}' id='{$item->id}' username='{$item->username}' instance='{$item->instance}' created_at='{$item->created_at}' avatar='{$item->avatar}'>
+		<div class='avatar'>
+			<img src='{$item->avatar}'>
 		</div>
 		<div class='container'>
 			<div class='names'>
-				<span class='screen_name'>{$item->screen_name}</span>{if $item->name} <span class='name'>({$item->name})</span>{/if}
-
-				{if $item->protected}<span class='icon-lock' class='tooltip' tooltip='(i18n_0266)'></span>{/if}
-				{if $item->verified}<img src='images/verified.png' class='tooltip' tooltip='(i18n_0263)'>{/if}
-				{if $item->ismutual}<span class='icon-arrow-left'></span><span class='icon-arrow-right'></span>{/if}
-				{if $item->isfriend}<span class='icon-arrow-left'></span>{/if}
-				{if $item->isfollower}<span class='icon-arrow-right'></span>{/if}
+				<span class='display_name'>{$item->display_name}</span><br>
+				<span class='username'>@{$item->username}@{$item->instance}</span>
 			</div>
 			<div class='counts'>
-				(i18n_0367):{$item->count} (i18n_0125):{$item->follow} (i18n_0122):{$item->follower}
+				(i18n_0367):{$item->statuses_count} (i18n_0125):{$item->following_count} (i18n_0122):{$item->followers_count}
 			</div>
-			{if $item->description}
-			<div class='desc'>
-				{$item->description}
-			</div>
-			{/if}
 		</div>
 	</div>
 	{/foreach}

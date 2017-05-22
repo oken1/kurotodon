@@ -228,9 +228,6 @@ console.log( res );
 				if ( res.status === undefined )
 				{
 					var s = '';
-					var json = res.json;
-					var assign = {};
-					var text = '';
 					var len;
 					var addcnt = 0;
 					var users = {};
@@ -517,7 +514,7 @@ console.log( res );
 				break;
 			case 'local':
 				cp.SetTitle( i18nGetMessage( 'i18n_0365' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
-				cp.SetIcon( 'icon-users' );
+				cp.SetIcon( 'icon-users2' );
 				break;
 			case 'federated':
 				cp.SetTitle( i18nGetMessage( 'i18n_0366' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
