@@ -1479,7 +1479,24 @@ function SendRequest( req, callback )
 					'Authorization': 'Bearer ' + req.access_token
 				}
 			} ).done( function( data, txt, xhr ) {
-console.log( xhr.getAllResponseHeaders() );
+				// parse link header
+				var link = xhr.getResponseHeader( 'LINK' );
+
+				if ( link )
+				{
+					if ( link.match( /max_id=(\d+)/ ) )
+					{
+						data.max_id = RegExp.$1;
+					}
+
+					if ( link.match( /since_id=(\d+)/ ) )
+					{
+						data.since_id = RegExp.$1;
+					}
+				}
+
+				console.log( data );
+
 				callback( data );
 			} ).fail( function( data ) {
 				data.url = url;
@@ -1493,8 +1510,6 @@ console.log( xhr.getAllResponseHeaders() );
 		//       data
 		case 'media_upload':
 			var url = 'https://' + req.instance + '/api/v1/media';
-
-			console.log( url );
 
 			var fd = new FormData();
 
@@ -2150,6 +2165,7 @@ function DuplicateCheck( cp )
 				switch ( cp.param.timeline_type )
 				{
 					case 'home':
+					case 'favourites':
 					case 'local':
 					case 'federated':
 					case 'notifications':
@@ -2198,6 +2214,11 @@ function DuplicateCheck( cp )
 						{
 							dupchk = i;
 						}
+						
+						break;
+					case 'muteusers':
+					case 'blockusers':
+						dupchk = i;
 						
 						break;
 				}

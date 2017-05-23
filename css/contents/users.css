@@ -19,21 +19,20 @@ div.contents.users .users_list div.item {
 	display: table;
 	width: 100%;
 	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
-	padding: 2px 6px 2px 4px;
-	box-sizing: border-box;
+	padding: 2px;
 }
 
 div.contents.users .users_list div.item:hover {
 	cursor: default;
 }
 
-/* アバター */
-div.contents.users.users_list div.item > .avatar {
+div.contents.users .users_list div.item > .avatar {
 	display: table-cell;
 	width: 38px;
 	padding-top: 4px;
+	padding-right: 4px;
 	vertical-align: top;
-	text-align: center;
+	text-align: right;
 }
 
 div.contents.users .users_list div.item .avatar > img {
@@ -85,6 +84,29 @@ div.contents.users .users_list div.item .container .counts {
 	opacity: 0.6;
 	font-size: 0.8rem;
 	padding: 2px 0px;
+}
+
+div.contents.users .users_list div.item .relationships {
+	display: table-cell;
+	vertical-align: middle;
+	width: 38px;
+	padding: 4px;
+}
+
+div.contents.users .users_list div.item .relationships > span {
+	font-size: 24px;
+	color: #808080;
+	opacity: 0.5;
+}
+
+div.contents.users .users_list div.item .relationships > span:hover {
+	cursor: pointer;
+	opacity: 1.0;
+}
+
+div.contents.users .users_list div.item .relationships > span.on {
+	color: #3ba0e9;
+	opacity: 1.0;
 }
 
 div.contents.users .users_list .readmore {

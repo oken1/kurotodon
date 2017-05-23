@@ -22,7 +22,7 @@
 		{else}
 			<div class='headcontainer'>
 				<div class='namedate'>
-					<span class='display_name'>{if $display_name}{$display_name}{else}{$username}{/if}</span> <span class='username'>{$acct}</span>
+					<span class='display_name'>{if $display_name}{$display_name}{else}{$username}{/if}</span> <span class='username'>@{$acct}</span>
 
 					<br>
 					<span class='date tooltip' tooltip='{$date}'><a href='{$url}' rel="nofollow noopener noreferrer" target='_blank' class='anchor'>{$dispdate}</a></span>

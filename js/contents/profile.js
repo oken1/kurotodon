@@ -42,6 +42,8 @@ Contents.profile = function( cp )
 					var compdate = NumFormat( CompareDate( dt.getFullYear(), dt.getMonth() + 1, dt.getDate(),
 									cr.substring( 0, 4 ), cr.substring( 5, 7 ), cr.substring( 8, 10 ) ) );
 
+					var myaccount = ( g_cmn.account[cp.param.account_id].id == res.id );
+
 					cont.html( OutputTPL( 'profile',
 						{
 							id: res.id,
@@ -54,6 +56,7 @@ Contents.profile = function( cp )
 							statuses_count: NumFormat( res.statuses_count ),
 							following_count: NumFormat( res.following_count ),
 							followers_count: NumFormat( res.followers_count ),
+							myaccount: myaccount,
 						}
 					) );
 					
@@ -65,6 +68,82 @@ Contents.profile = function( cp )
 						} );
 					}
 
+					// お気に入り/ミュートしたユーザー/ブロックしたユーザー一覧
+					if ( myaccount )
+					{
+						cont.find( '.special' ).find( '.favourites' ).on( 'click', function( e ) {
+							var dupchk = DuplicateCheck( {
+								type: 'timeline',
+								param: {
+									account_id: cp.param.account_id,
+									timeline_type: 'favourites',
+								}
+							} );
+
+							if ( dupchk == -1 )
+							{
+								var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+								_cp.SetType( 'timeline' );
+								_cp.SetParam( {
+									account_id: cp.param.account_id,
+									timeline_type: 'favourites',
+									reload_time: g_cmn.cmn_param['reload_time'],
+								} );
+								_cp.Start();
+							}
+
+							e.stopPropagation();
+						} );
+					
+						cont.find( '.special' ).find( '.muteusers' ).on( 'click', function( e ) {
+							var dupchk = DuplicateCheck( {
+								type: 'users',
+								param: {
+									account_id: cp.param.account_id,
+									users_type: 'muteusers'
+								}
+							} );
+
+							if ( dupchk == -1 )
+							{
+								var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+								_cp.SetType( 'users' );
+
+								_cp.SetParam( {
+									account_id: cp.param.account_id,
+									users_type: 'muteusers',
+								} );
+								_cp.Start();
+							}
+
+							e.stopPropagation();
+						} );
+
+						cont.find( '.special' ).find( '.blockusers' ).on( 'click', function( e ) {
+							var dupchk = DuplicateCheck( {
+								type: 'users',
+								param: {
+									account_id: cp.param.account_id,
+									users_type: 'blockusers'
+								}
+							} );
+
+							if ( dupchk == -1 )
+							{
+								var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+								_cp.SetType( 'users' );
+
+								_cp.SetParam( {
+									account_id: cp.param.account_id,
+									users_type: 'blockusers',
+								} );
+								_cp.Start();
+							}
+
+							e.stopPropagation();
+						} );
+					}
+					
 					// フォロー/フォロワー一覧
 					cont.find( '.stats' ).find( '.following_count,.followers_count' ).on( 'click', function( e ) {
 						var users_type = ( $( this ).hasClass( 'following_count' ) ) ? 'follows' : 'followers';
@@ -83,13 +162,15 @@ Contents.profile = function( cp )
 						{
 							var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
 							_cp.SetType( 'users' );
-							
+
+							var display_name = ( res.display_name ) ? res.display_name : res.username;
+
 							_cp.SetParam( {
 								account_id: cp.param.account_id,
 								users_type: users_type,
 								id: res.id,
 								instance: GetInstanceFromAcct( res.acct, cp.param.account_id ),
-								display_name: res.display_name,
+								display_name: display_name,
 							} );
 							_cp.Start();
 						}
@@ -97,7 +178,7 @@ Contents.profile = function( cp )
 						e.stopPropagation();
 					} );
 
-					Loading( true, 'relationships' );
+					Loading( true, 'profile_relationships' );
 
 					SendRequest(
 						{
@@ -127,7 +208,7 @@ Contents.profile = function( cp )
 								ApiError( res );
 							}
 
-							Loading( false, 'relationships' );
+							Loading( false, 'profile_relationships' );
 							cont.css( {
 								height: cont.find( '.profilebase' ).outerHeight(),
 							} );

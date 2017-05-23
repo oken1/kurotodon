@@ -21,8 +21,6 @@ Contents.impexp = function( cp )
 	{
 		filesystem.root.getFile( name, {}, function( entry ) {
 			entry.remove( callback, function( e ) {
-				console.log( 'remove' );
-				console.log( e );
 				if ( !stopflg )
 				{
 					MessageBox( i18nGetMessage( 'i18n_0347' ) );
@@ -31,9 +29,6 @@ Contents.impexp = function( cp )
 		}, function( e ) {
 			if ( e.name != 'NotFoundError' )
 			{
-				console.log( 'getFile' );
-				console.log( e );
-
 				if ( !stopflg )
 				{
 					MessageBox( i18nGetMessage( 'i18n_0347' ) );
@@ -149,12 +144,10 @@ Contents.impexp = function( cp )
 
 						writer.write( blob );
 					}, function( e ) {
-						console.log( 'createWriter' );
 						console.log( e );
 						MessageBox( i18nGetMessage( 'i18n_0347' ) );
 					} );
 				}, function( e ) {
-					console.log( 'getFile' );
 					console.log( e );
 					MessageBox( i18nGetMessage( 'i18n_0347' ) );
 				} );

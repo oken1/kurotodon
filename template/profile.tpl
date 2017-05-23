@@ -14,6 +14,13 @@
 	<div class='date'>
 		<span>{$day}days ({$date} - )</span>
 	</div>
+	{if $myaccount}
+	<div class='special'>
+		<span class='favourites btn img icon-star tooltip' tooltip='(i18n_0403)'></span>
+		<span class='muteusers btn img icon-volume-mute2 tooltip' tooltip='(i18n_0401)'></span>
+		<span class='blockusers btn img icon-eye-blocked tooltip' tooltip='(i18n_0402)'></span>
+	</div>
+	{/if}
 	<div class='stats'>
 		<div>
 			<span>(i18n_0367)</span>

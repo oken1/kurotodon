@@ -53,6 +53,12 @@ div.contents.profile .profilebase > div.note div a {
 	color: #ffffff;
 }
 
+div.contents.profile .profilebase > div.special {
+	margin: 8px 0;
+	display: block;
+	width: 100%;
+}
+
 div.contents.profile .profilebase > div.stats {
 	border-top: 1px solid #c0c0c0;
 	display: table;
@@ -89,10 +95,7 @@ div.contents.profile .profilebase > div.relationships > div {
 }
 
 div.contents.profile .profilebase > div.relationships > div > span {
-	font-size: 32px;
-}
-
-div.contents.profile .profilebase > div.relationships > div > span {
+	font-size: 24px;
 	color: #808080;
 	opacity: 0.5;
 }

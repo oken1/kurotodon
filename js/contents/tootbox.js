@@ -282,7 +282,7 @@ Contents.tootbox = function( cp )
 				{
 					if ( res.status === undefined )
 					{
-						cont.find( '.tootreply' ).find( '.replyitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
+						cont.find( '.tootreply .replyitem .del span' ).trigger( 'click' );
 
 						cp.param['account_id'] = account_id;
 						cont.trigger( 'account_update' );
@@ -297,6 +297,15 @@ Contents.tootbox = function( cp )
 						var height = cont.find( '.tootreply' ).find( '.replyitem' ).outerHeight( true );
 						cont.height( cont.height() + height );
 						p.height( p.height() + height );
+
+						var _text = '@' + res.account.acct + ' ';
+
+						for ( var i = 0 ; i < res.mentions.length ; i++ )
+						{
+							_text += '@' + res.mentions[i].acct + ' ';
+						}
+
+						cont.find( '.text' ).val( _text ).SetPos( 'end' );
 
 						cont.find( '.tootreply' ).find( '.del' ).find( 'span' ).on( 'click', ReplyDelClick );
 					}

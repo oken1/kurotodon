@@ -175,6 +175,16 @@ Contents.timeline = function( cp )
 				};
 
 				break;
+			// お気に入り
+			case 'favourites':
+				param = {
+					api: 'favourites',
+					data: {
+						limit: count
+					}
+				};
+
+				break;
 		}
 
 		switch ( type )
@@ -224,7 +234,6 @@ Contents.timeline = function( cp )
 			},
 			function( res )
 			{
-console.log( res );
 				if ( res.status === undefined )
 				{
 					var s = '';
@@ -258,22 +267,31 @@ console.log( res );
 
 					if ( len > 0 )
 					{
+						first_status_id = null;
+						last_status_id = null;
+
 						// 一番古いツイートのID更新
 						if ( type == 'init' || type == 'reload' || type == 'old' )
 						{
-							first_status_id = res[len - 1].id;
+							if ( res.max_id )
+							{
+								first_status_id = res.max_id;
+							}
 						}
 
 						// 一番新しいツイートのID更新
 						if ( type == 'init' || type == 'reload' || type == 'new' )
 						{
-							last_status_id = res[0].id;
+							if ( res.since_id )
+							{
+								last_status_id = res.since_id;
+							}
 						}
 					}
 
 					// もっと読む
 					var AppendReadmore = function() {
-						if ( len > 0 )
+						if ( first_status_id )
 						{
 							timeline_list.append(
 								'<div class="btn img readmore icon-arrow_down tooltip" tooltip="' + i18nGetMessage( 'i18n_0157' ) + '"></div>' );
@@ -533,8 +551,6 @@ console.log( res );
 				}
 
 				cp.SetIcon( 'icon-user' );
-				
-				// ユーザータイムラインはストリーミングなし
 				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
 				
 				break;
@@ -549,6 +565,11 @@ console.log( res );
 				cont.find( '.panel_btns' ).find( '.clear_notification' ).show();
 				break;
 
+			case 'favourites':
+				cp.SetTitle( i18nGetMessage( 'i18n_0403' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-star' );
+				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
+				break;
 		}
 
 		// タイトルバーに新着件数表示用のバッジを追加
