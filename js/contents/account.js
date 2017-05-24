@@ -163,6 +163,7 @@ Contents.account = function( cp )
 					account_id: account_id,
 					timeline_type: timeline_type,
 					reload_time: g_cmn.cmn_param['reload_time'],
+					streaming: true,
 				} );
 				_cp.Start();
 			}

@@ -48,15 +48,6 @@ img.emoji {
 	vertical-align: -0.1rem;
 }
 
-/* URL展開中 */
-.expand {
-	cursor: default;
-	opacity: 0.6;
-	text-decoration: none;
-
-	color: #ffffff;	/* color set: 全体のフォント */
-}
-
 /* Loading... */
 #loading {
 	position: fixed;

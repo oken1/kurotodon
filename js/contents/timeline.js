@@ -185,6 +185,16 @@ Contents.timeline = function( cp )
 				};
 
 				break;
+
+			// 詳細を表示
+			case 'expand':
+				param = {
+					api: 'statuses/' + cp.param['id'] + '/context',
+					data: {
+					}
+				};
+
+				break;
 		}
 
 		switch ( type )
@@ -234,176 +244,231 @@ Contents.timeline = function( cp )
 			},
 			function( res )
 			{
-				if ( res.status === undefined )
+				var _maketimeline = function( res )
 				{
-					var s = '';
-					var len;
-					var addcnt = 0;
-					var users = {};
-
-					len = res.length;
-
-					for ( var i = 0 ; i < len ; i++ )
+					if ( res.status === undefined )
 					{
-						var instance = GetInstanceFromAcct( res[i].account.acct, cp.param['account_id'] );
+						var s = '';
+						var len;
+						var addcnt = 0;
+						var users = {};
 
-						if ( status_ids[res[i].id + '@' + instance] == undefined )
+						len = res.length;
+
+						for ( var i = 0 ; i < len ; i++ )
 						{
-							s += MakeTimeline( res[i], cp.param['account_id'] );
+							var instance = GetInstanceFromAcct( res[i].account.acct, cp.param['account_id'] );
 
-							status_ids[res[i].id + '@' + instance] = true;
-							addcnt++;
-
-							if ( users[res[i].account.id + '@' + instance] == undefined )
+							if ( status_ids[res[i].id + '@' + instance] == undefined )
 							{
-								users[res[i].account.id + '@' + instance] = {
-									avatar: ImageURLConvert( res[i].account.avatar, res[i].account.acct, cp.param.account_id ),
-									display_name: res[i].account.display_name,
-									created_at: res[i].account.created_at,
-								};
-							}
-						}
-					}
+								s += MakeTimeline( res[i], cp.param['account_id'] );
 
-					if ( len > 0 )
-					{
-						first_status_id = null;
-						last_status_id = null;
+								status_ids[res[i].id + '@' + instance] = true;
+								addcnt++;
 
-						// 一番古いツイートのID更新
-						if ( type == 'init' || type == 'reload' || type == 'old' )
-						{
-							if ( res.max_id )
-							{
-								first_status_id = res.max_id;
-							}
-						}
-
-						// 一番新しいツイートのID更新
-						if ( type == 'init' || type == 'reload' || type == 'new' )
-						{
-							if ( res.since_id )
-							{
-								last_status_id = res.since_id;
-							}
-						}
-					}
-
-					// もっと読む
-					var AppendReadmore = function() {
-						if ( first_status_id )
-						{
-							timeline_list.append(
-								'<div class="btn img readmore icon-arrow_down tooltip" tooltip="' + i18nGetMessage( 'i18n_0157' ) + '"></div>' );
-						}
-					};
-
-					UserInfoUpdate( users );
-
-					var items = null;
-
-					switch ( type )
-					{
-						// 初期、更新
-						case 'init':
-						case 'reload':
-							timeline_list.html( s );
-							timeline_list.scrollTop( 0 );
-
-							AppendReadmore();
-
-							badge.hide().html( '' );
-							$( '#panellist' ).find( '> .lists > div[panel_id=' + cp.id + ']' ).find( 'span.badge' ).hide().html( '' );
-
-							items = timeline_list.find( 'div.item' );
-
-							break;
-						// 新着
-						case 'new':
-							if ( addcnt > 0 )
-							{
-								var _scheight = timeline_list.prop( 'scrollHeight' );
-								var _sctop = timeline_list.scrollTop();
-
-								timeline_list.prepend( s );
-
-								// 新着ツイートにスクロールする
-								if ( g_cmn.cmn_param['newscroll'] == 1 && _sctop == 0 )
+								if ( users[res[i].account.id + '@' + instance] == undefined )
 								{
+									users[res[i].account.id + '@' + instance] = {
+										avatar: ImageURLConvert( res[i].account.avatar, res[i].account.acct, cp.param.account_id ),
+										display_name: res[i].account.display_name,
+										created_at: res[i].account.created_at,
+									};
 								}
-								else
+							}
+						}
+
+						if ( len > 0 )
+						{
+							first_status_id = null;
+							last_status_id = null;
+
+							// 一番古いツイートのID更新
+							if ( type == 'init' || type == 'reload' || type == 'old' )
+							{
+								if ( res.max_id )
 								{
-									var scheight = timeline_list.prop( 'scrollHeight' );
-									timeline_list.scrollTop( _sctop + ( scheight - _scheight ) );
-								}
-
-								timeline_list.find( '> div.item:lt(' + addcnt + ')' ).addClass( 'new' );
-								newitems = $( timeline_list.find( '> div.item.new' ).get() );
-								items = newitems;
-
-								// 新着件数
-								badge.html( ( newitems.length > 999 ) ? '999+' : newitems.length ).show();
-								$( '#panellist' ).find( '> .lists > div[panel_id=' + cp.id + ']' ).find( 'span.badge' ).html( ( newitems.length > 999 ) ? '999+' : newitems.length ).show();
-
-								timeline_list.trigger( 'scroll' );
-
-								// "表示最大数を超えている件数
-								var itemcnt = StatusIDCount();
-
-								if ( itemcnt - cp.param['max_count'] > 0 )
-								{
-									// 新着で読み込んだ分だけ削除
-									timeline_list.find( '> div.item:gt(' + ( itemcnt - addcnt - 1 ) + ')' ).each( function() {
-										delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'instance' )];
-										$( this ).remove();
-									} );
-
-									first_status_id = timeline_list.find( '> div.item:last' ).attr( 'status_id' );
+									first_status_id = res.max_id;
 								}
 							}
 
-							break;
+							// 一番新しいツイートのID更新
+							if ( type == 'init' || type == 'reload' || type == 'new' )
+							{
+								if ( res.since_id )
+								{
+									last_status_id = res.since_id;
+								}
+							}
+						}
+
 						// もっと読む
-						case 'old':
-							var itemcnt = timeline_list.find( '> div.item:not(".res")' ).length;
-
-							if ( addcnt > 0 )
+						var AppendReadmore = function() {
+							if ( first_status_id )
 							{
-								timeline_list.append( s );
+								timeline_list.append(
+									'<div class="btn img readmore icon-arrow_down tooltip" tooltip="' + i18nGetMessage( 'i18n_0157' ) + '"></div>' );
+							}
+						};
+
+						UserInfoUpdate( users );
+
+						var items = null;
+
+						switch ( type )
+						{
+							// 初期、更新
+							case 'init':
+							case 'reload':
+								timeline_list.html( s );
+								timeline_list.scrollTop( 0 );
 
 								AppendReadmore();
-							}
 
-							timeline_list.find( '.readmore:first' ).remove();
-							$( '#tooltip' ).hide();
+								badge.hide().html( '' );
+								$( '#panellist' ).find( '> .lists > div[panel_id=' + cp.id + ']' ).find( 'span.badge' ).hide().html( '' );
 
-							items = timeline_list.find( '> div.item:not(".res"):gt(' + ( itemcnt - 1 ) + ')' );
-							break;
-					}
-				}
-				else
-				{
-					// もっと読むで404の場合
-					if ( type == 'old' && res.status == 404 )
-					{
-						timeline_list.find( '.readmore:first' ).remove();
-						$( '#tooltip' ).hide();
+								items = timeline_list.find( 'div.item' );
+
+								if ( cp.param.timeline_type == 'expand' )
+								{
+									cont.find( '.item[status_id="' + cp.param.id + '"]' ).addClass( 'source' );
+								}
+
+								break;
+							// 新着
+							case 'new':
+								if ( addcnt > 0 )
+								{
+									var _scheight = timeline_list.prop( 'scrollHeight' );
+									var _sctop = timeline_list.scrollTop();
+
+									timeline_list.prepend( s );
+
+									// 新着ツイートにスクロールする
+									if ( g_cmn.cmn_param['newscroll'] == 1 && _sctop == 0 )
+									{
+									}
+									else
+									{
+										var scheight = timeline_list.prop( 'scrollHeight' );
+										timeline_list.scrollTop( _sctop + ( scheight - _scheight ) );
+									}
+
+									timeline_list.find( '> div.item:lt(' + addcnt + ')' ).addClass( 'new' );
+									newitems = $( timeline_list.find( '> div.item.new' ).get() );
+									items = newitems;
+
+									// 新着件数
+									badge.html( ( newitems.length > 999 ) ? '999+' : newitems.length ).show();
+									$( '#panellist' ).find( '> .lists > div[panel_id=' + cp.id + ']' ).find( 'span.badge' ).html( ( newitems.length > 999 ) ? '999+' : newitems.length ).show();
+
+									timeline_list.trigger( 'scroll' );
+
+									// "表示最大数を超えている件数
+									var itemcnt = StatusIDCount();
+
+									if ( itemcnt - cp.param['max_count'] > 0 )
+									{
+										// 新着で読み込んだ分だけ削除
+										timeline_list.find( '> div.item:gt(' + ( itemcnt - addcnt - 1 ) + ')' ).each( function() {
+											delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'instance' )];
+											$( this ).remove();
+										} );
+
+										first_status_id = timeline_list.find( '> div.item:last' ).attr( 'status_id' );
+									}
+								}
+
+								break;
+							// もっと読む
+							case 'old':
+								var itemcnt = timeline_list.find( '> div.item:not(".res")' ).length;
+
+								if ( addcnt > 0 )
+								{
+									timeline_list.append( s );
+
+									AppendReadmore();
+								}
+
+								timeline_list.find( '.readmore:first' ).remove();
+								$( '#tooltip' ).hide();
+
+								items = timeline_list.find( '> div.item:not(".res"):gt(' + ( itemcnt - 1 ) + ')' );
+								break;
+						}
 					}
 					else
 					{
-						ApiError( res );
+						// もっと読むで404の場合
+						if ( type == 'old' && res.status == 404 )
+						{
+							timeline_list.find( '.readmore:first' ).remove();
+							$( '#tooltip' ).hide();
+						}
+						else
+						{
+							ApiError( res );
+						}
 					}
-				}
 
-				Loading( false, 'timeline' );
-				loading = false;
-				
-				// ストリーミングをONにする
-				if ( type == 'init' )
+					Loading( false, 'timeline' );
+					loading = false;
+					
+					// ストリーミングをONにする
+					if ( type == 'init' )
+					{
+						if ( cp.param.streaming )
+						{
+							lines.find( '.streamctl > a' ).trigger( 'click' );
+						}
+					}
+				};
+
+				// 詳細表示以外
+				if ( cp.param.timeline_type != 'expand' )
 				{
-					lines.find( '.streamctl > a' ).trigger( 'click' );
+					_maketimeline( res );
 				}
-				
+				// 詳細表示は元Tootを追加して、結果を加工
+				else
+				{
+					var context = res;
+
+					SendRequest(
+						{
+							method: 'GET',
+							action: 'api_call',
+							instance: g_cmn.account[cp.param['account_id']].instance,
+							access_token: g_cmn.account[cp.param['account_id']].access_token,
+							api: 'statuses/' + cp.param.id,
+						},
+						function( res )
+						{
+							if ( res.status === undefined )
+							{
+								var _cnt = 0;
+								var _res = [];
+								
+								for ( var i = 0 ; i < context.ancestors.length ; i++ )
+								{
+									_res[_cnt++] = context.ancestors[i];
+								}
+
+								_res[_cnt++] = res;
+
+								for ( var i = 0 ; i < context.descendants.length ; i++ )
+								{
+									_res[_cnt++] = context.descendants[i];
+								}
+
+								res = _res;
+							}
+
+							_maketimeline( res );
+						}
+					);
+				}
 			}
 		);
 	};
@@ -570,6 +635,12 @@ Contents.timeline = function( cp )
 				cp.SetIcon( 'icon-star' );
 				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
 				break;
+
+			case 'expand':
+				cp.SetTitle( i18nGetMessage( 'i18n_0404' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-bubbles2' );
+				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
+				break;
 		}
 
 		// タイトルバーに新着件数表示用のバッジを追加
@@ -671,6 +742,12 @@ Contents.timeline = function( cp )
 		// 新着読み込みタイマー開始
 		////////////////////////////////////////
 		timeline_list.on( 'reload_timer', function() {
+			// 詳細表示はタイマーなし
+			if ( cp.param.timeline_type == 'expand' )
+			{
+				return;
+			}
+			
 			// タイマーを止める
 			if ( tm != null )
 			{
@@ -764,6 +841,8 @@ Contents.timeline = function( cp )
 			{
 				SetStreamStatus( 'try' );
 
+				cp.param.streaming = true;
+
 				var api = 'https://' + account.instance + '/api/v1/streaming/';
 
 				switch( cp.param.timeline_type )
@@ -852,6 +931,7 @@ Contents.timeline = function( cp )
 			else if( $( this ).hasClass( 'on' ) )
 			{
 				SetStreamStatus( 'try' );
+				cp.param.streaming = false;
 				reader.cancel();
 			}
 		} );
@@ -1072,7 +1152,7 @@ Contents.timeline = function( cp )
 
 							if ( index != -1 )
 							{
-								g_cmn.toolbaar_user.splice( index, 1 );
+								g_cmn.toolbar_user.splice( index, 1 );
 							}
 
 							$( this ).attr( 'toolbaruser', false ).html( i18nGetMessage( 'i18n_0092' )  );
@@ -1103,7 +1183,35 @@ Contents.timeline = function( cp )
 
 						e.stopPropagation();
 					} );
-					
+
+					menubox.find( '> a.expandstatus' ).on( 'click', function( e ) {
+						var dupchk = DuplicateCheck( {
+							type: 'timeline',
+							param: {
+								account_id: cp.param.account_id,
+								timeline_type: 'expand',
+								id: item.attr( 'status_id' ),
+							}
+						} );
+
+						if ( dupchk == -1 )
+						{
+							var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+							_cp.SetType( 'timeline' );
+
+							_cp.SetParam( {
+								account_id: cp.param.account_id,
+								timeline_type: 'expand',
+								id: item.attr( 'status_id' ),
+								reload_time: g_cmn.cmn_param['reload_time'],
+								streaming: false,
+							} );
+							_cp.Start();
+						}
+
+						e.stopPropagation();
+					} );
+
 					menubox.find( '> a.speech' ).on( 'click', function( e ) {
 
 						var text = item.find( '.toot' ).find( '.toot_text' ).text();
@@ -1111,6 +1219,7 @@ Contents.timeline = function( cp )
 						uttr.lang = 'ja-JP';
 
 						speechSynthesis.speak( uttr );
+						e.stopPropagation();
 					} );
 				}
 

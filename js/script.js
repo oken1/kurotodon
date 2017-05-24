@@ -13,7 +13,7 @@ var g_cmn = {
 
 		reload_time:		30,								// - 新着読み込み
 		get_count:			40,								// - 一度に取得する件数
-		max_count:			160,							// - タイムラインに表示する最大件数
+		max_count:			100,							// - タイムラインに表示する最大件数
 		newscroll:			1,								// - 新着ツイートにスクロール
 		follow_mark:		1,								// - 相互フォロー表示
 
@@ -2066,6 +2066,7 @@ function OpenUserTimeline( account_id, id, username, display_name, instance )
 			display_name: display_name,
 			instance: instance,
 			reload_time: g_cmn.cmn_param['reload_time'],
+			streaming: false,
 		} );
 		_cp.Start();
 	}
@@ -2096,6 +2097,7 @@ function OpenHashtagTimeline( account_id, hashtag )
 			timeline_type: 'hashtag',
 			hashtag: hashtag.replace( /^#/, '' ),
 			reload_time: g_cmn.cmn_param['reload_time'],
+			streaming: true,
 		} );
 		_cp.Start();
 	}
@@ -2186,6 +2188,13 @@ function DuplicateCheck( cp )
 							dupchk = i;
 						}
 
+						break;
+					case 'expand':
+						if ( g_cmn.panel[i].param.id == cp.param.id )
+						{
+							dupchk = i;
+						}
+						
 						break;
 				}
 			}

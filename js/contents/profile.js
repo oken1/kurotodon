@@ -88,6 +88,7 @@ Contents.profile = function( cp )
 									account_id: cp.param.account_id,
 									timeline_type: 'favourites',
 									reload_time: g_cmn.cmn_param['reload_time'],
+									streaming: false,
 								} );
 								_cp.Start();
 							}

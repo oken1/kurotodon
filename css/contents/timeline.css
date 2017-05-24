@@ -52,6 +52,11 @@ div.contents.timeline .lines div.item {
 	color: #ffffff;
 }
 
+/* 詳細表示の元Toot */
+div.contents.timeline .lines div.item.source {
+	filter: brightness(130%);
+}
+
 /* 新着 */
 div.contents.timeline .lines div.item.new {
 	background: #204060;	/* color set:新着ツイートのBG */

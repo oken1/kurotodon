@@ -285,11 +285,11 @@
 	},
 
 	"i18n_0091": {
-		"message": "Removed from the toolbar"
+		"message": "Remove from toolbar"
 	},
 
 	"i18n_0092": {
-		"message": "Registered in the toolbar"
+		"message": "Add to toolbar"
 	},
 
 	"i18n_0093": {
@@ -1598,6 +1598,11 @@
 	"i18n_0403": {
 		"message": "Favourites"
 	},
+
+	"i18n_0404": {
+		"message": "Expand this status"
+	},
+
 
 
 
