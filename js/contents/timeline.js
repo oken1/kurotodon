@@ -1106,7 +1106,7 @@ Contents.timeline = function( cp )
 			////////////////////////////////////////
 			else if ( targ.hasClass( 'thumbnail' ) )
 			{
-				var _cp = new CPanel( null, null, 320, 320 );
+				var _cp = new CPanel( null, null, g_defwidth, g_defheight );
 				_cp.SetType( 'image' );
 				_cp.SetParam( {
 					urls: targ.closest( '.thumbnails' ).attr( 'urls' ),
@@ -1196,7 +1196,7 @@ Contents.timeline = function( cp )
 
 						if ( dupchk == -1 )
 						{
-							var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+							var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
 							_cp.SetType( 'timeline' );
 
 							_cp.SetParam( {
@@ -1236,7 +1236,7 @@ Contents.timeline = function( cp )
 
 				if ( pid == null )
 				{
-					var _cp = new CPanel( null, null, 324, 240 );
+					var _cp = new CPanel( null, null, g_defwidth, g_defheight_s );
 					_cp.SetType( 'tootbox' );
 					_cp.SetParam( { account_id: cp.param['account_id'] } );
 					_cp.Start( function() {

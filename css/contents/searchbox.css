@@ -1,0 +1,55 @@
+/* searchbox */
+div.contents.searchbox {
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: normal;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+/* テキストボックス＋検索ボタン */
+#searchbox_box {
+	display: table;
+	width: 100%;
+	padding: 4px;
+}
+
+#searchbox_box > * {
+	padding: 6px;
+	white-space: nowrap;
+}
+
+#searchbox_text {
+	display: table-cell;
+	width: 100%;
+}
+
+#search {
+	display: table-cell;
+}
+
+#searchbox_result {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.hashtags_list div.item {
+	display: table;
+	width: 100%;
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
+	padding: 4px 2px;
+}
+
+.hashtags_list div.item:hover {
+	cursor: default;
+}
+
+.hashtags_list div.item .hashtag {
+	font-weight: bold;
+}
+
+.hashtags_list div.item .hashtag:hover {
+	cursor: pointer;
+	opacity: 0.8;
+}

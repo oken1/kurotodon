@@ -123,7 +123,7 @@ div.contents.timeline .lines div.item > .avatar .icon-loop {
 div.contents.timeline .lines div.item > .toot .headcontainer {
 	display: table;
 	width: 100%;
-	padding-bottom: 2px;
+	table-layout: fixed;
 }
 
 /* 名前・日付 */
@@ -131,6 +131,10 @@ div.contents.timeline .lines div.item > .toot .headcontainer .namedate {
 	display: table-cell;
 	font-size: 0.9rem;
 	padding-right: 2rem;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	width: 100%;
 }
 
 div.contents.timeline .lines div.item > .toot .headcontainer .namedate .anchor {
@@ -334,7 +338,7 @@ div.contents.timeline .lines div.item > .toot > .toot_text .anchor {
 }
 
 div.contents.timeline .lines div.item > .toot > .toot_text p {
-	padding: 0.5rem 0;
+	padding: 0.3rem 0;
 }
 
 div.contents.timeline .lines div.item > .toot > .toot_text.notification p {

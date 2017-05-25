@@ -40,6 +40,8 @@ var g_testmode = true;
 // manifest
 var manifest;
 
+var g_defwidth, g_defheight, g_defheight_s, g_defheight_l;
+
 ////////////////////////////////////////////////////////////////////////////////
 // 初期化処理
 ////////////////////////////////////////////////////////////////////////////////
@@ -408,7 +410,7 @@ function Init()
 
 				if ( pid == null )
 				{
-					var _cp = new CPanel( null, null, 320, 360 );
+					var _cp = new CPanel( null, null, g_defwidth, g_defheight );
 					_cp.SetType( 'rsslist' );
 					_cp.SetParam( {} );
 					_cp.Start();
@@ -431,7 +433,7 @@ function Init()
 
 				if ( pid == null )
 				{
-					var _cp = new CPanel( null, null, 360, 240 );
+					var _cp = new CPanel( null, null, g_defwidth, g_defheight_s );
 					_cp.SetType( 'nowbrowsing' );
 					_cp.SetParam( {} );
 					_cp.Start();
@@ -454,7 +456,7 @@ function Init()
 
 				if ( pid == null )
 				{
-					var _cp = new CPanel( null, null, 360, 240 );
+					var _cp = new CPanel( null, null, g_defwidth, g_defheight_s );
 					_cp.SetType( 'impexp' );
 					_cp.SetParam( {} );
 					_cp.Start();
@@ -490,7 +492,7 @@ function Init()
 
 		if ( pid == null )
 		{
-			var _cp = new CPanel( null, null, 324, 240 );
+			var _cp = new CPanel( null, null, g_defwidth, g_defheight_s );
 			_cp.SetType( 'tootbox' );
 			_cp.SetParam( { account_id: '' } );
 			_cp.Start();
@@ -515,7 +517,7 @@ function Init()
 
 		if ( pid == null )
 		{
-			var _cp = new CPanel( null, null, 360, 240 );
+			var _cp = new CPanel( null, null, g_defwidth, g_defheight_s );
 			_cp.SetType( 'account' );
 			_cp.SetParam( {} );
 			_cp.Start();
@@ -540,8 +542,33 @@ function Init()
 
 		if ( pid == null )
 		{
-			var _cp = new CPanel( null, null, 360, 360 );
+			var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
 			_cp.SetType( 'cmnsetting' );
+			_cp.SetParam( {} );
+			_cp.Start();
+		}
+		else
+		{
+			SetFront( $( '#' + pid ) );
+
+			// 最小化している場合は元に戻す
+			if ( GetPanel( pid ).minimum.minimum == true )
+			{
+				$( '#' + pid ).find( 'div.titlebar' ).find( '.minimum' ).trigger( 'click' );
+			}
+		}
+	});
+
+	////////////////////////////////////////////////////////////
+	// 検索ボタンのクリック処理
+	////////////////////////////////////////////////////////////
+	$( document ).on( 'click', '#head_search', function( e ) {
+		var pid = IsUnique( 'searchbox' );
+
+		if ( pid == null )
+		{
+			var _cp = new CPanel( null, null, g_defwidth, g_defheight_s );
+			_cp.SetType( 'searchbox' );
 			_cp.SetParam( {} );
 			_cp.Start();
 		}
@@ -969,6 +996,13 @@ function SetFont( formflg )
 			} )
 		}
 	}
+	
+	// パネルのデフォルトサイズをフォントサイズをベースにする
+	g_defwidth = g_cmn.cmn_param.font_size * 30;
+	g_defheight = g_cmn.cmn_param.font_size * 30;
+	g_defheight_s = g_cmn.cmn_param.font_size * 20;
+
+	g_defheight_l = $( window ).height() * 0.75;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2055,7 +2089,7 @@ function OpenUserTimeline( account_id, id, username, display_name, instance )
 
 	if ( dupchk == -1 )
 	{
-		var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+		var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
 		_cp.SetType( 'timeline' );
 
 		_cp.SetParam( {
@@ -2089,7 +2123,7 @@ function OpenHashtagTimeline( account_id, hashtag )
 
 	if ( dupchk == -1 )
 	{
-		var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+		var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
 		_cp.SetType( 'timeline' );
 
 		_cp.SetParam( {
@@ -2120,7 +2154,7 @@ function OpenUserProfile( id, instance, account_id )
 
 	if ( dupchk == -1 )
 	{
-		var _cp = new CPanel( null, null, 400, 360 );
+		var _cp = new CPanel( null, null, g_defwidth, g_defheight );
 		_cp.SetType( 'profile' );
 
 		_cp.SetParam( {

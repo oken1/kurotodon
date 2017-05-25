@@ -43,7 +43,7 @@ Contents.rsslist = function( cp )
 			}
 			else
 			{
-				var _cp = new CPanel( null, null, 320, 360, id );
+				var _cp = new CPanel( null, null, g_defwidth, g_defheight, id );
 				_cp.SetType( 'rss' );
 				_cp.SetTitle( g_cmn.rss_panel[id].param.title, true );
 				_cp.SetParam( g_cmn.rss_panel[id].param );
@@ -137,7 +137,7 @@ Contents.rsslist = function( cp )
 				return;
 			}
 
-			var _cp = new CPanel( null, null, 320, 360 );
+			var _cp = new CPanel( null, null, g_defwidth, g_defheight );
 			_cp.SetType( 'rss' );
 			_cp.SetParam( { title: 'RSS', urls: [], reload_time: 15, count: 10 } );
 			_cp.Start( function() {

@@ -82,7 +82,7 @@ Contents.profile = function( cp )
 
 							if ( dupchk == -1 )
 							{
-								var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+								var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
 								_cp.SetType( 'timeline' );
 								_cp.SetParam( {
 									account_id: cp.param.account_id,
@@ -107,7 +107,7 @@ Contents.profile = function( cp )
 
 							if ( dupchk == -1 )
 							{
-								var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+								var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
 								_cp.SetType( 'users' );
 
 								_cp.SetParam( {
@@ -131,7 +131,7 @@ Contents.profile = function( cp )
 
 							if ( dupchk == -1 )
 							{
-								var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+								var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
 								_cp.SetType( 'users' );
 
 								_cp.SetParam( {
@@ -161,7 +161,7 @@ Contents.profile = function( cp )
 
 						if ( dupchk == -1 )
 						{
-							var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+							var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
 							_cp.SetType( 'users' );
 
 							var display_name = ( res.display_name ) ? res.display_name : res.username;

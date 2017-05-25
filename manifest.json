@@ -5,7 +5,7 @@
 	"author": "KEN1",
 	"description": "__MSG_manifest_description__",
 	"default_locale": "en",
-	"content_security_policy": "script-src 'self'; object-src 'self'",
+	"content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com/ajax/libs/; object-src 'self'",
 	"update_url": "http://www.jstwi.com/kurotodon/update.xml",
 
 	"minimum_chrome_version": "20.0",

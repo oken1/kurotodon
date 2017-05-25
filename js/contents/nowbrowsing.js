@@ -48,7 +48,6 @@ Contents.nowbrowsing = function( cp )
 				var pid = IsUnique( 'tootbox' );
 				var left = null;
 				var top = null;
-				var width = 324;
 
 				var SetText = function() {
 					$( '.tootbox .text' ).each( function( e ) {
@@ -70,7 +69,7 @@ Contents.nowbrowsing = function( cp )
 				// ツイートパネルが開いていない場合は開く
 				if ( pid == null )
 				{
-					var _cp = new CPanel( left, top, width, 240 );
+					var _cp = new CPanel( left, top, g_defwidth, g_defheight_s );
 					_cp.SetType( 'tootbox' );
 					_cp.SetParam( { account_id: '' } );
 					_cp.Start( function() {

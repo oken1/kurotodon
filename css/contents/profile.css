@@ -50,7 +50,11 @@ div.contents.profile .profilebase > div.note div {
 }
 
 div.contents.profile .profilebase > div.note div a {
-	color: #ffffff;
+	color: #add4f2;
+}
+
+div.contents.profile .profilebase > div.note div a:hover {
+	opacity: 0.8;
 }
 
 div.contents.profile .profilebase > div.special {

@@ -157,7 +157,7 @@ Contents.account = function( cp )
 
 			if ( dupchk == -1 )
 			{
-				var _cp = new CPanel( null, null, 360, $( window ).height() * 0.75 );
+				var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
 				_cp.SetType( 'timeline' );
 				_cp.SetParam( {
 					account_id: account_id,

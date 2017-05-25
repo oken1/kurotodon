@@ -9,24 +9,25 @@ div.contents.users {
 }
 
 /* リスト部 */
-div.contents.users .users_list {
+.users_list {
 	width: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
 
-div.contents.users .users_list div.item {
+.users_list div.item {
 	display: table;
 	width: 100%;
 	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
 	padding: 2px;
+	table-layout: fixed;
 }
 
-div.contents.users .users_list div.item:hover {
+.users_list div.item:hover {
 	cursor: default;
 }
 
-div.contents.users .users_list div.item > .avatar {
+.users_list div.item > .avatar {
 	display: table-cell;
 	width: 38px;
 	padding-top: 4px;
@@ -35,81 +36,91 @@ div.contents.users .users_list div.item > .avatar {
 	text-align: right;
 }
 
-div.contents.users .users_list div.item .avatar > img {
+.users_list div.item .avatar > img {
 	width: 32px;
 	height: 32px;
 }
 
-div.contents.users .users_list div.item .avatar > img:hover {
+.users_list div.item .avatar > img:hover {
 	cursor: pointer;
 }
 
-div.contents.users .users_list div.item .container {
+.users_list div.item .container {
 	display: table-cell;
 	vertical-align: top;
 	padding: 4px;
 }
 
-div.contents.users .users_list div.item .container .names {
+.users_list div.item .container .names {
 	font-size: 0.8rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
-div.contents.users .users_list div.item .container .names .display_name,
-div.contents.users .users_list div.item .container .names .username {
+.users_list div.item .container .names .display_name,
+.users_list div.item .container .names .username {
 	-webkit-user-select: auto;
 }
 
-div.contents.users .users_list div.item .container .names .display_name {
+.users_list div.item .container .names .display_name {
 	font-weight: bold;
 	font-size: 1rem;
 }
 
-div.contents.users .users_list div.item .container .names .display_name:hover {
+.users_list div.item .container .names .display_name:hover {
 	cursor: pointer;
 	opacity: 0.8;
 }
 
 /* 名前 */
-div.contents.users .users_list div.item .container .names .username {
+.users_list div.item .container .names .username {
 	opacity: 0.6;
 }
 
-div.contents.users .users_list div.item .container .names .username:hover {
+.users_list div.item .container .names .username:hover {
 	cursor: pointer;
 	opacity: 0.8;
 }
 
 /* トゥート数、フォロー数 */
-div.contents.users .users_list div.item .container .counts {
+.users_list div.item .container .counts {
 	opacity: 0.6;
 	font-size: 0.8rem;
 	padding: 2px 0px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
-div.contents.users .users_list div.item .relationships {
+.users_list div.item .relationships {
 	display: table-cell;
 	vertical-align: middle;
 	width: 38px;
 	padding: 4px;
 }
 
-div.contents.users .users_list div.item .relationships > span {
+.users_list div.item .relationships.off {
+	display: none;
+}
+
+.users_list div.item .relationships > span {
 	font-size: 24px;
 	color: #808080;
 	opacity: 0.5;
 }
 
-div.contents.users .users_list div.item .relationships > span:hover {
+.users_list div.item .relationships > span:hover {
 	cursor: pointer;
 	opacity: 1.0;
 }
 
-div.contents.users .users_list div.item .relationships > span.on {
+.users_list div.item .relationships > span.on {
 	color: #3ba0e9;
 	opacity: 1.0;
 }
 
-div.contents.users .users_list .readmore {
+.users_list .readmore {
 	display: block;
 	width: 50%;
 	margin: 8px auto;

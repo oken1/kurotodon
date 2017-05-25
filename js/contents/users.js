@@ -89,7 +89,7 @@ Contents.users = function( cp )
 				if ( res.status === undefined )
 				{
 					var s = '';
-					var items = new Array();
+					var items = [];
 					var len = res.length;
 					var ids = [];
 
@@ -397,6 +397,17 @@ Contents.users = function( cp )
 
 			OpenUserTimeline( cp.param.account_id, item.attr( 'id' ), item.attr( 'username' ),
 				item.attr( 'display_name' ), item.attr( 'instance' ) );
+
+			e.stopPropagation();
+		} );
+
+		////////////////////////////////////////
+		// アイコンクリック
+		////////////////////////////////////////
+		users_list.on( 'click', '> div.item .avatar', function( e ) {
+			var item = $( this ).closest( '.item' );
+
+			OpenUserProfile( item.attr( 'id' ), item.attr( 'instance' ), cp.param.account_id );
 
 			e.stopPropagation();
 		} );
