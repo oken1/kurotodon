@@ -12,6 +12,11 @@ div.contents.image video {
 	height: 100%;
 }
 
+div.contents.image iframe {
+	width: 100%;
+	height: 100%;
+}
+
 div.contents.image > div {
 	position: relative;
 }

@@ -8,8 +8,8 @@ Contents.image = function( cp )
 	var p = $( '#' + cp.id );
 	var cont = p.find( 'div.contents' );
 	var scaleX = 1, scaleY = 1, rotate = 0;
-	var urls = cp.param['urls'].split( /\n/ );
-	var types = cp.param['types'].split( /\n/ );
+	var urls = cp.param.urls.split( /\n/ );
+	var types = cp.param.types.split( /\n/ );
 
 	cp.SetIcon( 'icon-image' );
 
@@ -20,15 +20,28 @@ Contents.image = function( cp )
 		cp.SetTitle( i18nGetMessage( 'i18n_0199' ), false );
 		setTimeout( function() { Loading( true, 'image_load' ); }, 0 );
 
-		if ( types[cp.param['index']] == 'image' )
+		if ( types[cp.param.index] == 'image' )
 		{
 			cont.addClass( 'image' )
-				.html( OutputTPL( 'image', { url: urls[cp.param['index']] } ) );
+				.html( OutputTPL( 'image', { url: urls[cp.param.index] } ) ).css( { overflow: 'auto' } );
 		}
-		else if ( types[cp.param['index']] == 'video' || types[cp.param['index']] == 'gifv' )
+		else if ( types[cp.param.index] == 'video' || types[cp.param.index] == 'gifv' )
 		{
 			cont.addClass( 'image' )
-				.html( OutputTPL( 'video', { url: urls[cp.param['index']] } ) );
+				.html( OutputTPL( 'video', { url: urls[cp.param.index] } ) ).css( { overflow: 'auto' } );
+		}
+		else if ( types[cp.param.index] == 'youtube' )
+		{
+			if ( urls[cp.param.index].match( /https?:\/\/(?:www|m)\.youtube\.com\/watch\?.*v=([^&]+)/ ) ||
+				 urls[cp.param.index].match( /https?:\/\/youtu.be\/([^&]+)/ ) )
+			{
+				var id = RegExp.$1;
+
+				cont.addClass( 'image' )
+					.html( OutputTPL( 'youtube', { id: id } ) ).css( { overflow: 'hidden' } );
+
+				cp.SetTitle( 'Youtube', false );
+			}
 		}
 		else
 		{
@@ -44,17 +57,23 @@ Contents.image = function( cp )
 			// 実サイズ
 			var nw, nh;
 
-			if ( types[cp.param['index']] == 'image' )
+			if ( types[cp.param.index] == 'image' )
 			{
 				nw = $( e.target ).get( 0 ).naturalWidth;
 				nh = $( e.target ).get( 0 ).naturalHeight;
 			}
-			else if ( types[cp.param['index']] == 'video' || types[cp.param['index']] == 'gifv' )
+			else if ( types[cp.param.index] == 'video' || types[cp.param['index']] == 'gifv' )
 			{
 				nw = e.target.videoWidth;
 				nh = e.target.videoHeight;
 			}
-
+			else if ( types[cp.param.index] == 'youtube' )
+			{
+				nw = g_defwidth * 2;
+				nh = g_defwidth * 2 * 0.75;
+				console.log( nw + 'x' + nh );
+			}
+			
 			setTimeout( function() { Loading( false, 'image_load' ); }, 0 );
 
 			// 巨大画像の表示抑止
@@ -231,6 +250,10 @@ Contents.image = function( cp )
 		} );
 
 		cont.find( 'video' ).on( 'loadeddata', function( e ) {
+			LoadedEvent( e );
+		} );
+
+		cont.find( '.youtube-player' ).on( 'load', function( e ) {
 			LoadedEvent( e );
 		} );
 

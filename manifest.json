@@ -1,14 +1,13 @@
 {
 	"manifest_version": 2,
 	"name": "Kurotodon",
-	"version": "0.0.0.1",
+	"version": "0.1",
 	"author": "KEN1",
 	"description": "__MSG_manifest_description__",
 	"default_locale": "en",
-	"content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com/ajax/libs/; object-src 'self'",
-	"update_url": "http://www.jstwi.com/kurotodon/update.xml",
+	"content_security_policy": "script-src 'self'; object-src 'self'",
 
-	"minimum_chrome_version": "20.0",
+	"minimum_chrome_version": "50.0",
 
 	"browser_action": {
 		"default_icon": "images/icon128.png",

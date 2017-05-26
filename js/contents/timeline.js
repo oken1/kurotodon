@@ -22,7 +22,7 @@ Contents.timeline = function( cp )
 	var scrollHeight = null;
 	var loading = false;
 	var cursor_on_option = false;
-	var reader = null;
+	var socket = null;
 	
 	////////////////////////////////////////////////////////////
 	// 読み込み済みステータスID数を取得
@@ -756,7 +756,7 @@ Contents.timeline = function( cp )
 			}
 
 			tm = setInterval( function() {
-				if ( reader == null )
+				if ( socket == null )
 				{
 					ListMake( cp.param['get_count'], 'new' );
 				}
@@ -843,7 +843,15 @@ Contents.timeline = function( cp )
 
 				cp.param.streaming = true;
 
-				var api = 'https://' + account.instance + '/api/v1/streaming/';
+				var _host = account.instance;
+
+				// mstdn.jp対策
+				if ( account.instance == 'mstdn.jp' )
+				{
+					_host = 'streaming.' + _host;
+				}
+
+				var api = 'wss://' + _host + '/api/v1/streaming/?access_token=' + account.access_token + '&stream=';
 
 				switch( cp.param.timeline_type )
 				{
@@ -852,7 +860,7 @@ Contents.timeline = function( cp )
 						api += 'user';
 						break;
 					case 'local':
-						api += 'public/local';
+						api += 'public:local';
 						break;
 					case 'federated':
 						api += 'public';
@@ -861,78 +869,48 @@ Contents.timeline = function( cp )
 						api += 'hashtag?tag=' + encodeURIComponent( cp.param['hashtag'] );
 						break;
 				}
-				
-				var headers = new Headers();
-				headers.set( 'Authorization', 'Bearer ' + account.access_token );
 
-				fetch( api, {
-					method: 'GET',
-					mode: 'cors',
-					headers: headers,
-				} ).then( function( res ) {
-					reader = res.body.getReader();
-					var decoder = new TextDecoder();
-					var txt = '';
-					var json = {};
+				socket = new WebSocket( api.replace( 'https', 'wss' ) );
 
+				socket.onopen = function( e ) {
 					SetStreamStatus( 'on' );
+				};
 
-					reader.read().then( function processResult( result ) {
-						if ( result.done )
-						{
-							reader = null;
-							SetStreamStatus( 'off' );
-							return;
-						}
+				var decoder = new TextDecoder();
 
-						txt += decoder.decode( result.value || new Uint8Array, { stream: true } );
-						var data = txt.split( /\n/ );
-						txt = '';
-						
-						for ( var i = 0 ; i < data.length ; i++ )
-						{
-							if ( data[i].match( /^data: {/ ) )
-							{
-								try {
-									Object.assign( json, JSON.parse( data[i].replace( /^data: /, '' ) ) );
+				socket.onmessage = function( e ) {
+					var _json = JSON.parse( e.data );
 
-									cont.trigger( 'streaming', [{ action: 'stream_recieved', json: json}] );
-									json = {};
-								}
-								catch( e )
-								{
-									txt += data[i];
-								}
-							}
-							else
-							{
-								if ( data[i].match( /^event: (.*)$/ ) )
-								{
-									json = { event: RegExp.$1 };
-								}
-							}
-						}
+					var json = {
+						event: _json.event,
+					};
 
-						return reader.read().then( processResult );
-					} ).catch( function( err ) {
-						console.log( 'reader.read() error' );
-						console.log( err );
-						reader = null;
-						SetStreamStatus( 'off' );
-					} );
-				} ).catch( function( err ) {
-					console.log( 'fetch error' );
-					console.log( err );
-					reader = null;
+					if ( _json.payload )
+					{
+						Object.assign( json, JSON.parse( _json.payload ) );
+					}
+
+					cont.trigger( 'streaming', [{ action: 'stream_recieved', json: json }] );
+				};
+
+				socket.onerror = function( e ) {
+					console.log( 'socket error' );
+					console.log( e );
+					socket = null;
 					SetStreamStatus( 'off' );
-				} );
+				};
+
+				socket.onclose = function( e ) {
+					socket = null;
+					SetStreamStatus( 'off' );
+				};
 			}
 			// 停止
 			else if( $( this ).hasClass( 'on' ) )
 			{
 				SetStreamStatus( 'try' );
 				cp.param.streaming = false;
-				reader.cancel();
+				socket.close();
 			}
 		} );
 
@@ -1606,9 +1584,9 @@ Contents.timeline = function( cp )
 			tm = null;
 		}
 
-		if ( reader != null )
+		if ( socket != null )
 		{
-			reader.cancel();
+			socket.close();
 		}
 	};
 }

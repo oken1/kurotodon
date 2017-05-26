@@ -1986,13 +1986,6 @@ function ConvertContent( content, json )
 		_thumbnails.find( '.images' ).show();
 	}
 
-	if ( json.media_attachments.length )
-	{
-		_thumbnails.attr( 'urls', _urls.join( '\n' ) );
-		_thumbnails.attr( 'types', _types.join( '\n' ) );
-		_jq.append( _thumbnails );
-	}
-
 	// #hashtagを置き換える
 	for ( var i = 0 ; i < json.tags.length ; i++ )
 	{
@@ -2003,6 +1996,8 @@ function ConvertContent( content, json )
 			}
 		} );
 	}
+
+	var youtubes = 0;
 
 	// その他
 	_jq.find( 'a' ).each( function( e ) {
@@ -2025,10 +2020,33 @@ function ConvertContent( content, json )
 			display_url = anchor.text();
 		}
 
+		// youtube
+		if ( anchor.attr( 'href' ).match( /^https?:\/\/(?:(?:www|m)\.youtube\.com\/watch\?.*v=|youtu\.be\/)([\w-]+)/ ) )
+		{
+			var id = RegExp.$1;
+
+			youtubes++;
+			_urls[_index] = anchor.attr( 'href' );
+			_types[_index] = 'youtube';
+
+			var _img = $( '<img class="thumbnail video" src="http://i.ytimg.com/vi/' + id + '/default.jpg' + '" index="' + _index + '">' );
+			_thumbnails.find( '.images' ).append( _img );
+
+			_index++;
+
+		}
+
 		$( this ).replaceWith( $( '<a href="' + anchor.attr( 'href' ) + 
 			'" rel="nofollow noopener noreferrer" target="_blank" class="url anchor">' + 
 			display_url + ellipsis + '</span></a>' ) );
 	} );
+
+	if ( json.media_attachments.length + youtubes )
+	{
+		_thumbnails.attr( 'urls', _urls.join( '\n' ) );
+		_thumbnails.attr( 'types', _types.join( '\n' ) );
+		_jq.append( _thumbnails );
+	}
 
 	return _jq.html();
 }
