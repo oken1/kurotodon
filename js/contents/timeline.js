@@ -1490,6 +1490,7 @@ Contents.timeline = function( cp )
 						mytoot: options.attr( 'mytoot' ),
 						reblogged: options.attr( 'reblogged' ),
 						type: cp.param['timeline_type'],
+						visibility: $( this ).attr( 'visibility' ),
 					} ) );
 				}
 

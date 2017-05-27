@@ -1,4 +1,4 @@
-<div class='item' id='{$id}' instance='{$instance}' display_name='{$display_name}' avatar='{$avatar}' username='{$username}' status_id='{$status_id}' created_at='{$created_at}'>
+<div class='item' id='{$id}' instance='{$instance}' display_name='{$display_name}' avatar='{$avatar}' username='{$username}' status_id='{$status_id}' created_at='{$created_at}' visibility='{$visibility}'>
 	<div class='avatar'>
 		{if $notification->type=='favourite'}
 			<span class='icon-star'><span>
@@ -11,6 +11,8 @@
 				<img src='{$bt_avatar}' class='bt_avatar'>
 				</div>
 			{/if}
+			{if $visibility=='private'}<span class='icon-lock'></span>{/if}
+			{if $visibility=='direct'}<span class='icon-envelope'></span>{/if}
 		{/if}
 	</div>
 	<div class='toot'>

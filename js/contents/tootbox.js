@@ -298,16 +298,25 @@ Contents.tootbox = function( cp )
 						cont.height( cont.height() + height );
 						p.height( p.height() + height );
 
-						var _text = '@' + res.account.acct + ' ';
+						var _text = '';
 
+						if ( res.account.acct != g_cmn.account[account_id].username )
+						{
+							_text = '@' + res.account.acct + ' ';
+						}
+						
 						for ( var i = 0 ; i < res.mentions.length ; i++ )
 						{
-							_text += '@' + res.mentions[i].acct + ' ';
+							if ( res.mentions[i].acct != g_cmn.account[account_id].username )
+							{
+								_text += '@' + res.mentions[i].acct + ' ';
+							}
 						}
 
 						cont.find( '.text' ).val( _text ).SetPos( 'end' );
 
-						SetPrivacy( 3 );
+						var visibility = { public: 0, unlisted: 1, private: 2, direct: 3 };
+						SetPrivacy( visibility[res.visibility] );
 
 						cont.find( '.tootreply' ).find( '.del' ).find( 'span' ).on( 'click', ReplyDelClick );
 					}

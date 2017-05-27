@@ -1099,7 +1099,8 @@ function MakeTimeline( json, account_id )
 		bt_avatar: bt_avatar,
 
 		mytoot: ( !bt_flg && instance == g_cmn.account[account_id].instance && json.account.id == g_cmn.account[account_id].id ),
-
+		visibility: json.visibility,
+		
 		display_name: json.account.display_name,
 		username: json.account.username,
 		instance: instance,
