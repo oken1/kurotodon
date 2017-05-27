@@ -279,9 +279,6 @@ Contents.timeline = function( cp )
 
 						if ( len > 0 )
 						{
-							first_status_id = null;
-							last_status_id = null;
-
 							// 一番古いツイートのID更新
 							if ( type == 'init' || type == 'reload' || type == 'old' )
 							{
