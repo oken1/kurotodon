@@ -565,11 +565,34 @@ Contents.timeline = function( cp )
 			cp.param['max_count'] = g_cmn.cmn_param['max_count'];
 		}
 
+		if ( cp.param.timeline_type == 'notifications' )
+		{
+			if ( cp.param.dn_new_followers == undefined )
+			{
+				cp.param.dn_new_followers = 1;
+			}
+			
+			if ( cp.param.dn_favourites == undefined )
+			{
+				cp.param.dn_favourites = 1;
+			}
+			
+			if ( cp.param.dn_mentions == undefined )
+			{
+				cp.param.dn_mentions = 1;
+			}
+			
+			if ( cp.param.dn_boosts == undefined )
+			{
+				cp.param.dn_boosts = 1;
+			}
+		}
+
 		// 全体を作成
 		cont.addClass( 'timeline' );
 		lines.html( OutputTPL( 'timeline', { type: cp.param['timeline_type'] } ) );
 
-		setting.html( OutputTPL( 'tlsetting', { param: cp.param, uniqueID: GetUniqueID() } ) );
+		setting.html( OutputTPL( 'tlsetting', { param: cp.param } ) );
 
 		// タイムラインを表示
 		lines.show();
@@ -863,7 +886,7 @@ Contents.timeline = function( cp )
 						api += 'public';
 						break;
 					case 'hashtag':
-						api += 'hashtag?tag=' + encodeURIComponent( cp.param['hashtag'] );
+						api += 'hashtag&tag=' + encodeURIComponent( cp.param['hashtag'] );
 						break;
 				}
 
@@ -940,12 +963,49 @@ Contents.timeline = function( cp )
 					UserInfoUpdate( users );
 					addcnt++;
 
+					// デスクトップ通知
+					if ( data.json.event == 'notification' )
+					{
+						var options = {};
+
+						if ( data.json.type == 'follow' && cp.param.dn_new_followers )
+						{
+							options.title = data.json.account.display_name + i18nGetMessage( 'i18n_0372' );
+							options.body = '';
+						}
+						else
+						{
+							var _jq = $( '<div>' + data.json.status.content + '</div>' );
+							
+							options.body = _jq.text();
+
+							if ( data.json.type == 'favourite' && cp.param.dn_favourites )
+							{
+								options.title = data.json.account.display_name + i18nGetMessage( 'i18n_0373' );
+							}
+
+							if ( data.json.type == 'mention' && cp.param.dn_mentions )
+							{
+								options.title = data.json.account.display_name;
+							}
+
+							if ( data.json.type == 'reblog' && cp.param.dn_boosts )
+							{
+								options.title = data.json.account.display_name + i18nGetMessage( 'i18n_0374' );
+							}
+						}
+
+						var dn = new Notification( options.title, {
+							body: options.body,
+							icon: ImageURLConvert( data.json.account.avatar, data.json.account.acct, cp.param.account_id ),
+						} );
+					}
+
 					last_status_id = data.json.id;
 				}
 
 				if ( addcnt > 0 )
 				{
-
 					// 新着ツイートにスクロールする
 					if ( g_cmn.cmn_param['newscroll'] == 1 && _sctop == 0 )
 					{
@@ -1566,6 +1626,31 @@ Contents.timeline = function( cp )
 					.end()
 					.next().slideDown( 200 );
 			}
+
+			e.stopPropagation();
+		} );
+
+		////////////////////////////////////////
+		// 適用ボタンクリック処理
+		////////////////////////////////////////
+		setting.find( '.tlsetting_apply' ).click( function( e ) {
+			// disabedなら処理しない
+			if ( $( this ).hasClass( 'disabled' ) )
+			{
+				return;
+			}
+
+			if ( cp.param.timeline_type == 'notifications' )
+			{
+				cp.param.dn_new_followers = ( setting.find( '.dn_new_followers' ).prop( 'checked' ) ) ? 1 : 0;
+				cp.param.dn_favourites = ( setting.find( '.dn_favourites' ).prop( 'checked' ) ) ? 1 : 0;
+				cp.param.dn_mentions = ( setting.find( '.dn_mentions' ).prop( 'checked' ) ) ? 1 : 0;
+				cp.param.dn_boosts = ( setting.find( '.dn_boosts' ).prop( 'checked' ) ) ? 1 : 0;
+			}
+
+			setting.find( '.tlsetting_apply' ).addClass( 'disabled' );
+
+			SaveData();
 
 			e.stopPropagation();
 		} );

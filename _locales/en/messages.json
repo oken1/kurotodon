@@ -1603,6 +1603,26 @@
 		"message": "Expand this status"
 	},
 
+	"i18n_0405": {
+		"message": "Desktop notifications"
+	},
+
+	"i18n_0406": {
+		"message": "New followers"
+	},
+
+	"i18n_0407": {
+		"message": "Favourites"
+	},
+
+	"i18n_0408": {
+		"message": "Mentions"
+	},
+
+	"i18n_0409": {
+		"message": "Boosts"
+	},
+
 
 
 

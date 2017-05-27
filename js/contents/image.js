@@ -69,8 +69,8 @@ Contents.image = function( cp )
 			}
 			else if ( types[cp.param.index] == 'youtube' )
 			{
-				nw = g_defwidth * 2;
-				nh = g_defwidth * 2 * 0.75;
+				nw = g_defwidth * 1.5;
+				nh = g_defwidth * 1.5 * 0.75;
 				console.log( nw + 'x' + nh );
 			}
 			

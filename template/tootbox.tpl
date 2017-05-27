@@ -17,7 +17,7 @@
 				<div class='tooltip' tooltip='(i18n_0384)'><span class='icon-earth'></span> (i18n_0380)</div>
 				<div class='tooltip' tooltip='(i18n_0385)'><span class='icon-unlocked'></span> (i18n_0381)</div>
 				<div class='tooltip' tooltip='(i18n_0386)'><span class='icon-lock'></span> (i18n_0382)</div>
-				<div class='tooltip' tooltip='(i18n_0387)'><span class='icon-envelop'></span> (i18n_0383)</div>
+				<div class='tooltip' tooltip='(i18n_0387)'><span class='icon-envelope'></span> (i18n_0383)</div>
 			</div>
 			<a class='btn tooltip contentwarning' tooltip='(i18n_0378)'>CW</a>
 			<a class='btn img icon-pencil tooltip disabled toot' tooltip='(i18n_0367)(Ctrl+Enter)'></a>

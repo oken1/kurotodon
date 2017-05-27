@@ -307,6 +307,8 @@ Contents.tootbox = function( cp )
 
 						cont.find( '.text' ).val( _text ).SetPos( 'end' );
 
+						SetPrivacy( 3 );
+
 						cont.find( '.tootreply' ).find( '.del' ).find( 'span' ).on( 'click', ReplyDelClick );
 					}
 					else
@@ -334,17 +336,22 @@ Contents.tootbox = function( cp )
 			}
 		} );
 
-		////////////////////////////////////////
-		// プライバシー設定変更処理
-		////////////////////////////////////////
-		cont.find( '.pvselect > div' ).click( function( e ) {
-			var icons = new Array( 'icon-earth', 'icon-unlocked', 'icon-lock', 'icon-envelop' );
+		function SetPrivacy( index )
+		{
+			var icons = new Array( 'icon-earth', 'icon-unlocked', 'icon-lock', 'icon-envelope' );
 			var pvbtn = cont.find( '.privacy' );
 
 			pvbtn.removeClass( icons[pv] );
 
-			pv = cont.find( '.pvselect > div' ).index( this );
+			pv = index;
 			pvbtn.addClass( icons[pv] );
+		}
+
+		////////////////////////////////////////
+		// プライバシー設定変更処理
+		////////////////////////////////////////
+		cont.find( '.pvselect > div' ).click( function( e ) {
+			SetPrivacy( cont.find( '.pvselect > div' ).index( this ) );
 
 			cont.find( '.pvselect' ).hide();
 		} );
