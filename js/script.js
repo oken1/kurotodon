@@ -1492,15 +1492,17 @@ function SendRequest( req, callback )
 			{
 				for ( var i in req.param )
 				{
-					query.set( i, req.param[i] );
+					query += i + '=' + req.param[i] + '&';
 				}
 			}
 
 			var url = 'https://' + req.instance + '/api/v1/' + req.api;
 			
-			if ( query.toString().length )
+			if ( query.length )
 			{
-				url += '?' + query.toString();
+				url += '?' + query
+
+				url.replace( /&$/, '' );
 			}
 
 			console.log( url );

@@ -863,13 +863,13 @@ Contents.timeline = function( cp )
 
 				cp.param.streaming = true;
 
-				var _host = account.instance;
+				// mstdn.jp、qiitadon.com対策
+				var streaming_url = {
+					'mstdn.jp': 'streaming.mstdn.jp',
+					'qiitadon.com': 'streaming.qiitadon.com:4000',
+				};
 
-				// mstdn.jp対策
-				if ( account.instance == 'mstdn.jp' )
-				{
-					_host = 'streaming.' + _host;
-				}
+				var _host = streaming_url[account.instance] || account.instance;
 
 				var api = 'wss://' + _host + '/api/v1/streaming/?access_token=' + account.access_token + '&stream=';
 
@@ -890,13 +890,11 @@ Contents.timeline = function( cp )
 						break;
 				}
 
-				socket = new WebSocket( api.replace( 'https', 'wss' ) );
+				socket = new WebSocket( api );
 
 				socket.onopen = function( e ) {
 					SetStreamStatus( 'on' );
 				};
-
-				var decoder = new TextDecoder();
 
 				socket.onmessage = function( e ) {
 					var _json = JSON.parse( e.data );
