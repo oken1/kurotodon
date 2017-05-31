@@ -1,7 +1,7 @@
 Kurotodon
 =============
 
-KuroTwiをベースに、Mastodonのクライアントを作っています。
+KuroTwiをベースにしたMastodonのクライアントです。マルチインスタンス対応で、異なるインスタンスのタイムラインを並べて見ることができます
 
 Screenshot
 =============
@@ -10,8 +10,5 @@ Screenshot
 
 Installation
 =============
-ウェブストアでの正式公開前にお試しで使ってみたい方は、以下の方法でどうぞ  
-  
-１．ZIPでダウンロード  
-２．適当なところに展開  
-３．Chromeの拡張機能画面で「パッケージ化されていない拡張機能を読み込む」で展開したフォルダを指定
+1.[ウェブストアからインストール](https://chrome.google.com/webstore/detail/kurotwi/kcijnjkpackkklmkicldmkbhpdeilbgf)
+2.ZIPでダウンロード→適当なところに展開→Chromeの拡張機能画面で「パッケージ化されていない拡張機能を読み込む」で展開したフォルダを指定
