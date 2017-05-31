@@ -737,20 +737,6 @@ Contents.timeline = function( cp )
 						unit = i18nGetMessage( 'i18n_0259' );
 					}
 
-					// 月速
-					if ( spd < 1 )
-					{
-						spd = spd * 30.41667;
-						unit = i18nGetMessage( 'i18n_0203' );
-					}
-
-					// 年速
-					if ( spd < 1 )
-					{
-						spd = spd * 12;
-						unit = i18nGetMessage( 'i18n_0264' );
-					}
-
 					spd = Math.floor( spd * 100 ) / 100;
 				}
 			}
@@ -795,7 +781,7 @@ Contents.timeline = function( cp )
 		// 通知消去ボタンクリック
 		////////////////////////////////////////
 		lines.find( '.panel_btns' ).find( '.clear_notification' ).click( function() {
-			if ( confirm( i18nGetMessage( 'i18n_0390' ) ) )
+			if ( confirm( i18nGetMessage( 'i18n_0391' ) ) )
 			{
 				Blackout( true );
 				Loading( true, 'clear_notification' );
@@ -1246,11 +1232,11 @@ Contents.timeline = function( cp )
 					} );
 
 					menubox.find( '> a.speech' ).on( 'click', function( e ) {
-
 						var text = item.find( '.toot' ).find( '.toot_text' ).text();
 						var uttr = new SpeechSynthesisUtterance( text );
 						uttr.lang = 'ja-JP';
 
+						speechSynthesis.cancel();
 						speechSynthesis.speak( uttr );
 						e.stopPropagation();
 					} );

@@ -1502,7 +1502,7 @@ function SendRequest( req, callback )
 			{
 				url += '?' + query
 
-				url.replace( /&$/, '' );
+				url = url.replace( /&$/, '' );
 			}
 
 			console.log( url );
@@ -1905,10 +1905,20 @@ function i18nGetMessage( id, options )
 					cnt++;
 				}
 
+				if ( msg == '' )
+				{
+					console.log( 'i18nGetMessage error [' + id + ']' );
+				}
+				
 				return msg;
 			}
 			else
 			{
+				if ( g_message_data[id].message == '' )
+				{
+					console.log( 'i18nGetMessage error [' + id + ']' );
+				}
+				
 				return g_message_data[id].message;
 			}
 		}

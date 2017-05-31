@@ -342,12 +342,6 @@ panel.fixed div.titlebar {
 	background-color: #404040;	/* color set: タイトルバー(位置固定)のBG */
 }
 
-/* パネルを開いているアカウント */
-panel div.titlebar .title .titlename:hover {
-	opacity: 0.7;
-	cursor: pointer;
-}
-
 /* 位置固定メニュー */
 panel div.titlebar .titlesetting {
 	position: absolute;

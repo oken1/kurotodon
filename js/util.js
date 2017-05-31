@@ -16,8 +16,6 @@ function GetUniqueID()
 ////////////////////////////////////////////////////////////////////////////////
 // 日付変換
 // type = 0 : 絶対時間
-//        1 : 相対時間(過去)
-//        2 : 相対時間(未来)
 //        3 : 絶対時間(1年以内の場合は年省略、同日の場合は月日も省略)
 ////////////////////////////////////////////////////////////////////////////////
 function DateConv( src, type, digit )
@@ -54,43 +52,6 @@ function DateConv( src, type, digit )
 				( "00" + date.getHours() ).slice( -2 ) + ":" +
 				( "00" + date.getMinutes() ).slice( -2 ) + ":" +
 				( "00" + date.getSeconds() ).slice( -2 );
-	}
-	else
-	{
-		date.setTime( time );
-
-		var curdate = new Date();
-		var relt;
-
-		if ( type == 1 )
-		{
-			relt = Math.floor( ( curdate - date ) / 1000 );
-		}
-		else
-		{
-			relt = Math.floor( ( date - curdate ) / 1000 );
-		}
-
-		if ( relt < 0 )
-		{
-			return '0' + i18nGetMessage( 'i18n_0270' );
-		}
-		else if ( relt < 60 )
-		{
-			return relt + i18nGetMessage( 'i18n_0270' );
-		}
-		else if ( relt < 60 * 60 )
-		{
-			return Math.floor( relt / 60 ) + i18nGetMessage( 'i18n_0272' );
-		}
-		else if ( relt < 60 * 60 * 24 )
-		{
-			return Math.floor( relt / 60 / 60 ) + i18nGetMessage( 'i18n_0299' );
-		}
-		else
-		{
-			return DateConv( src, 0, 4 );
-		}
 	}
 }
 
