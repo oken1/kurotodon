@@ -1028,10 +1028,11 @@ function SetFront( p )
 ////////////////////////////////////////////////////////////////////////////////
 // タイムライン作成
 ////////////////////////////////////////////////////////////////////////////////
-function MakeTimeline( json, account_id )
+function MakeTimeline( json, cp )
 {
 	var notification = null;
-	
+	var account_id = cp.param.account_id;
+
 	// Notification
 	if ( json.type )
 	{
@@ -1079,6 +1080,16 @@ function MakeTimeline( json, account_id )
 	}
 
 	var instance = GetInstanceFromAcct( json.account.acct, account_id );
+
+	// NSFW表示設定
+	if ( cp.param.tl_nsfw == '1' )
+	{
+		json.sensitive = true;
+	}
+	else if ( cp.param.tl_nsfw == '2' )
+	{
+		json.sensitive = false;
+	}
 
 	var assign = {
 		id: json.account.id,

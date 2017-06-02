@@ -27,4 +27,20 @@
 		</div>
 	</div>
 	{/if}
+
+	{if $param->timeline_type!='notifications'}
+	<div class='kind'><span class='icon-arrow_down'></span>(i18n_0002)</div>
+	<div class='kinditems'>
+		<div class='group'>
+			<div class='title'>
+				NSFW
+			</div>
+			<div class='radiocontainer'>
+				<div><input type='radio' class='tl_nsfw' name='tl_nsfw_{$uniqueID}' value='0' {if $param->tl_nsfw==0}checked{/if}>(i18n_0003)</div>
+				<div><input type='radio' class='tl_nsfw' name='tl_nsfw_{$uniqueID}' value='1' {if $param->tl_nsfw==1}checked{/if}>(i18n_0004)</div>
+				<div><input type='radio' class='tl_nsfw' name='tl_nsfw_{$uniqueID}' value='2' {if $param->tl_nsfw==2}checked{/if}>(i18n_0005)</div>
+			</div>
+		</div>
+	</div>
+	{/if}
 </div>

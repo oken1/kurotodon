@@ -261,7 +261,7 @@ Contents.timeline = function( cp )
 
 							if ( status_ids[res[i].id + '@' + instance] == undefined )
 							{
-								s += MakeTimeline( res[i], cp.param['account_id'] );
+								s += MakeTimeline( res[i], cp );
 
 								status_ids[res[i].id + '@' + instance] = true;
 								addcnt++;
@@ -588,11 +588,19 @@ Contents.timeline = function( cp )
 			}
 		}
 
+		if ( cp.param.timeline_type != 'notifications' )
+		{
+			if ( cp.param.tl_nsfw == undefined )
+			{
+				cp.param.tl_nsfw = 0;
+			}
+		}
+
 		// 全体を作成
 		cont.addClass( 'timeline' );
 		lines.html( OutputTPL( 'timeline', { type: cp.param['timeline_type'] } ) );
 
-		setting.html( OutputTPL( 'tlsetting', { param: cp.param } ) );
+		setting.html( OutputTPL( 'tlsetting', { param: cp.param, uniqueID: GetUniqueID() } ) );
 
 		// タイムラインを表示
 		lines.show();
@@ -931,7 +939,7 @@ Contents.timeline = function( cp )
 				if ( ( cp.param.timeline_type != 'notifications' && data.json.event == 'update' ) ||
 					 ( cp.param.timeline_type == 'notifications' && data.json.event == 'notification' ) )
 				{
-					timeline_list.prepend( MakeTimeline( data.json, cp.param.account_id ) ).children( ':first' ).hide().fadeIn();;
+					timeline_list.prepend( MakeTimeline( data.json, cp ) ).children( ':first' ).hide().fadeIn();;
 
 					var instance = GetInstanceFromAcct( data.json.account.acct, cp.param.account_id );
 					
@@ -1631,6 +1639,11 @@ Contents.timeline = function( cp )
 				cp.param.dn_favourites = ( setting.find( '.dn_favourites' ).prop( 'checked' ) ) ? 1 : 0;
 				cp.param.dn_mentions = ( setting.find( '.dn_mentions' ).prop( 'checked' ) ) ? 1 : 0;
 				cp.param.dn_boosts = ( setting.find( '.dn_boosts' ).prop( 'checked' ) ) ? 1 : 0;
+			}
+
+			if ( cp.param.timeline_type != 'notifications' )
+			{
+				cp.param['tl_nsfw'] = setting.find( 'input[class=tl_nsfw]:checked' ).val();
 			}
 
 			setting.find( '.tlsetting_apply' ).addClass( 'disabled' );
