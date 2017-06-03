@@ -2246,6 +2246,7 @@ function DuplicateCheck( cp )
 					case 'favourites':
 					case 'local':
 					case 'federated':
+					case 'media':
 					case 'notifications':
 						dupchk = i;
 

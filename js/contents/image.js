@@ -11,7 +11,7 @@ Contents.image = function( cp )
 	var urls = cp.param.urls.split( /\n/ );
 	var types = cp.param.types.split( /\n/ );
 
-	cp.SetIcon( 'icon-image' );
+	cp.SetIcon( 'icon-image2' );
 
 	////////////////////////////////////////////////////////////
 	// 開始処理

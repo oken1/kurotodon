@@ -23,6 +23,14 @@
 		"message": "NSFWを自動で開く"
 	},
 
+	"i18n_0006": {
+		"message": "メディアタイムライン"
+	},
+
+	"i18n_0007": {
+		"message": "メディア"
+	},
+
 	"i18n_0029": {
 		"message": "Now Browsing"
 	},

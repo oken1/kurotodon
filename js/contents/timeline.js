@@ -135,6 +135,18 @@ Contents.timeline = function( cp )
 				};
 			
 				break;
+			// メディア
+			case 'media':
+				param = {
+					api: 'timelines/public',
+					data: {
+						local: true,
+						media: true,
+						limit: count
+					}
+				};
+
+				break;
 			// 連合
 			case 'federated':
 				param = {
@@ -627,6 +639,10 @@ Contents.timeline = function( cp )
 				cp.SetTitle( i18nGetMessage( 'i18n_0365' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-users2' );
 				break;
+			case 'media':
+				cp.SetTitle( i18nGetMessage( 'i18n_0007' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-image2' );
+				break;
 			case 'federated':
 				cp.SetTitle( i18nGetMessage( 'i18n_0366' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-earth' );
@@ -876,6 +892,9 @@ Contents.timeline = function( cp )
 					case 'local':
 						api += 'public:local';
 						break;
+					case 'media':
+						api += 'public:local';
+						break;
 					case 'federated':
 						api += 'public';
 						break;
@@ -935,6 +954,12 @@ Contents.timeline = function( cp )
 				var addcnt = 0;
 
 				var _sctop = timeline_list.scrollTop();
+
+				/* メディアタイムラインはmedia_attachmentsなしを排除 */
+				if ( cp.param.timeline_type == 'media' && data.json.media_attachments == 0 )
+				{
+					return false;
+				}
 
 				if ( ( cp.param.timeline_type != 'notifications' && data.json.event == 'update' ) ||
 					 ( cp.param.timeline_type == 'notifications' && data.json.event == 'notification' ) )

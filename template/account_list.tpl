@@ -10,6 +10,7 @@
 		<div class='buttons'>
 			<a class='btn img home tooltip icon-home' tooltip='(i18n_0152)'></a>
 			<a class='btn img local tooltip icon-users2' tooltip='(i18n_0363)'></a>
+			<a class='btn img media tooltip icon-image2 {if $item->instance!="pawoo.net"}disabled{/if}' tooltip='(i18n_0006)'></a>
 			<a class='btn img federated tooltip icon-earth' tooltip='(i18n_0364)'></a>
 			<a class='btn img notifications tooltip icon-bell' tooltip='(i18n_0093)'></a>
 		</div>

@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?pkqs2c');
-  src:  url('fonts/icomoon.eot?pkqs2c#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?pkqs2c') format('truetype'),
-    url('fonts/icomoon.woff?pkqs2c') format('woff'),
-    url('fonts/icomoon.svg?pkqs2c#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?l9jv1r');
+  src:  url('fonts/icomoon.eot?l9jv1r#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?l9jv1r') format('truetype'),
+    url('fonts/icomoon.woff?l9jv1r') format('woff'),
+    url('fonts/icomoon.svg?l9jv1r#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -41,6 +41,15 @@
 }
 .icon-camera:before {
   content: "\f030";
+}
+.icon-image2:before {
+  content: "\f03e";
+}
+.icon-photo:before {
+  content: "\f03e";
+}
+.icon-picture-o:before {
+  content: "\f03e";
 }
 .icon-group:before {
   content: "\f0c0";
@@ -140,9 +149,6 @@
 }
 .icon-lrrev:before {
   content: "\e012";
-}
-.icon-image:before {
-  content: "\e014";
 }
 .icon-forward:before {
   content: "\e015";

@@ -341,6 +341,18 @@ div.contents.timeline .lines div.item > .toot > .toot_text p {
 	padding: 0.3rem 0;
 }
 
+/* code (Qiitadon) */
+div.contents.timeline .lines div.item > .toot > .toot_text code {
+	display: block;
+	background: #484848;
+	padding: 4px;
+}
+
+div.contents.timeline .lines div.item > .toot > .toot_text code.inline {
+	display: inline;
+	padding: 0 2px;
+}
+
 div.contents.timeline .lines div.item > .toot > .toot_text.notification p {
 	padding: 0.2rem 0;
 }
