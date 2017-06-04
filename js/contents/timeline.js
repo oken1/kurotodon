@@ -17,13 +17,11 @@ Contents.timeline = function( cp )
 	var status_ids = {};
 	var first_status_id = null;
 	var last_status_id = null;
-	var page = 1;
 	var scrollPos = null;
 	var scrollHeight = null;
-	var loading = false;
 	var cursor_on_option = false;
 	var socket = null;
-	
+
 	////////////////////////////////////////////////////////////
 	// 読み込み済みステータスID数を取得
 	////////////////////////////////////////////////////////////
@@ -213,13 +211,11 @@ Contents.timeline = function( cp )
 		{
 			// 初期
 			case 'init':
-				loading = true;
 				status_ids = {};
 
 				break;
 			// 更新
 			case 'reload':
-				loading = true;
 				status_ids = {};
 
 				break;
@@ -269,7 +265,7 @@ Contents.timeline = function( cp )
 
 						for ( var i = 0 ; i < len ; i++ )
 						{
-							var instance = GetInstanceFromAcct( res[i].account.acct, cp.param['account_id'] );
+							var instance = GetInstanceFromAcct( res[i].account.acct, g_cmn.account[cp.param['account_id']].instance );
 
 							if ( status_ids[res[i].id + '@' + instance] == undefined )
 							{
@@ -281,7 +277,7 @@ Contents.timeline = function( cp )
 								if ( users[res[i].account.id + '@' + instance] == undefined )
 								{
 									users[res[i].account.id + '@' + instance] = {
-										avatar: ImageURLConvert( res[i].account.avatar, res[i].account.acct, cp.param.account_id ),
+										avatar: ImageURLConvert( res[i].account.avatar, res[i].account.acct, g_cmn.account[cp.param.account_id].instance ),
 										display_name: res[i].account.display_name,
 										created_at: res[i].account.created_at,
 									};
@@ -354,7 +350,7 @@ Contents.timeline = function( cp )
 									timeline_list.prepend( s );
 
 									// 新着ツイートにスクロールする
-									if ( g_cmn.cmn_param['newscroll'] == 1 && _sctop == 0 )
+									if ( g_cmn.cmn_param['newscroll'] == 1 && _sctop == 0 && !cursor_on_option )
 									{
 									}
 									else
@@ -422,8 +418,7 @@ Contents.timeline = function( cp )
 					}
 
 					Loading( false, 'timeline' );
-					loading = false;
-					
+
 					// ストリーミングをONにする
 					if ( type == 'init' )
 					{
@@ -966,13 +961,13 @@ Contents.timeline = function( cp )
 				{
 					timeline_list.prepend( MakeTimeline( data.json, cp ) ).children( ':first' ).hide().fadeIn();;
 
-					var instance = GetInstanceFromAcct( data.json.account.acct, cp.param.account_id );
+					var instance = GetInstanceFromAcct( data.json.account.acct, g_cmn.account[cp.param.account_id].instance );
 					
 					status_ids[data.json.id + '@' + instance] = true;
 
 					var users = {};
 					users[data.json.account.id + '@' + instance] = {
-						avatar: ImageURLConvert( data.json.account.avatar, data.json.account.acct, cp.param.account_id ),
+						avatar: ImageURLConvert( data.json.account.avatar, data.json.account.acct, g_cmn.account[cp.param.account_id].instance ),
 						display_name: data.json.account.display_name,
 						created_at: data.json.account.created_at,
 					};
@@ -1014,7 +1009,7 @@ Contents.timeline = function( cp )
 
 						var dn = new Notification( options.title, {
 							body: options.body,
-							icon: ImageURLConvert( data.json.account.avatar, data.json.account.acct, cp.param.account_id ),
+							icon: ImageURLConvert( data.json.account.avatar, data.json.account.acct, g_cmn.account[cp.param.account_id].instance ),
 						} );
 					}
 
@@ -1024,7 +1019,7 @@ Contents.timeline = function( cp )
 				if ( addcnt > 0 )
 				{
 					// 新着ツイートにスクロールする
-					if ( g_cmn.cmn_param['newscroll'] == 1 && _sctop == 0 )
+					if ( g_cmn.cmn_param['newscroll'] == 1 && _sctop == 0 && !cursor_on_option )
 					{
 					}
 					else
@@ -1117,7 +1112,7 @@ Contents.timeline = function( cp )
 				if ( targ.hasClass( 'user' ) )
 				{
 					OpenUserTimeline( cp.param['account_id'], targ.attr( 'id' ), targ.attr( 'username' ),
-						'', GetInstanceFromAcct( targ.attr( 'acct' ), cp.param['account_id'] ) );
+						'', GetInstanceFromAcct( targ.attr( 'acct' ), g_cmn.account[cp.param['account_id']].instance ) );
 				}
 
 				if ( targ.hasClass( 'hashtag' ) )

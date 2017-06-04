@@ -290,7 +290,7 @@ Contents.tootbox = function( cp )
 						cp.param['reply'] = res.id;
 
 						cont.find( '.tootreply' ).html( OutputTPL( 'tootbox_reply', {
-							avatar: ImageURLConvert( res.account.avatar, res.account.acct, account_id ),
+							avatar: ImageURLConvert( res.account.avatar, res.account.acct, g_cmn.account[account_id].instance ),
 							status: res.content.replace( /<("[^"]*"|'[^']*'|[^'">])*>/g, '' ),
 						} ) );
 

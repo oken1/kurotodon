@@ -47,7 +47,7 @@ Contents.profile = function( cp )
 					cont.html( OutputTPL( 'profile',
 						{
 							id: res.id,
-							avatar: ImageURLConvert( res.avatar, res.acct, cp.param.account_id ),
+							avatar: ImageURLConvert( res.avatar, res.acct, g_cmn.account[cp.param.account_id].instance ),
 							display_name: res.display_name,
 							acct: res.acct,
 							note: res.note,
@@ -63,7 +63,7 @@ Contents.profile = function( cp )
 					if ( res.header )
 					{
 						cont.find( '.profilebase' ).css( {
-							backgroundImage: 'url("' + ImageURLConvert( res.header, res.acct, cp.param.account_id ) + '")',
+							backgroundImage: 'url("' + ImageURLConvert( res.header, res.acct, g_cmn.account[cp.param.account_id].instance ) + '")',
 							backgroundSize: 'cover'
 						} );
 					}
@@ -155,7 +155,7 @@ Contents.profile = function( cp )
 								account_id: cp.param.account_id,
 								users_type: users_type,
 								id: res.id,
-								instance: GetInstanceFromAcct( res.acct, cp.param.account_id )
+								instance: GetInstanceFromAcct( res.acct, g_cmn.account[cp.param.account_id].instance )
 							}
 						} );
 
@@ -170,7 +170,7 @@ Contents.profile = function( cp )
 								account_id: cp.param.account_id,
 								users_type: users_type,
 								id: res.id,
-								instance: GetInstanceFromAcct( res.acct, cp.param.account_id ),
+								instance: GetInstanceFromAcct( res.acct, g_cmn.account[cp.param.account_id].instance ),
 								display_name: display_name,
 							} );
 							_cp.Start();

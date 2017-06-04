@@ -9,6 +9,7 @@
 			<span>(i18n_0033)</span>
 			<span>(i18n_0029)</span>
 			<span>(i18n_0052)/(i18n_0053)</span>
+			<span>(i18n_0008)</span>
 		</div>
 	</span>
 	<a id='head_search' class='btn headerbtn icon-search tooltip disabled' tooltip='(i18n_0206) (Alt+S)'></a>

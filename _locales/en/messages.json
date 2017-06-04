@@ -31,6 +31,14 @@
 		"message": "Media"
 	},
 
+	"i18n_0008": {
+		"message": "Peep into a instance"
+	},
+
+	"i18n_0009": {
+		"message": "Open"
+	},
+
 	"i18n_0029": {
 		"message": "Now Browsing"
 	},

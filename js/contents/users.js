@@ -95,13 +95,13 @@ Contents.users = function( cp )
 
 					for ( var i = 0 ; i < len ; i++ )
 					{
-						var instance = GetInstanceFromAcct( res[i].acct, cp.param.account_id );
+						var instance = GetInstanceFromAcct( res[i].acct, g_cmn.account[cp.param.account_id].instance );
 
 						users[res[i].id + '@' + instance] = true;
 						ids.push( res[i].id );
 
 						items.push( {
-							avatar: ImageURLConvert( res[i].avatar, res[i].acct, cp.param.account_id ),
+							avatar: ImageURLConvert( res[i].avatar, res[i].acct, g_cmn.account[cp.param.account_id].instance ),
 							display_name: ( res[i].display_name ) ? res[i].display_name : res[i].username,
 							username: res[i].username,
 							instance: instance,

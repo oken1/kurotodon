@@ -308,7 +308,7 @@ function Init()
 							{
 								g_cmn.account[account_id].username = res.username;
 								g_cmn.account[account_id].display_name = res.display_name;
-								g_cmn.account[account_id].avatar = ImageURLConvert( res.avatar, res.acct, account_id );
+								g_cmn.account[account_id].avatar = ImageURLConvert( res.avatar, res.acct, g_cmn.account[account_id].instance );
 								g_cmn.account[account_id].notsave.statuses_count = res.statuses_count;
 								g_cmn.account[account_id].notsave.following_count = res.following_count;
 								g_cmn.account[account_id].notsave.followers_count = res.followers_count;
@@ -458,6 +458,30 @@ function Init()
 				{
 					var _cp = new CPanel( null, null, g_defwidth, g_defheight_s );
 					_cp.SetType( 'impexp' );
+					_cp.SetParam( {} );
+					_cp.Start();
+				}
+				else
+				{
+					SetFront( $( '#' + pid ) );
+
+					// 最小化している場合は元に戻す
+					if ( GetPanel( pid ).minimum.minimum == true )
+					{
+						$( '#' + pid ).find( 'titlebar' ).find( '.minimum' ).trigger( 'click' );
+					}
+				}
+
+				break;
+
+			// インスタンスを覗く
+			case 3:
+				var pid = IsUnique( 'peep' );
+
+				if ( pid == null )
+				{
+					var _cp = new CPanel( null, null, g_defwidth, g_defheight_s / 2 );
+					_cp.SetType( 'peep' );
 					_cp.SetParam( {} );
 					_cp.Start();
 				}
@@ -1041,17 +1065,17 @@ function MakeTimeline( json, cp )
 			id: json.account.id,
 			username: json.account.username,
 			display_name: ( json.account.display_name ) ? json.account.display_name : json.account.username,
-			instance: GetInstanceFromAcct( json.account.acct, account_id ),
+			instance: GetInstanceFromAcct( json.account.acct, g_cmn.account[account_id].instance ),
 		};
 
 		if ( json.type == 'follow' )
 		{
 			var assign = {
 				notification: notification,
-				instance: GetInstanceFromAcct( json.account.acct, account_id ),
+				instance: GetInstanceFromAcct( json.account.acct, g_cmn.account[account_id].instance ),
 				id: json.account.id,
 				display_name: json.account.display_name,
-				avatar: ImageURLConvert( json.account.avatar, json.account.acct, account_id ),
+				avatar: ImageURLConvert( json.account.avatar, json.account.acct, g_cmn.account[account_id].instance ),
 				username: json.account.username,
 				status_id: json.id,
 				created_at: json.created_at,
@@ -1068,10 +1092,10 @@ function MakeTimeline( json, cp )
 
 	var bt_flg = ( json.reblog );
 	var bt_id = json.account.id;
-	var bt_instance = GetInstanceFromAcct( json.account.acct, account_id );
+	var bt_instance = GetInstanceFromAcct( json.account.acct, g_cmn.account[account_id].instance );
 	var bt_display_name = json.account.display_name;
 	var bt_username = json.account.username;
-	var bt_avatar = ImageURLConvert( json.account.avatar, json.account.acct, account_id );
+	var bt_avatar = ImageURLConvert( json.account.avatar, json.account.acct, g_cmn.account[account_id].instance );
 
 	if ( bt_flg )
 	{
@@ -1079,7 +1103,7 @@ function MakeTimeline( json, cp )
 		json = _json;
 	}
 
-	var instance = GetInstanceFromAcct( json.account.acct, account_id );
+	var instance = GetInstanceFromAcct( json.account.acct, g_cmn.account[account_id].instance );
 
 	// NSFW表示設定
 	if ( cp.param.tl_nsfw == '1' )
@@ -1096,7 +1120,7 @@ function MakeTimeline( json, cp )
 		status_id: json.id,
 		created_at: json.created_at,
 
-		avatar: ImageURLConvert( json.account.avatar, json.account.acct, account_id ),
+		avatar: ImageURLConvert( json.account.avatar, json.account.acct, g_cmn.account[account_id].instance ),
 		statuses_count: NumFormat( json.account.statuses_count ),
 		following: NumFormat( json.account.following_count ),
 		followers: NumFormat( json.account.followers_count ),
@@ -2079,12 +2103,12 @@ function ConvertContent( content, json )
 ////////////////////////////////////////////////////////////////////////////////
 // acctからインスタンス名を取得する
 ////////////////////////////////////////////////////////////////////////////////
-function GetInstanceFromAcct( acct, account_id ) {
+function GetInstanceFromAcct( acct, instance ) {
 	var _data = acct.split( /@/ );
 
 	if ( _data.length <= 1 )
 	{
-		return g_cmn.account[account_id].instance;
+		return instance;
 	}
 	else
 	{
@@ -2096,7 +2120,7 @@ function GetInstanceFromAcct( acct, account_id ) {
 ////////////////////////////////////////////////////////////////////////////////
 // missing.png対応
 ////////////////////////////////////////////////////////////////////////////////
-function ImageURLConvert( imgurl, acct, account_id )
+function ImageURLConvert( imgurl, acct, instance )
 {
 	if ( imgurl.match( /^https:\/\// ) )
 	{
@@ -2105,7 +2129,7 @@ function ImageURLConvert( imgurl, acct, account_id )
 
 	if ( imgurl.match( /missing.png$/ ) )
 	{
-		return 'https://' + GetInstanceFromAcct( acct, account_id ) + imgurl;
+		return 'https://' + GetInstanceFromAcct( acct, instance ) + imgurl;
 	}
 	else
 	{

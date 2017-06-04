@@ -1,0 +1,31 @@
+/* peep */
+div.contents.searchbox {
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: normal;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+/* テキストボックス＋開くボタン */
+#peep_box {
+	display: table;
+	width: 100%;
+	padding: 4px;
+}
+
+#peep_box > * {
+	padding: 6px;
+	white-space: nowrap;
+}
+
+#peep_text {
+	display: table-cell;
+	width: 100%;
+}
+
+#peep_box > span,
+#peep_open {
+	display: table-cell;
+}

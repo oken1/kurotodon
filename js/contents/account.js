@@ -136,14 +136,21 @@ Contents.account = function( cp )
 		////////////////////////////////////////
 		// ホームボタンクリック
 		// ローカルボタンクリック
+		// メディアボタンクリック
 		// 連合ボタンクリック
 		// 通知ボタンクリック
 		////////////////////////////////////////
-		$( '#account_list' ).find( 'div.item' ).find( '.buttons' ).find( '.home,.local,.federated,.notifications' ).click( function( e ) {
+		$( '#account_list' ).find( 'div.item' ).find( '.buttons' ).find( '.home,.local,.media,.federated,.notifications' ).click( function( e ) {
+			if ( $( this ).hasClass( 'disabled' ) )
+			{
+				return;
+			}
+
 			var account_id = $( this ).parent().parent().attr( 'account_id' );
 
 			var timeline_type = $( this ).hasClass( 'home' ) ? 'home' :
 								$( this ).hasClass( 'local' ) ? 'local' :
+								$( this ).hasClass( 'media' ) ? 'media' :
 								$( this ).hasClass( 'federated' ) ? 'federated' :
 								'notifications';
 
@@ -269,7 +276,7 @@ Contents.account = function( cp )
 			if ( confirm( i18nGetMessage( 'i18n_0185', [g_cmn.account[account_id].display_name] ) ) )
 			{
 				// ストリーミングを止める
-				var type = new Array( 'home', 'local', 'federated', 'hashtag', 'notifications' );
+				var type = new Array( 'home', 'local', 'media', 'federated', 'hashtag', 'notifications' );
 
 				for ( var i = 0 ; i < type.length ; i++ )
 				{
@@ -322,7 +329,7 @@ Contents.account = function( cp )
 				for ( var account_id in g_cmn.account )
 				{
 					// ストリーミングを止める
-					var type = new Array( 'home', 'local', 'federated', 'hashtag', 'notifications' );
+					var type = new Array( 'home', 'local', 'media', 'federated', 'hashtag', 'notifications' );
 
 					for ( var i = 0 ; i < type.length ; i++ )
 					{
@@ -583,7 +590,7 @@ Contents.account = function( cp )
 										
 										g_cmn.account[res.id + '@' + instance] = $.extend( true, {}, _account );
 
-										g_cmn.account[res.id + '@' + instance].avatar = ImageURLConvert( res.avatar, res.acct, res.id + '@' + instance );
+										g_cmn.account[res.id + '@' + instance].avatar = ImageURLConvert( res.avatar, res.acct, g_cmn.account[res.id + '@' + instance].instance );
 
 										$( '#head' ).trigger( 'account_update' );
 										UpdateToolbarUser();
