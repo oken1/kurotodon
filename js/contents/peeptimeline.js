@@ -316,6 +316,19 @@ Contents.peeptimeline = function( cp )
 		cont.addClass( 'timeline' );
 		lines.html( OutputTPL( 'timeline', { type: cp.param['timeline_type'] } ) );
 
+		cont.find( '.setting' ).remove();
+		
+		$.ajax( {
+			type: 'GET',
+			url: 'https://' + cp.param.instance + '/about/more',
+			dataType: 'html',
+		} ).done( function( data ) {
+			var _j = $( data );
+
+			lines.find( '.aboutmore .users' ).html( _j.find( '.information-board > .section:eq(0) > strong' ).text() );
+			lines.find( '.aboutmore .statuses' ).html( _j.find( '.information-board > .section:eq(1) > strong' ).text() );
+		} );
+
 		// タイムラインを表示
 		lines.show();
 

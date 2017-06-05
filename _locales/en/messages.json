@@ -39,6 +39,14 @@
 		"message": "Open"
 	},
 
+	"i18n_0010": {
+		"message": "users"
+	},
+
+	"i18n_0011": {
+		"message": "statuses"
+	},
+
 	"i18n_0029": {
 		"message": "Now Browsing"
 	},

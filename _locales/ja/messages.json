@@ -39,6 +39,14 @@
 		"message": "開く"
 	},
 
+	"i18n_0010": {
+		"message": "ユーザー数"
+	},
+
+	"i18n_0011": {
+		"message": "トゥート数"
+	},
+
 	"i18n_0029": {
 		"message": "Now Browsing"
 	},

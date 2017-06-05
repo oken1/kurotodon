@@ -6,6 +6,12 @@
 	<div class='streamctl'>
 		<a class='stm_btn tooltip off' tooltip='(i18n_0388)'></a>
 	</div>
+	{if $type=='peep'}
+	<div class='aboutmore'>
+		<span>(i18n_0010):</span><span class='users'></span> 
+		<span>(i18n_0011):</span><span class='statuses'></span>
+	</div>
+	{/if}
 	<div class='sctbl'>
 		<a class='tooltip icon-arrow_up' tooltip='(i18n_0194)'></a>
 		<a class='tooltip icon-arrow_down' tooltip='(i18n_0192)'></a>
