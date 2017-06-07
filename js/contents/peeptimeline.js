@@ -13,25 +13,13 @@ Contents.peeptimeline = function( cp )
 	var newitems = $();
 	var tm = null;
 	var status_ids = {};
+	var status_cnt = 0;
 	var first_status_id = null;
 	var last_status_id = null;
 	var scrollPos = null;
 	var scrollHeight = null;
 	var cursor_on_option = false;
-
-	////////////////////////////////////////////////////////////
-	// 読み込み済みステータスID数を取得
-	////////////////////////////////////////////////////////////
-	var StatusIDCount = function() {
-		var cnt = 0;
-
-		for ( var id in status_ids )
-		{
-			cnt++;
-		}
-
-		return cnt;
-	}
+	var active_users = {};
 
 	////////////////////////////////////////////////////////////
 	// 一覧作成
@@ -58,12 +46,14 @@ Contents.peeptimeline = function( cp )
 			// 初期
 			case 'init':
 				status_ids = {};
+				status_cnt = 0;
 
 				break;
 			// 更新
 			case 'reload':
 				status_ids = {};
-
+				status_cnt = 0;
+				
 				break;
 			// 新着
 			case 'new':
@@ -72,6 +62,7 @@ Contents.peeptimeline = function( cp )
 					// 一度も読み込んでいない場合は、初期として扱う
 					type = 'init';
 					status_ids = {};
+					status_cnt = 0;
 				}
 				else
 				{
@@ -116,6 +107,10 @@ Contents.peeptimeline = function( cp )
 								s += MakePeepTimeline( res[i], cp );
 
 								status_ids[res[i].id + '@' + instance] = true;
+								status_cnt++;
+
+								active_users[res[i].account.id + '@' + instance] = true;
+
 								addcnt++;
 							}
 						}
@@ -198,13 +193,12 @@ Contents.peeptimeline = function( cp )
 									timeline_list.trigger( 'scroll' );
 
 									// "表示最大数を超えている件数
-									var itemcnt = StatusIDCount();
-
-									if ( itemcnt - cp.param['max_count'] > 0 )
+									if ( status_cnt - cp.param['max_count'] > 0 )
 									{
 										// 新着で読み込んだ分だけ削除
-										timeline_list.find( '> div.item:gt(' + ( itemcnt - addcnt - 1 ) + ')' ).each( function() {
+										timeline_list.find( '> div.item:gt(' + ( status_cnt - addcnt - 1 ) + ')' ).each( function() {
 											delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'instance' )];
+											status_cnt--;
 											$( this ).remove();
 										} );
 
@@ -325,8 +319,8 @@ Contents.peeptimeline = function( cp )
 		} ).done( function( data ) {
 			var _j = $( data );
 
-			lines.find( '.aboutmore .users' ).html( _j.find( '.information-board > .section:eq(0) > strong' ).text() );
-			lines.find( '.aboutmore .statuses' ).html( _j.find( '.information-board > .section:eq(1) > strong' ).text() );
+			lines.find( '.instance_info_window .users' ).html( _j.find( '.information-board > .section:eq(0) > strong' ).text() );
+			lines.find( '.instance_info_window .statuses' ).html( _j.find( '.information-board > .section:eq(1) > strong' ).text() );
 		} );
 
 		// タイムラインを表示
@@ -372,9 +366,7 @@ Contents.peeptimeline = function( cp )
 			var spd;
 			var unit = i18nGetMessage( 'i18n_0270' );
 
-			var itemcnt = StatusIDCount();
-
-			if ( itemcnt < 1 )
+			if ( status_cnt < 1 )
 			{
 				spd = '--';
 				unit = '--';
@@ -384,7 +376,7 @@ Contents.peeptimeline = function( cp )
 				var firstdate = new Date();
 				var lastdate = Date.parse( timeline_list.find( '> div.item:last' ).attr( 'created_at' ).replace( '+', 'GMT+' ) );
 
-				spd = itemcnt / ( firstdate - lastdate ) * 1000;
+				spd = status_cnt / ( firstdate - lastdate ) * 1000;
 
 				if ( spd < 0 )
 				{
@@ -418,7 +410,10 @@ Contents.peeptimeline = function( cp )
 				}
 			}
 
-			$( this ).attr( 'tooltip', i18nGetMessage( 'i18n_0037' ) + ': ' + spd + '/' + unit );
+			var s = i18nGetMessage( 'i18n_0037' ) + ': ' + spd + '/' + unit;
+			s += ' ' + i18nGetMessage( 'i18n_0012' ) + ': ' + Object.keys( active_users ).length + i18nGetMessage( 'i18n_0013' );
+
+			$( this ).attr( 'tooltip', s );
 		} );
 
 		////////////////////////////////////////
@@ -443,6 +438,13 @@ Contents.peeptimeline = function( cp )
 		lines.find( '.panel_btns' ).find( '.timeline_reload' ).click( function() {
 			timeline_list.trigger( 'reload_timer' );
 			ListMake( cp.param['get_count'], 'reload' );
+		} );
+
+		////////////////////////////////////////
+		// インスタンス情報ボタンクリック
+		////////////////////////////////////////
+		lines.find( '.panel_btns' ).find( '.instance_info' ).click( function() {
+			lines.find( '.instance_info_window' ).toggle();
 		} );
 
 		////////////////////////////////////////

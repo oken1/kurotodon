@@ -473,30 +473,6 @@ function Init()
 				}
 
 				break;
-
-			// インスタンスを覗く
-			case 3:
-				var pid = IsUnique( 'peep' );
-
-				if ( pid == null )
-				{
-					var _cp = new CPanel( null, null, g_defwidth, g_defheight_s / 2 );
-					_cp.SetType( 'peep' );
-					_cp.SetParam( {} );
-					_cp.Start();
-				}
-				else
-				{
-					SetFront( $( '#' + pid ) );
-
-					// 最小化している場合は元に戻す
-					if ( GetPanel( pid ).minimum.minimum == true )
-					{
-						$( '#' + pid ).find( 'titlebar' ).find( '.minimum' ).trigger( 'click' );
-					}
-				}
-
-				break;
 		}
 
 		$( this ).toggle();
@@ -593,6 +569,37 @@ function Init()
 		{
 			var _cp = new CPanel( null, null, g_defwidth, g_defheight_s );
 			_cp.SetType( 'searchbox' );
+			_cp.SetParam( {} );
+			_cp.Start();
+		}
+		else
+		{
+			SetFront( $( '#' + pid ) );
+
+			// 最小化している場合は元に戻す
+			if ( GetPanel( pid ).minimum.minimum == true )
+			{
+				$( '#' + pid ).find( 'div.titlebar' ).find( '.minimum' ).trigger( 'click' );
+			}
+		}
+	});
+
+	////////////////////////////////////////////////////////////
+	// インスタンスを覗くボタンのクリック処理
+	////////////////////////////////////////////////////////////
+	$( document ).on( 'click', '#head_peep', function( e ) {
+		// disabledなら処理しない
+		if ( $( this ).hasClass( 'disabled' ) )
+		{
+			return;
+		}
+
+		var pid = IsUnique( 'peep' );
+
+		if ( pid == null )
+		{
+			var _cp = new CPanel( null, null, g_defwidth, g_defheight_s / 2 );
+			_cp.SetType( 'peep' );
 			_cp.SetParam( {} );
 			_cp.Start();
 		}

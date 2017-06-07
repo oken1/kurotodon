@@ -15,27 +15,15 @@ Contents.timeline = function( cp )
 	var newitems = $();
 	var tm = null;
 	var status_ids = {};
+	var status_cnt = 0;
 	var first_status_id = null;
 	var last_status_id = null;
 	var scrollPos = null;
 	var scrollHeight = null;
 	var cursor_on_option = false;
 	var socket = null;
-
-	////////////////////////////////////////////////////////////
-	// 読み込み済みステータスID数を取得
-	////////////////////////////////////////////////////////////
-	var StatusIDCount = function() {
-		var cnt = 0;
-
-		for ( var id in status_ids )
-		{
-			cnt++;
-		}
-
-		return cnt;
-	}
-
+	var active_users = {};
+	
 	///////////////////////////////////////////////////////////////////
 	// ツールバーユーザーの情報を最新に更新
 	///////////////////////////////////////////////////////////////////
@@ -212,12 +200,14 @@ Contents.timeline = function( cp )
 			// 初期
 			case 'init':
 				status_ids = {};
-
+				status_cnt = 0;
+				
 				break;
 			// 更新
 			case 'reload':
 				status_ids = {};
-
+				status_cnt = 0;
+				
 				break;
 			// 新着
 			case 'new':
@@ -226,6 +216,7 @@ Contents.timeline = function( cp )
 					// 一度も読み込んでいない場合は、初期として扱う
 					type = 'init';
 					status_ids = {};
+					status_cnt = 0;
 				}
 				else
 				{
@@ -272,6 +263,10 @@ Contents.timeline = function( cp )
 								s += MakeTimeline( res[i], cp );
 
 								status_ids[res[i].id + '@' + instance] = true;
+								status_cnt++;
+
+								active_users[res[i].account.id + '@' + instance] = true;
+
 								addcnt++;
 
 								if ( users[res[i].account.id + '@' + instance] == undefined )
@@ -370,13 +365,12 @@ Contents.timeline = function( cp )
 									timeline_list.trigger( 'scroll' );
 
 									// "表示最大数を超えている件数
-									var itemcnt = StatusIDCount();
-
-									if ( itemcnt - cp.param['max_count'] > 0 )
+									if ( status_cnt - cp.param['max_count'] > 0 )
 									{
 										// 新着で読み込んだ分だけ削除
-										timeline_list.find( '> div.item:gt(' + ( itemcnt - addcnt - 1 ) + ')' ).each( function() {
+										timeline_list.find( '> div.item:gt(' + ( status_cnt - addcnt - 1 ) + ')' ).each( function() {
 											delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'instance' )];
+											status_cnt--;
 											$( this ).remove();
 										} );
 
@@ -622,6 +616,7 @@ Contents.timeline = function( cp )
 		// タイトル&ボタン設定
 		var account = g_cmn.account[cp.param['account_id']];
 
+		cont.find( '.panel_btns' ).find( '.instance_info' ).hide();
 		cont.find( '.panel_btns' ).find( '.clear_notification' ).hide();
 
 		switch ( cp.param['timeline_type'] )
@@ -714,9 +709,7 @@ Contents.timeline = function( cp )
 			var spd;
 			var unit = i18nGetMessage( 'i18n_0270' );
 
-			var itemcnt = StatusIDCount();
-
-			if ( itemcnt < 1 )
+			if ( status_cnt < 1 )
 			{
 				spd = '--';
 				unit = '--';
@@ -726,7 +719,7 @@ Contents.timeline = function( cp )
 				var firstdate = new Date();
 				var lastdate = Date.parse( timeline_list.find( '> div.item:last' ).attr( 'created_at' ).replace( '+', 'GMT+' ) );
 
-				spd = itemcnt / ( firstdate - lastdate ) * 1000;
+				spd = status_cnt / ( firstdate - lastdate ) * 1000;
 
 				if ( spd < 0 )
 				{
@@ -760,7 +753,10 @@ Contents.timeline = function( cp )
 				}
 			}
 
-			$( this ).attr( 'tooltip', i18nGetMessage( 'i18n_0037' ) + ': ' + spd + '/' + unit );
+			var s = i18nGetMessage( 'i18n_0037' ) + ': ' + spd + '/' + unit;
+			s += ' ' + i18nGetMessage( 'i18n_0012' ) + ': ' + Object.keys( active_users ).length + i18nGetMessage( 'i18n_0013' );
+
+			$( this ).attr( 'tooltip', s );
 		} );
 
 		////////////////////////////////////////
@@ -964,6 +960,9 @@ Contents.timeline = function( cp )
 					var instance = GetInstanceFromAcct( data.json.account.acct, g_cmn.account[cp.param.account_id].instance );
 					
 					status_ids[data.json.id + '@' + instance] = true;
+					status_cnt++;
+
+					active_users[data.json.account.id + '@' + instance] = true;
 
 					var users = {};
 					users[data.json.account.id + '@' + instance] = {
@@ -1037,13 +1036,15 @@ Contents.timeline = function( cp )
 					timeline_list.trigger( 'scroll' );
 
 					// "表示最大数を超えている件数
-					var itemcnt = StatusIDCount();
-
-					if ( itemcnt - cp.param['max_count'] > 0 )
+console.log( 'status_cnt=' + status_cnt + ':max_count=' + cp.param['max_count'] + ': = ' + ( status_cnt - cp.param['max_count'] ) );
+					if ( status_cnt - cp.param['max_count'] > 0 )
 					{
+console.log( 'del : ' + (status_cnt - addcnt - 1 ) );
+
 						// 新着で読み込んだ分だけ削除
-						timeline_list.find( '> div.item:gt(' + ( itemcnt - addcnt - 1 ) + ')' ).each( function() {
+						timeline_list.find( '> div.item:gt(' + ( status_cnt - addcnt - 1 ) + ')' ).each( function() {
 							delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'instance' )];
+							status_cnt--;
 							$( this ).remove();
 						} );
 
@@ -1383,6 +1384,7 @@ Contents.timeline = function( cp )
 							{
 								item.fadeOut( 'fast', function() {
 									delete status_ids[item.attr( 'status_id' ) + '@' + item.attr( 'instance' )];
+									status_cnt--;
 									$( this ).remove();
 
 									StatusesCountUpdate( cp.param['account_id'], 1 );

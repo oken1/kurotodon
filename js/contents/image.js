@@ -71,7 +71,6 @@ Contents.image = function( cp )
 			{
 				nw = g_defwidth * 1.5;
 				nh = g_defwidth * 1.5 * 0.75;
-				console.log( nw + 'x' + nh );
 			}
 			
 			setTimeout( function() { Loading( false, 'image_load' ); }, 0 );

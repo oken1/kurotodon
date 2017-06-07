@@ -47,6 +47,18 @@
 		"message": "statuses"
 	},
 
+	"i18n_0012": {
+		"message": "Active"
+	},
+
+	"i18n_0013": {
+		"message": "Users"
+	},
+
+	"i18n_0014": {
+		"message": "Instance information"
+	},
+
 	"i18n_0029": {
 		"message": "Now Browsing"
 	},

@@ -8,7 +8,7 @@ Contents.peep = function( cp )
 	var p = $( '#' + cp.id );
 	var cont = p.find( 'div.contents' );
 
-	cp.SetIcon( 'icon-search' );
+	cp.SetIcon( 'icon-eye' );
 
 	////////////////////////////////////////////////////////////
 	// 開始処理

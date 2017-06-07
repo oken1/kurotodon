@@ -3,13 +3,13 @@
 </div>
 <div>
 	<span id='head_users'></span>
+	<a id='head_peep' class='btn headerbtn icon-eye tooltip' tooltip='(i18n_0008)'></a>
 	<span class='subcontainer'>
 		<a id='head_tool' class='btn headerbtn icon-wrench tooltip' tooltip='(i18n_0090)'></a>
 		<div id='head_tool_sub' class='header_sub'>
 			<span>(i18n_0033)</span>
 			<span>(i18n_0029)</span>
 			<span>(i18n_0052)/(i18n_0053)</span>
-			<span>(i18n_0008)</span>
 		</div>
 	</span>
 	<a id='head_search' class='btn headerbtn icon-search tooltip disabled' tooltip='(i18n_0206) (Alt+S)'></a>
