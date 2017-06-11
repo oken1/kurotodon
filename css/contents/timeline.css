@@ -18,7 +18,7 @@ div.contents.timeline .lines .panel_btns .instance_info_window {
 	background: #2e2e2e;
 	overflow-x: hidden;
 	overflow-y: auto;
-	padding: 4px;
+	padding: 8px;
 }
 
 /* Streaming Control */
@@ -431,6 +431,29 @@ div.contents.timeline .lines div.item > .toot .menubox {
 div.contents.timeline .lines div.item > .toot .menubox .btn {
 	padding: 6px 8px;
 	margin: 2px;
+}
+
+/* リモートフォローアカウント一覧 */
+div.contents.timeline .lines div.item > .toot .menubox .remote_account_list {
+	display: none;
+	position: absolute;
+	height: 15rem;
+	left: 1rem;
+	z-index: 8900;
+	border: 1px solid #101010;
+	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
+	background: #2e2e2e;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+div.contents.timeline .lines div.item > .toot .menubox .remote_account_list .remote_account {
+	padding: 4px;
+}
+
+div.contents.timeline .lines div.item > .toot .menubox .remote_account_list .remote_account:hover {
+	cursor: pointer;
+	background: #204060;
 }
 
 div.contents.timeline .lines .readmore {

@@ -282,7 +282,7 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 					.find( '.lines' ).hide()
 					.end()
 					.find( '.setting' ).show()
-					.find( 'input[type=text]:first' ).focus();
+					.find( 'input[type=text]' ).first().focus();
 			}
 			else
 			{

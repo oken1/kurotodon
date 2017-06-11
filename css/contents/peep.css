@@ -13,19 +13,24 @@ div.contents.searchbox {
 	display: table;
 	width: 100%;
 	padding: 4px;
+	overflow: hidden;
 }
 
-#peep_box > * {
-	padding: 6px;
-	white-space: nowrap;
-}
-
-#peep_text {
+#peep_box > span {
 	display: table-cell;
+	vertical-align: middle;
+}
+
+#peep_box > span:first-child {
+	width: 8rem;
+}
+
+#peep_box > .peeptext > input[type=text] {
 	width: 100%;
+	min-width: 4rem;
 }
 
-#peep_box > span,
-#peep_open {
-	display: table-cell;
+
+#peep_box > span:last-child {
+	width: 4rem;
 }

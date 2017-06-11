@@ -42,7 +42,16 @@ div.contents.profile .profilebase > div.display_name span {
 	font-size: 2rem;
 }
 
-div.contents.profile .profilebase > div.acct span {
+div.contents.profile .profilebase > div.acct .instance {
+	color: #add4f2;
+}
+
+div.contents.profile .profilebase > div.acct .instance:hover {
+	opacity: 0.8;
+	cursor: pointer;
+}
+
+div.contents.profile .profilebase > div.acct .instance {
 }
 
 div.contents.profile .profilebase > div.note div {

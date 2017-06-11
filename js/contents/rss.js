@@ -164,14 +164,14 @@ Contents.rss = function( cp )
 		////////////////////////////////////////
 		// 一番上へ
 		////////////////////////////////////////
-		cont.find( '.panel_btns' ).find( '.sctbl' ).find( 'a:first' ).click( function( e ) {
+		cont.find( '.panel_btns' ).find( '.sctbl' ).find( 'a' ).first().click( function( e ) {
 			rss_list.scrollTop( 0 );
 		} );
 
 		////////////////////////////////////////
 		// 一番下へ
 		////////////////////////////////////////
-		cont.find( '.panel_btns' ).find( '.sctbl' ).find( 'a:last' ).click( function( e ) {
+		cont.find( '.panel_btns' ).find( '.sctbl' ).find( 'a' ).last().click( function( e ) {
 			rss_list.scrollTop( rss_list.prop( 'scrollHeight' ) );
 		} );
 

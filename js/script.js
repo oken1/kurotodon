@@ -2063,7 +2063,7 @@ function ConvertContent( content, json )
 
 		if ( anchor.find( 'span.invisible' ).length && anchor.find( 'span.ellipsis' ).length )
 		{
-			if ( anchor.find( 'span.invisible' ).length == 2 && anchor.find( 'span.invisible:last' ).text() != '' )
+			if ( anchor.find( 'span.invisible' ).length == 2 && anchor.find( 'span.invisible' ).last().text() != '' )
 			{
 				ellipsis = '…';
 			}

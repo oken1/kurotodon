@@ -49,7 +49,8 @@ Contents.profile = function( cp )
 							id: res.id,
 							avatar: ImageURLConvert( res.avatar, res.acct, g_cmn.account[cp.param.account_id].instance ),
 							display_name: res.display_name,
-							acct: res.acct,
+							username: res.username,
+							instance: GetInstanceFromAcct( res.acct, g_cmn.account[cp.param.account_id].instance ),
 							note: res.note,
 							day: compdate,
 							date: DateConv( res.created_at, 0 ),
@@ -67,6 +68,21 @@ Contents.profile = function( cp )
 							backgroundSize: 'cover'
 						} );
 					}
+
+					cont.find( '.acct .instance' ).on( 'click', function( e ) {
+						var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
+						_cp.SetType( 'peeptimeline' );
+
+						_cp.SetParam( {
+							timeline_type: 'peep',
+							instance: $( this ).attr( 'instance' ),
+							reload_time: g_cmn.cmn_param['reload_time'],
+							streaming: false,
+						} );
+						_cp.Start();
+
+						e.stopPropagation();
+					} );
 
 					// お気に入り/ミュートしたユーザー/ブロックしたユーザー一覧
 					if ( myaccount )
@@ -144,7 +160,7 @@ Contents.profile = function( cp )
 							e.stopPropagation();
 						} );
 					}
-					
+
 					// フォロー/フォロワー一覧
 					cont.find( '.stats' ).find( '.following_count,.followers_count' ).on( 'click', function( e ) {
 						var users_type = ( $( this ).hasClass( 'following_count' ) ) ? 'follows' : 'followers';

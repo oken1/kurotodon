@@ -202,7 +202,7 @@ Contents.peeptimeline = function( cp )
 											$( this ).remove();
 										} );
 
-										first_status_id = timeline_list.find( '> div.item:last' ).attr( 'status_id' );
+										first_status_id = timeline_list.find( '> div.item' ).last().attr( 'status_id' );
 									}
 								}
 
@@ -218,7 +218,7 @@ Contents.peeptimeline = function( cp )
 									AppendReadmore();
 								}
 
-								timeline_list.find( '.readmore:first' ).remove();
+								timeline_list.find( '.readmore' ).first().remove();
 								$( '#tooltip' ).hide();
 
 								items = timeline_list.find( '> div.item:not(".res"):gt(' + ( itemcnt - 1 ) + ')' );
@@ -230,7 +230,7 @@ Contents.peeptimeline = function( cp )
 						// もっと読むで404の場合
 						if ( type == 'old' && res.status == 404 )
 						{
-							timeline_list.find( '.readmore:first' ).remove();
+							timeline_list.find( '.readmore' ).fist().remove();
 							$( '#tooltip' ).hide();
 						}
 						else
@@ -319,8 +319,8 @@ Contents.peeptimeline = function( cp )
 		} ).done( function( data ) {
 			var _j = $( data );
 
-			lines.find( '.instance_info_window .users' ).html( _j.find( '.information-board > .section:eq(0) > strong' ).text() );
-			lines.find( '.instance_info_window .statuses' ).html( _j.find( '.information-board > .section:eq(1) > strong' ).text() );
+			lines.find( '.instance_info_window .users' ).html( _j.find( '.information-board > .section' ).eq(0).find( '> strong' ).text() );
+			lines.find( '.instance_info_window .statuses' ).html( _j.find( '.information-board > .section' ).eq(1).find( '> strong' ).text() );
 		} );
 
 		// タイムラインを表示
@@ -374,7 +374,7 @@ Contents.peeptimeline = function( cp )
 			else
 			{
 				var firstdate = new Date();
-				var lastdate = Date.parse( timeline_list.find( '> div.item:last' ).attr( 'created_at' ).replace( '+', 'GMT+' ) );
+				var lastdate = Date.parse( timeline_list.find( '> div.item' ).last().attr( 'created_at' ).replace( '+', 'GMT+' ) );
 
 				spd = status_cnt / ( firstdate - lastdate ) * 1000;
 
@@ -450,14 +450,14 @@ Contents.peeptimeline = function( cp )
 		////////////////////////////////////////
 		// 一番上へ
 		////////////////////////////////////////
-		lines.find( '.sctbl' ).find( 'a:first' ).click( function( e ) {
+		lines.find( '.sctbl' ).find( 'a' ).first().click( function( e ) {
 			timeline_list.scrollTop( 0 );
 		} );
 
 		////////////////////////////////////////
 		// 一番下へ
 		////////////////////////////////////////
-		lines.find( '.sctbl' ).find( 'a:last' ).click( function( e ) {
+		lines.find( '.sctbl' ).find( 'a' ).last().click( function( e ) {
 			timeline_list.scrollTop( timeline_list.prop( 'scrollHeight' ) );
 		} );
 
@@ -518,6 +518,107 @@ Contents.peeptimeline = function( cp )
 				} );
 				_cp.Start();
 			}
+			////////////////////////////////////////
+			// メニューボタンクリック
+			////////////////////////////////////////
+			else if ( targ.hasClass( 'timeline_menu' ) )
+			{
+				// disabledなら処理しない
+				if ( targ.hasClass( 'disabled' ) )
+				{
+					return;
+				}
+
+				var item = targ.closest( '.item' );
+
+				// 最初にクリックされたときにメニューボックス部を作成
+				if ( item.find( '.menubox' ).length == 0 )
+				{
+					item.find( '.toot' ).append( OutputTPL( 'timeline_menu', {
+						toolbaruser: false, type: 'peep',
+					} ) );
+
+					var menubox = item.find( 'div.toot' ).find( 'div.menubox' );
+
+					// リモートフォロー
+					menubox.find( '> a.remotefollow' ).on( 'click', function( e ) {
+						var account_list = item.find( '.menubox .remote_account_list' );
+
+						if ( account_list.css( 'display' ) == 'none' )
+						{
+							var s = '';
+
+							for ( var i = 0 ; i < g_cmn.account_order.length ; i++ )
+							{
+								var id = g_cmn.account_order[i];
+
+								s += '<div class="remote_account">' +
+									 '<span>' + g_cmn.account[id].display_name + '</span>' +
+									 '<span>@' + g_cmn.account[id].instance + '</span>' +
+									 '</div>';
+							}
+							account_list.show().html( s );
+						}
+						else
+						{
+							account_list.hide();
+						}
+
+						e.stopPropagation();
+					} );
+
+					menubox.on( 'click', '> .remote_account_list .remote_account', function( e ) {
+						var account = g_cmn.account[g_cmn.account_order[$( this ).index()]];
+
+						var uri = item.attr( 'username' ) + '@' + item.attr( 'instance' );
+
+						Loading( true, 'remotefollow' );
+
+						SendRequest(
+							{
+								method: 'POST',
+								action: 'api_call',
+								instance: account.instance,
+								access_token: account.access_token,
+								api: 'follows',
+								param: {
+									uri: item.attr( 'username' ) + '@' + item.attr( 'instance' )
+								}
+							},
+							function( res )
+							{
+								console.log( res )
+
+								if ( res.status === undefined )
+								{
+								}
+								else
+								{
+									ApiError( res );
+								}
+
+								item.find( '.menubox .remote_account_list' ).hide();
+								Loading( false, 'remotefollow' );
+							}
+						);
+
+						e.stopPropagation();
+					} );
+
+					// 読み上げ
+					menubox.find( '> a.speech' ).on( 'click', function( e ) {
+						var text = item.find( '.toot' ).find( '.toot_text' ).text();
+						var uttr = new SpeechSynthesisUtterance( text );
+						uttr.lang = 'ja-JP';
+
+						speechSynthesis.cancel();
+						speechSynthesis.speak( uttr );
+						e.stopPropagation();
+					} );
+				}
+
+				item.find( '.menubox' ).toggle();
+			}
 			else
 			{
 				return;
@@ -535,6 +636,36 @@ Contents.peeptimeline = function( cp )
 			}
 			else
 			{
+				$( '#tooltip' ).hide();
+			}
+		} );
+
+		////////////////////////////////////////
+		// カーソルを乗せたとき（ボタン群表示）
+		////////////////////////////////////////
+		timeline_list.on( 'mouseenter mouseleave', '> div.item', function( e ) {
+			var options = $( this ).find( 'div.options' );
+
+			if ( e.type == 'mouseenter' )
+			{
+				timeline_list.find( '> div.items' ).find( 'div.options' ).find( 'span.btns' ).css( { display: 'none' } );
+
+				// 初めて乗せたときに描画
+				if ( options.find( 'span.btns' ).length == 0 )
+				{
+					options.prepend( OutputTPL( 'timeline_options', {
+						mytoot: options.attr( 'mytoot' ),
+						reblogged: options.attr( 'reblogged' ),
+						type: cp.param['timeline_type'],
+						visibility: $( this ).attr( 'visibility' ),
+					} ) );
+				}
+
+				options.find( 'span.btns' ).css( { display: 'inline-block' } );
+			}
+			else
+			{
+				options.find( 'span.btns' ).css( { display: 'none' } );
 				$( '#tooltip' ).hide();
 			}
 		} );

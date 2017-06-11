@@ -59,6 +59,50 @@
 		"message": "Instance information"
 	},
 
+	"i18n_0015": {
+		"message": "Edit profile"
+	},
+
+	"i18n_0016": {
+		"message": "Display name"
+	},
+
+	"i18n_0017": {
+		"message": "30 characters"
+	},
+
+	"i18n_0018": {
+		"message": "Bio"
+	},
+
+	"i18n_0019": {
+		"message": "160 characters"
+	},
+
+	"i18n_0020": {
+		"message": "Avatar"
+	},
+
+	"i18n_0021": {
+		"message": "Header"
+	},
+
+	"i18n_0022": {
+		"message": "Lock account"
+	},
+
+	"i18n_0023": {
+		"message": "Post privacy"
+	},
+
+	"i18n_0024": {
+		"message": "Upload"
+	},
+
+	"i18n_0025": {
+		"message": "Remote follow"
+	},
+
 	"i18n_0029": {
 		"message": "Now Browsing"
 	},
@@ -81,6 +125,10 @@
 
 	"i18n_0046": {
 		"message": "Getting account information"
+	},
+
+	"i18n_0047": {
+		"message": "Account settings"
 	},
 
 	"i18n_0052": {

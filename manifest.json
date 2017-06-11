@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Kurotodon",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"author": "KEN1",
 	"description": "__MSG_manifest_description__",
 	"default_locale": "en",

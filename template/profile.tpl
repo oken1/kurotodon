@@ -6,7 +6,7 @@
 		<span>{$display_name}</span>
 	</div>
 	<div class='acct'>
-		<span>@{$acct}</span><span> (ID:{$id})</span>
+		<span>@{$username}</span><span class='instance' instance='{$instance}'>@{$instance}</span><span> (ID:{$id})</span>
 	</div>
 	<div class='note'>
 		<div>{$note}</div>

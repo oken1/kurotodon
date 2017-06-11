@@ -155,7 +155,7 @@ Contents.users = function( cp )
 								AppendReadmore();
 							}
 
-							users_list.find( '.readmore:first' ).remove();
+							users_list.find( '.readmore' ).first().remove();
 							$( '#tooltip' ).hide();
 
 							break;
@@ -271,7 +271,7 @@ Contents.users = function( cp )
 					// もっと読むで404が返ってきた場合
 					if ( type == 'old' && res.status == 404 )
 					{
-						users_list.find( '.readmore:first' ).remove();
+						users_list.find( '.readmore' ).first().remove();
 						$( '#tooltip' ).hide();
 					}
 					else

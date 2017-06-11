@@ -374,7 +374,7 @@ Contents.timeline = function( cp )
 											$( this ).remove();
 										} );
 
-										first_status_id = timeline_list.find( '> div.item:last' ).attr( 'status_id' );
+										first_status_id = timeline_list.find( '> div.item' ).last().attr( 'status_id' );
 									}
 								}
 
@@ -390,7 +390,7 @@ Contents.timeline = function( cp )
 									AppendReadmore();
 								}
 
-								timeline_list.find( '.readmore:first' ).remove();
+								timeline_list.find( '.readmore' ).first().remove();
 								$( '#tooltip' ).hide();
 
 								items = timeline_list.find( '> div.item:not(".res"):gt(' + ( itemcnt - 1 ) + ')' );
@@ -402,7 +402,7 @@ Contents.timeline = function( cp )
 						// もっと読むで404の場合
 						if ( type == 'old' && res.status == 404 )
 						{
-							timeline_list.find( '.readmore:first' ).remove();
+							timeline_list.find( '.readmore' ).first().remove();
 							$( '#tooltip' ).hide();
 						}
 						else
@@ -717,7 +717,7 @@ Contents.timeline = function( cp )
 			else
 			{
 				var firstdate = new Date();
-				var lastdate = Date.parse( timeline_list.find( '> div.item:last' ).attr( 'created_at' ).replace( '+', 'GMT+' ) );
+				var lastdate = Date.parse( timeline_list.find( '> div.item' ).last().attr( 'created_at' ).replace( '+', 'GMT+' ) );
 
 				spd = status_cnt / ( firstdate - lastdate ) * 1000;
 
@@ -830,14 +830,14 @@ Contents.timeline = function( cp )
 		////////////////////////////////////////
 		// 一番上へ
 		////////////////////////////////////////
-		lines.find( '.sctbl' ).find( 'a:first' ).click( function( e ) {
+		lines.find( '.sctbl' ).find( 'a' ).first().click( function( e ) {
 			timeline_list.scrollTop( 0 );
 		} );
 
 		////////////////////////////////////////
 		// 一番下へ
 		////////////////////////////////////////
-		lines.find( '.sctbl' ).find( 'a:last' ).click( function( e ) {
+		lines.find( '.sctbl' ).find( 'a' ).last().click( function( e ) {
 			timeline_list.scrollTop( timeline_list.prop( 'scrollHeight' ) );
 		} );
 
@@ -955,7 +955,7 @@ Contents.timeline = function( cp )
 				if ( ( cp.param.timeline_type != 'notifications' && data.json.event == 'update' ) ||
 					 ( cp.param.timeline_type == 'notifications' && data.json.event == 'notification' ) )
 				{
-					timeline_list.prepend( MakeTimeline( data.json, cp ) ).children( ':first' ).hide().fadeIn();;
+					timeline_list.prepend( MakeTimeline( data.json, cp ) ).children().first().hide().fadeIn();;
 
 					var instance = GetInstanceFromAcct( data.json.account.acct, g_cmn.account[cp.param.account_id].instance );
 					
@@ -1024,7 +1024,7 @@ Contents.timeline = function( cp )
 					else
 					{
 						var scheight = timeline_list.prop( 'scrollHeight' );
-						timeline_list.scrollTop( _sctop + ( timeline_list.find( '>div.item:eq(0)' ).outerHeight() ) );
+						timeline_list.scrollTop( _sctop + ( timeline_list.find( '>div.item' ).eq(0).outerHeight() ) );
 					}
 
 					timeline_list.find( '> div.item:lt(1)' ).addClass( 'new' );
@@ -1036,11 +1036,8 @@ Contents.timeline = function( cp )
 					timeline_list.trigger( 'scroll' );
 
 					// "表示最大数を超えている件数
-console.log( 'status_cnt=' + status_cnt + ':max_count=' + cp.param['max_count'] + ': = ' + ( status_cnt - cp.param['max_count'] ) );
 					if ( status_cnt - cp.param['max_count'] > 0 )
 					{
-console.log( 'del : ' + (status_cnt - addcnt - 1 ) );
-
 						// 新着で読み込んだ分だけ削除
 						timeline_list.find( '> div.item:gt(' + ( status_cnt - addcnt - 1 ) + ')' ).each( function() {
 							delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'instance' )];
@@ -1048,7 +1045,7 @@ console.log( 'del : ' + (status_cnt - addcnt - 1 ) );
 							$( this ).remove();
 						} );
 
-						first_status_id = timeline_list.find( '> div.item:last' ).attr( 'status_id' );
+						first_status_id = timeline_list.find( '> div.item' ).last().attr( 'status_id' );
 					}
 				}
 			}

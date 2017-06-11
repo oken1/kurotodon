@@ -86,6 +86,7 @@ Contents.account = function( cp )
 			{
 				$( '#account_list' ).find( 'div.item[account_id="' + $( '#account_del' ).attr( 'delid' ) + '"]' ).addClass( 'select' );
 				$( '#account_del' ).removeClass( 'disabled' );
+//				$( '#account_setting' ).removeClass( 'disabled' );
 				$( '#account_posup' ).removeClass( 'disabled' );
 				$( '#account_posdown' ).removeClass( 'disabled' );
 			}
@@ -100,6 +101,8 @@ Contents.account = function( cp )
 			$( '#account_del' )
 				.attr( 'delid', $( this ).attr( 'account_id' ) )
 				.removeClass( 'disabled' );
+//			$( '#account_setting' )
+//				.removeClass( 'disabled' );
 			$( '#account_posup' )
 				.removeClass( 'disabled' );
 			$( '#account_posdown' )
@@ -229,6 +232,9 @@ Contents.account = function( cp )
 			// 削除ボタン
 			$( '#account_del' ).addClass( 'disabled' );
 
+			// 設定ボタン
+			$( '#account_setting' ).addClass( 'disabled' );
+
 			// ▲▼ボタン
 			$( '#account_posup' ).addClass( 'disabled' );
 			$( '#account_posdown' ).addClass( 'disabled' );
@@ -258,7 +264,7 @@ Contents.account = function( cp )
 
 			$( '#login_window' ).toggle();
 
-			$( '#login_window' ).find( 'input[type=text]:first' ).focus();
+			$( '#login_window' ).find( 'input[type=text]' ).first().focus();
 		} );
 
 		////////////////////////////////////////
@@ -353,6 +359,40 @@ Contents.account = function( cp )
 
 				UpdateToolbarUser();
 			}
+		} );
+
+		////////////////////////////////////////
+		// アカウント設定ボタンクリック処理
+		////////////////////////////////////////
+		$( '#account_setting' ).click( function( e ) {
+			// disabledなら処理しない
+			if ( $( this ).hasClass( 'disabled' ) )
+			{
+				return;
+			}
+
+			var pid = IsUnique( 'accountset' );
+
+			if ( pid == null )
+			{
+				var _cp = new CPanel( null, null, 360, 420 );
+				_cp.SetType( 'accountset' );
+				_cp.SetParam( {
+					account_id: $( '#account_del' ).attr( 'delid' ),
+				} );
+				_cp.Start();
+			}
+			else
+			{
+				var _cp = GetPanel( pid );
+				_cp.SetType( 'accountset' );
+				_cp.SetParam( {
+					account_id: $( '#account_del' ).attr( 'delid' ),
+				} );
+				$( '#' + pid ).find( 'div.contents' ).trigger( 'account_change' );
+			}
+
+			e.stopPropagation();
 		} );
 
 		////////////////////////////////////////

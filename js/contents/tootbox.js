@@ -179,13 +179,13 @@ Contents.tootbox = function( cp )
 						{
 							tootimages.append( OutputTPL( 'tootbox_image', { item: res } ) );
 							tootimages.attr( 'account_id', cp.param['account_id'] );
-							tootimages.find( '.del:last' ).find( 'span' ).click( ImageDelClick );
-							tootimages.find( '.imageitem:last' ).attr( 'uid', GetUniqueID() );
+							tootimages.find( '.del' ).last().find( 'span' ).click( ImageDelClick );
+							tootimages.find( '.imageitem' ).last().attr( 'uid', GetUniqueID() );
 
-							tootimages.find( '.imageitem:last > .icon > img' ).attr( 'src', res.preview_url );
+							tootimages.find( '.imageitem' ).last().find( '> .icon > img' ).attr( 'src', res.preview_url );
 							cont.find( '.text' ).val( cont.find( '.text' ).val() + ' ' + res.text_url );
 
-							var height = tootimages.find( '.imageitem:last' ).outerHeight( true );
+							var height = tootimages.find( '.imageitem' ).last().outerHeight( true );
 
 							cont.find( '.nsfw' ).show();
 
@@ -337,7 +337,7 @@ Contents.tootbox = function( cp )
 				cont.find( '.pvselect' ).show().css( 'left', $( this ).position().left );
 
 				cont.find( '.pvselect > div' ).removeClass( 'selected' );
-				cont.find( '.pvselect > div:eq(' + pv + ')' ).addClass( 'selected' );
+				cont.find( '.pvselect > div' ).eq(pv).addClass( 'selected' );
 			}
 			else
 			{
