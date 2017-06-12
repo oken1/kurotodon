@@ -23,7 +23,8 @@ Contents.timeline = function( cp )
 	var cursor_on_option = false;
 	var socket = null;
 	var active_users = {};
-	
+	var over_cnt = 0;
+
 	///////////////////////////////////////////////////////////////////
 	// ツールバーユーザーの情報を最新に更新
 	///////////////////////////////////////////////////////////////////
@@ -368,12 +369,15 @@ Contents.timeline = function( cp )
 									if ( status_cnt - cp.param['max_count'] > 0 )
 									{
 										// 新着で読み込んだ分だけ削除
-										timeline_list.find( '> div.item:gt(' + ( status_cnt - addcnt - 1 ) + ')' ).each( function() {
-											delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'instance' )];
+										var delitems = timeline_list.find( '> div.item:gt(' + ( status_cnt - addcnt - 1 ) + ')' );
+										
+										for ( var i = 0, _len = delitems.length ; i < _len ; i++ )
+										{
+											delete status_ids[$( delitems[i] ).attr( 'status_id' ) + '@' + $( delitems[i] ).attr( 'instance' )];
 											status_cnt--;
-											$( this ).remove();
-										} );
+										}
 
+										delitems.remove();
 										first_status_id = timeline_list.find( '> div.item' ).last().attr( 'status_id' );
 									}
 								}
@@ -1038,14 +1042,24 @@ Contents.timeline = function( cp )
 					// "表示最大数を超えている件数
 					if ( status_cnt - cp.param['max_count'] > 0 )
 					{
-						// 新着で読み込んだ分だけ削除
-						timeline_list.find( '> div.item:gt(' + ( status_cnt - addcnt - 1 ) + ')' ).each( function() {
-							delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'instance' )];
-							status_cnt--;
-							$( this ).remove();
-						} );
+						over_cnt += addcnt;
 
-						first_status_id = timeline_list.find( '> div.item' ).last().attr( 'status_id' );
+						// 10件分溜めてから消す
+						if ( over_cnt >= 10 )
+						{
+							var delitems = timeline_list.find( '> div.item:gt(' + ( status_cnt - over_cnt - 1 ) + ')' );
+
+							for ( var i = 0, _len = delitems.length ; i < _len ; i++ )
+							{
+								delete status_ids[$( delitems[i] ).attr( 'status_id' ) + '@' + $( delitems[i] ).attr( 'instance' )];
+								status_cnt--;
+							}
+
+							delitems.remove();
+
+							first_status_id = timeline_list.find( '> div.item' ).last().attr( 'status_id' );
+							over_cnt = 0;
+						}
 					}
 				}
 			}

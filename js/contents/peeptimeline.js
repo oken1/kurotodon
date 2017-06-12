@@ -192,16 +192,20 @@ Contents.peeptimeline = function( cp )
 
 									timeline_list.trigger( 'scroll' );
 
+
 									// "表示最大数を超えている件数
 									if ( status_cnt - cp.param['max_count'] > 0 )
 									{
 										// 新着で読み込んだ分だけ削除
-										timeline_list.find( '> div.item:gt(' + ( status_cnt - addcnt - 1 ) + ')' ).each( function() {
-											delete status_ids[$( this ).attr( 'status_id' ) + '@' + $( this ).attr( 'instance' )];
+										var delitems = timeline_list.find( '> div.item:gt(' + ( status_cnt - addcnt - 1 ) + ')' );
+										
+										for ( var i = 0, _len = delitems.length ; i < _len ; i++ )
+										{
+											delete status_ids[$( delitems[i] ).attr( 'status_id' ) + '@' + $( delitems[i] ).attr( 'instance' )];
 											status_cnt--;
-											$( this ).remove();
-										} );
+										}
 
+										delitems.remove();
 										first_status_id = timeline_list.find( '> div.item' ).last().attr( 'status_id' );
 									}
 								}
