@@ -45,7 +45,7 @@ Contents.peep = function( cp )
 
 			_cp.SetParam( {
 				timeline_type: 'peep',
-				instance: $( '#peep_text' ).val(),
+				instance: $( '#peep_text' ).val().trim(),
 				reload_time: g_cmn.cmn_param['reload_time'],
 				streaming: false,
 			} );

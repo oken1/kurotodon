@@ -7,8 +7,25 @@ Contents.profile = function( cp )
 {
 	var p = $( '#' + cp.id );
 	var cont = p.find( 'div.contents' );
+	var profile = null;
 
 	cp.SetIcon( 'icon-user' );
+
+	////////////////////////////////////////////////////////////
+	// タイトル設定
+	////////////////////////////////////////////////////////////
+	var SetTitle = function() {
+		if ( profile != null )
+		{
+			cp.SetTitle( profile.display_name + ' ' + i18nGetMessage( 'i18n_0107' ) + 
+				'(' + g_cmn.account[cp.param['account_id']].display_name + '@' + g_cmn.account[cp.param['account_id']].instance + ')', false );
+		}
+		else
+		{
+			cp.SetTitle( i18nGetMessage( 'i18n_0107' ) + 
+				'(' + g_cmn.account[cp.param['account_id']].display_name + '@' + g_cmn.account[cp.param['account_id']].instance + ')', false );
+		}
+	};
 
 	////////////////////////////////////////////////////////////
 	// ユーザ情報作成
@@ -17,9 +34,9 @@ Contents.profile = function( cp )
 		cont.html( '' )
 			.addClass( 'profile' );
 
+		SetTitle();
+
 		Loading( true, 'profile' );
-		cp.SetTitle( i18nGetMessage( 'i18n_0107' ) + 
-			'(' + g_cmn.account[cp.param['account_id']].display_name + '@' + g_cmn.account[cp.param['account_id']].instance + ')', false );
 
 		SendRequest(
 			{
@@ -33,8 +50,9 @@ Contents.profile = function( cp )
 			{
 				if ( res.status === undefined )
 				{
-					cp.SetTitle( res.display_name + ' ' + i18nGetMessage( 'i18n_0107' ) + 
-						'(' + g_cmn.account[cp.param['account_id']].display_name + '@' + g_cmn.account[cp.param['account_id']].instance + ')', false );
+					profile = res;
+
+					SetTitle();
 
 					// day
 					var dt = new Date();
@@ -417,6 +435,8 @@ Contents.profile = function( cp )
 		////////////////////////////////////////
 		cont.on( 'account_update', function() {
 			AccountAliveCheck();
+
+			SetTitle();
 		} );
 
 		if ( !AccountAliveCheck() )

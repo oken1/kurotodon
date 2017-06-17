@@ -13,6 +13,13 @@ div.contents.accountset {
 	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
 }
 
+#avatarchange > div, #headerchange > div, #profedit > div {
+	padding: 4px 8px;
+}
+
+#profbio {
+	height: 40px;
+}
 
 div.contents.accountset > div > span {
 	display: block;
@@ -34,11 +41,6 @@ div.contents.accountset > div > span {
 }
 
 #avataruploadbox_select, #headeruploadbox_select {
-	padding: 0 0 2px 4px;
-}
-
-#avataruploadbox_btn, #headeruploadbox_btn {
-	padding: 0 4px;
 }
 
 #profedit > div {
@@ -51,11 +53,11 @@ div.contents.accountset > div > span {
 }
 
 #profedit > div > input[type=text] {
-	width: 180px;
+	width: 90%;
 }
 
 #profedit > div > textarea {
 	margin: 4px 0;
-	width: 320px;
-	height: 50px;
+	width: 90%;
+	height: 7rem;
 }

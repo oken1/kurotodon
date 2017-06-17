@@ -12,7 +12,35 @@ Contents.users = function( cp )
 	var users = {};
 	var limit = 80;
 	var first_id = null;
-	
+
+	////////////////////////////////////////////////////////////
+	// タイトル設定
+	////////////////////////////////////////////////////////////
+	var SetTitle = function()
+	{
+		var account = g_cmn.account[cp.param['account_id']];
+
+		switch ( cp.param['users_type'] )
+		{
+			case 'follows':
+				cp.SetTitle( cp.param.display_name + ' ' + i18nGetMessage( 'i18n_0399' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
+				cp.SetIcon( 'icon-user-plus' );
+				break;
+			case 'followers':
+				cp.SetTitle( cp.param.display_name + ' ' + i18nGetMessage( 'i18n_0400' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
+				cp.SetIcon( 'icon-user-plus' );
+				break;
+			case 'muteusers':
+				cp.SetTitle( i18nGetMessage( 'i18n_0401' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
+				cp.SetIcon( 'icon-volume-mute2' );
+				break;
+			case 'blockusers':
+				cp.SetTitle( i18nGetMessage( 'i18n_0402' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
+				cp.SetIcon( 'icon-eye-blocked' );
+				break;
+		}
+	};
+
 	////////////////////////////////////////////////////////////
 	// リスト部作成
 	////////////////////////////////////////////////////////////
@@ -340,6 +368,8 @@ Contents.users = function( cp )
 		////////////////////////////////////////
 		cont.on( 'account_update', function() {
 			AccountAliveCheck();
+
+			SetTitle();
 		} );
 
 		if ( !AccountAliveCheck() )
@@ -353,29 +383,8 @@ Contents.users = function( cp )
 
 		users_list = cont.find( '.users_list' );
 
-		// タイトル設定
-		var account = g_cmn.account[cp.param['account_id']];
-
-		switch ( cp.param['users_type'] )
-		{
-			case 'follows':
-				cp.SetTitle( cp.param.display_name + ' ' + i18nGetMessage( 'i18n_0399' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
-				cp.SetIcon( 'icon-user-plus' );
-				break;
-			case 'followers':
-				cp.SetTitle( cp.param.display_name + ' ' + i18nGetMessage( 'i18n_0400' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
-				cp.SetIcon( 'icon-user-plus' );
-				break;
-			case 'muteusers':
-				cp.SetTitle( i18nGetMessage( 'i18n_0401' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
-				cp.SetIcon( 'icon-volume-mute2' );
-				break;
-			case 'blockusers':
-				cp.SetTitle( i18nGetMessage( 'i18n_0402' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
-				cp.SetIcon( 'icon-eye-blocked' );
-				break;
-		}
-
+		SetTitle();
+		
 		////////////////////////////////////////
 		// 更新ボタンクリック
 		////////////////////////////////////////

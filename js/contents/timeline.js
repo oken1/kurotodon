@@ -26,6 +26,72 @@ Contents.timeline = function( cp )
 	var over_cnt = 0;
 
 	///////////////////////////////////////////////////////////////////
+	// タイトル設定
+	///////////////////////////////////////////////////////////////////
+	var SetTitle = function( users ) {
+		var account = g_cmn.account[cp.param['account_id']];
+
+		switch ( cp.param['timeline_type'] )
+		{
+			case 'home':
+				cp.SetTitle( i18nGetMessage( 'i18n_0152' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-home' );
+				break;
+			case 'local':
+				cp.SetTitle( i18nGetMessage( 'i18n_0365' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-users2' );
+				cont.find( '.panel_btns' ).find( '.instance_info' ).show();
+				break;
+			case 'media':
+				cp.SetTitle( i18nGetMessage( 'i18n_0007' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-image2' );
+				break;
+			case 'federated':
+				cp.SetTitle( i18nGetMessage( 'i18n_0366' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-earth' );
+				break;
+			case 'user':
+				cp.param['display_name'] = ( cp.param['display_name'] == '' ) ? cp.param['username'] : cp.param['display_name'];
+				
+				if ( cp.param['instance'] == account.instance )
+				{
+					cp.SetTitle( cp.param['display_name'] + ' (' + account.display_name + '@' + account.instance + ')', true );
+				}
+				else
+				{
+					cp.SetTitle( cp.param['display_name'] + '@' + cp.param['instance'] + ' (' + account.display_name + '@' + account.instance + ')', true );
+				}
+
+				cp.SetIcon( 'icon-user' );
+				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
+				
+				break;
+			case 'hashtag':
+				cp.SetTitle( cp.param['hashtag'] + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-hash' );
+				break;
+			case 'notifications':
+				cp.SetTitle( i18nGetMessage( 'i18n_0093' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-bell' );
+
+				cont.find( '.panel_btns' ).find( '.clear_notification' ).show();
+				break;
+
+			case 'favourites':
+				cp.SetTitle( i18nGetMessage( 'i18n_0403' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-star' );
+				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
+				break;
+
+			case 'expand':
+				cp.SetTitle( i18nGetMessage( 'i18n_0404' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetIcon( 'icon-bubbles2' );
+				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
+				break;
+		}
+	};
+
+	///////////////////////////////////////////////////////////////////
 	// ツールバーユーザーの情報を最新に更新
 	///////////////////////////////////////////////////////////////////
 	var UserInfoUpdate = function( users ) {
@@ -540,6 +606,8 @@ Contents.timeline = function( cp )
 		////////////////////////////////////////
 		cont.on( 'account_update', function() {
 			AccountAliveCheck();
+			
+			SetTitle();
 		} );
 
 		////////////////////////////////////////
@@ -623,62 +691,37 @@ Contents.timeline = function( cp )
 		cont.find( '.panel_btns' ).find( '.instance_info' ).hide();
 		cont.find( '.panel_btns' ).find( '.clear_notification' ).hide();
 
-		switch ( cp.param['timeline_type'] )
+		SetTitle();
+
+		/* インスタンス情報 */
+		if ( cp.param['timeline_type'] == 'local' )
 		{
-			case 'home':
-				cp.SetTitle( i18nGetMessage( 'i18n_0152' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
-				cp.SetIcon( 'icon-home' );
-				break;
-			case 'local':
-				cp.SetTitle( i18nGetMessage( 'i18n_0365' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
-				cp.SetIcon( 'icon-users2' );
-				break;
-			case 'media':
-				cp.SetTitle( i18nGetMessage( 'i18n_0007' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
-				cp.SetIcon( 'icon-image2' );
-				break;
-			case 'federated':
-				cp.SetTitle( i18nGetMessage( 'i18n_0366' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
-				cp.SetIcon( 'icon-earth' );
-				break;
-			case 'user':
-				cp.param['display_name'] = ( cp.param['display_name'] == '' ) ? cp.param['username'] : cp.param['display_name'];
-				
-				if ( cp.param['instance'] == account.instance )
-				{
-					cp.SetTitle( cp.param['display_name'] + ' (' + account.display_name + '@' + account.instance + ')', true );
-				}
-				else
-				{
-					cp.SetTitle( cp.param['display_name'] + '@' + cp.param['instance'] + ' (' + account.display_name + '@' + account.instance + ')', true );
-				}
+			$.ajax( {
+				type: 'GET',
+				url: 'https://' + account.instance + '/about/more',
+				dataType: 'html',
+			} ).done( function( data ) {
+				var _j = $( data );
 
-				cp.SetIcon( 'icon-user' );
-				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
-				
-				break;
-			case 'hashtag':
-				cp.SetTitle( cp.param['hashtag'] + ' (' + account.display_name + '@' + account.instance + ')', true );
-				cp.SetIcon( 'icon-hash' );
-				break;
-			case 'notifications':
-				cp.SetTitle( i18nGetMessage( 'i18n_0093' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
-				cp.SetIcon( 'icon-bell' );
+				lines.find( '.instance_info_window .users' ).html( _j.find( '.information-board > .section' ).eq(0).find( '> strong' ).text() );
+				lines.find( '.instance_info_window .statuses' ).html( _j.find( '.information-board > .section' ).eq(1).find( '> strong' ).text() );
 
-				cont.find( '.panel_btns' ).find( '.clear_notification' ).show();
-				break;
-
-			case 'favourites':
-				cp.SetTitle( i18nGetMessage( 'i18n_0403' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
-				cp.SetIcon( 'icon-star' );
-				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
-				break;
-
-			case 'expand':
-				cp.SetTitle( i18nGetMessage( 'i18n_0404' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
-				cp.SetIcon( 'icon-bubbles2' );
-				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
-				break;
+				SendRequest(
+					{
+						method: 'GET',
+						action: 'api_call',
+						instance: account.instance,
+						api: 'instance',
+					},
+					function( res )
+					{
+						if ( res.status === undefined )
+						{
+							lines.find( '.instance_info_window .version' ).html( res.version );
+						}
+					}
+				);
+			} );
 		}
 
 		// タイトルバーに新着件数表示用のバッジを追加
@@ -797,6 +840,13 @@ Contents.timeline = function( cp )
 		} );
 
 		////////////////////////////////////////
+		// インスタンス情報ボタンクリック
+		////////////////////////////////////////
+		lines.find( '.panel_btns' ).find( '.instance_info' ).click( function() {
+			lines.find( '.instance_info_window' ).toggle();
+		} );
+
+		////////////////////////////////////////
 		// 通知消去ボタンクリック
 		////////////////////////////////////////
 		lines.find( '.panel_btns' ).find( '.clear_notification' ).click( function() {
@@ -870,7 +920,6 @@ Contents.timeline = function( cp )
 
 				// mstdn.jp、qiitadon.com対策
 				var streaming_url = {
-					'mstdn.jp': 'streaming.mstdn.jp',
 					'qiitadon.com': 'streaming.qiitadon.com:4000',
 				};
 

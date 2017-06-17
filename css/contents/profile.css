@@ -36,10 +36,15 @@ div.contents.profile .profilebase > div.avatar img {
 
 div.contents.profile .profilebase > div.display_name {
 	line-height: 2rem;
+	-webkit-user-select: auto;
 }
 
 div.contents.profile .profilebase > div.display_name span {
 	font-size: 2rem;
+}
+
+div.contents.profile .profilebase > div.acct {
+	-webkit-user-select: auto;
 }
 
 div.contents.profile .profilebase > div.acct .instance {
@@ -56,6 +61,7 @@ div.contents.profile .profilebase > div.acct .instance {
 
 div.contents.profile .profilebase > div.note div {
 	line-height: 1.5rem;
+	-webkit-user-select: auto;
 }
 
 div.contents.profile .profilebase > div.note div a {

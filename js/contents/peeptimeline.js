@@ -316,6 +316,7 @@ Contents.peeptimeline = function( cp )
 
 		cont.find( '.setting' ).remove();
 		
+		/* インスタンス情報 */
 		$.ajax( {
 			type: 'GET',
 			url: 'https://' + cp.param.instance + '/about/more',
@@ -325,6 +326,22 @@ Contents.peeptimeline = function( cp )
 
 			lines.find( '.instance_info_window .users' ).html( _j.find( '.information-board > .section' ).eq(0).find( '> strong' ).text() );
 			lines.find( '.instance_info_window .statuses' ).html( _j.find( '.information-board > .section' ).eq(1).find( '> strong' ).text() );
+
+			SendRequest(
+				{
+					method: 'GET',
+					action: 'api_call',
+					instance: cp.param.instance,
+					api: 'instance',
+				},
+				function( res )
+				{
+					if ( res.status === undefined )
+					{
+						lines.find( '.instance_info_window .version' ).html( res.version );
+					}
+				}
+			);
 		} );
 
 		// タイムラインを表示

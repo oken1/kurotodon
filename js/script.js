@@ -1528,7 +1528,7 @@ function SendRequest( req, callback )
 			break;
 	
 		case 'api_call':
-			var query = new URLSearchParams();
+			var query = '';
 
 			if ( req.method == 'GET' && req.param )
 			{
@@ -1553,7 +1553,7 @@ function SendRequest( req, callback )
 				url: url,
 				dataType: 'json',
 				type: req.method,
-				data: ( req.method == 'POST' ) ? req.param : {},
+				data: ( req.method == 'POST' || req.method == 'PATCH' ) ? req.param : {},
 				headers: {
 					'Authorization': 'Bearer ' + req.access_token
 				}

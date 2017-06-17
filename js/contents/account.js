@@ -86,7 +86,7 @@ Contents.account = function( cp )
 			{
 				$( '#account_list' ).find( 'div.item[account_id="' + $( '#account_del' ).attr( 'delid' ) + '"]' ).addClass( 'select' );
 				$( '#account_del' ).removeClass( 'disabled' );
-//				$( '#account_setting' ).removeClass( 'disabled' );
+				$( '#account_setting' ).removeClass( 'disabled' );
 				$( '#account_posup' ).removeClass( 'disabled' );
 				$( '#account_posdown' ).removeClass( 'disabled' );
 			}
@@ -101,8 +101,8 @@ Contents.account = function( cp )
 			$( '#account_del' )
 				.attr( 'delid', $( this ).attr( 'account_id' ) )
 				.removeClass( 'disabled' );
-//			$( '#account_setting' )
-//				.removeClass( 'disabled' );
+			$( '#account_setting' )
+				.removeClass( 'disabled' );
 			$( '#account_posup' )
 				.removeClass( 'disabled' );
 			$( '#account_posdown' )
@@ -375,7 +375,7 @@ Contents.account = function( cp )
 
 			if ( pid == null )
 			{
-				var _cp = new CPanel( null, null, 360, 420 );
+				var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
 				_cp.SetType( 'accountset' );
 				_cp.SetParam( {
 					account_id: $( '#account_del' ).attr( 'delid' ),

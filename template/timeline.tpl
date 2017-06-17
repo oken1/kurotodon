@@ -3,10 +3,11 @@
 		<a class='btn img panel_btn timeline_reload icon-redo tooltip' tooltip='(i18n_0218)'></a>
 		<a class='btn img panel_btn clear_notification icon-eraser tooltip' tooltip='(i18n_0390)'></a>
 		<a class='btn img panel_btn instance_info icon-info tooltip' tooltip='(i18n_0014)'></a>
-		{if $type=='peep'}
+		{if $type=='peep'||$type=='local'}
 		<div class='instance_info_window'>
-			<div>(i18n_0010): </span><span class='users'></div>
-			<div>(i18n_0011): </span><span class='statuses'></div>
+			<div><span>(i18n_0010): </span><span class='users'></span></div>
+			<div><span>(i18n_0011): </span><span class='statuses'></span></div>
+			<div><span>Version: </span><span class='version'></span></div>
 		</div>
 		{/if}
 	</div>

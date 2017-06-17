@@ -21,6 +21,10 @@ div.contents.timeline .lines .panel_btns .instance_info_window {
 	padding: 8px;
 }
 
+div.contents.timeline .lines .panel_btns .instance_info_window > div {
+	padding: 4px;
+}
+
 /* Streaming Control */
 div.contents.timeline .lines .panel_btns .streamctl {
 	text-align: right;
