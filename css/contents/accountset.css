@@ -8,12 +8,12 @@ div.contents.accountset {
 	height: 100%;
 }
 
-#avatarchange, #headerchange, #profedit {
+#avatarchange, #headerchange, #profedit, #privacychange {
 	padding: 8px;
 	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
 }
 
-#avatarchange > div, #headerchange > div, #profedit > div {
+#avatarchange > div, #headerchange > div, #profedit > div, #privacychange > div {
 	padding: 4px 8px;
 }
 
@@ -23,7 +23,7 @@ div.contents.accountset {
 
 div.contents.accountset > div > span {
 	display: block;
-	margin-bottom: 6px;
+	margin-bottom: 2px;
 }
 
 #avatarimg, #headerimg {

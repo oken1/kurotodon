@@ -16,11 +16,11 @@
 	<span>(i18n_0020)</span>
 	<div>
 		<div>
-			<img id='avatarimg' src='{$avatar}'>
+			<img id='avatarimg'>
 		</div>
 		<div id='avatarupload_box'>
 			<div id='avataruploadbox_select'>
-				<span class='display_filename'>(i18n_0119)</span><br>
+				<span class='display_filename'>(i18n_0119)</span>
 				<input type='file' id='avatarupload_input' accept='image/jpeg,image/png,image/gif' name='media'>
 			</div>
 			<div id='avataruploadbox_btn'>
@@ -34,11 +34,11 @@
 	<span>(i18n_0021)</span>
 	<div>
 		<div>
-			<img id='headerimg' src='{$header}'>
+			<img id='headerimg'>
 		</div>
 		<div id='headerupload_box'>
 			<div id='headeruploadbox_select'>
-				<span class='display_filename'>(i18n_0119)</span><br>
+				<span class='display_filename'>(i18n_0119)</span>
 				<input type='file' id='headerupload_input' accept='image/jpeg,image/png,image/gif' name='media'>
 			</div>
 			<div id='headeruploadbox_btn'>
@@ -46,5 +46,15 @@
 				<a class='btn uploadbtn' id='headeruploadbtn'>(i18n_0024)</a>
 			</div>
 		</div>
+	</div>
+</div>
+<div id='privacychange'>
+	<span>(i18n_0023)</span>
+	<div>
+		<select id='privacy_select'>
+			<option value='0'>(i18n_0380) ((i18n_0384))
+			<option value='1'>(i18n_0381) ((i18n_0385))
+			<option value='2'>(i18n_0382) ((i18n_0386))
+		</select>
 	</div>
 </div>

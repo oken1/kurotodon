@@ -532,6 +532,7 @@ Contents.account = function( cp )
 				username: '',
 				display_name: '',
 				avatar: '',
+				privacy: '0',
 				notsave: {},
 			};
 

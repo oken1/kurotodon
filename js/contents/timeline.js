@@ -1548,6 +1548,31 @@ Contents.timeline = function( cp )
 		} );
 
 		////////////////////////////////////////
+		// リンクにカーソルを乗せたとき
+		////////////////////////////////////////
+		timeline_list.on( 'mouseenter mouseleave', '> div.item div.toot_text a.anchor.url', function( e ) {
+			var anchor = $( this );
+			var url = anchor.attr( 'href' );
+
+			if ( e.type == 'mouseenter' )
+			{
+				// t.coを展開する
+				if ( url.match( /^https:\/\/t\.co/ ) )
+				{
+					var _xhr = new XMLHttpRequest();
+					_xhr.open( 'GET', url );
+					_xhr.responseType = 'document';
+
+					_xhr.onload = function( e ) {
+						anchor.attr( 'href', _xhr.response.title ).html( _xhr.response.title );
+					};
+
+					_xhr.send();
+				}
+			}
+		} );
+
+		////////////////////////////////////////
 		// カーソルを乗せたとき（ボタン群表示）
 		////////////////////////////////////////
 		timeline_list.on( 'mouseenter mouseleave', '> div.item', function( e ) {

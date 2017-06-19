@@ -52,6 +52,8 @@ Contents.accountset = function( cp )
 					cont.find( '#profname' ).val( res.display_name );
 					cont.find( '#profbio' ).val( $( res.note.replace( /<br \/>/g, '\n' ) ).text() );
 
+					cont.find( '#privacy_select' ).val( account.privacy );
+					
 					////////////////////////////////////////
 					// ファイル選択ボタンクリック処理
 					////////////////////////////////////////
@@ -206,6 +208,13 @@ Contents.accountset = function( cp )
 								cont.find( '#profupdatebtn' ).removeClass( 'disabled' );
 							}
 						);
+					} );
+					
+					////////////////////////////////////////
+					// 公開範囲変更処理
+					////////////////////////////////////////
+					$( '#privacy_select' ).change( function() {
+						g_cmn.account[cp.param.account_id].privacy = $( this ).val();
 					} );
 				}
 				else

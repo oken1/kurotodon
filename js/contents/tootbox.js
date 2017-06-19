@@ -29,6 +29,8 @@ Contents.tootbox = function( cp )
 		cont.find( '.nsfw' ).hide();
 		cont.find( '.pvselect' ).hide();
 
+		SetPrivacy( g_cmn.account[cp.param.account_id].privacy );
+		
 		////////////////////////////////////////
 		// ファイルドロップ時の処理
 		////////////////////////////////////////
@@ -84,8 +86,7 @@ Contents.tootbox = function( cp )
 		var ReplyDelClick = function() {
 			var replyitem = $( this ).parent().parent();
 			var height = replyitem.outerHeight( true );
-			
-			
+
 			replyitem.remove();
 			delete cp.param['reply'];
 			
@@ -263,6 +264,8 @@ Contents.tootbox = function( cp )
 				cont.find( '.nsfw' ).hide();
 
 				cont.find( '.tootreply' ).find( '.replyitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
+
+				SetPrivacy( g_cmn.account[cp.param.account_id].privacy );
 			}
 		} );
 
@@ -474,6 +477,8 @@ Contents.tootbox = function( cp )
 
 						// 返信をクリア
 						cont.find( '.tootreply' ).find( '.replyitem' ).find( '.del' ).find( 'span' ).trigger( 'click' );
+
+						SetPrivacy( g_cmn.account[cp.param.account_id].privacy );
 
 						StatusesCountUpdate( cp.param['account_id'], 1 );
 					}

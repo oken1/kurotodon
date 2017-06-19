@@ -275,6 +275,7 @@ function Init()
 						username: '',
 						display_name: '',
 						avatar: '',
+						privacy: '0',
 						notsave: {},
 					};
 
