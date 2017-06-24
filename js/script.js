@@ -55,6 +55,7 @@ function Init()
 	g_cmn.account = {};
 	g_cmn.toolbar_user = new Array();
 	g_cmn.notsave = {};
+	g_cmn.notsave.instances = {};
 	g_cmn.account_order = new Array();
 	g_cmn.rss_panel = {};
 

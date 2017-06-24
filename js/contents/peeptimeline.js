@@ -145,8 +145,6 @@ Contents.peeptimeline = function( cp )
 							}
 						};
 
-						var items = null;
-
 						switch ( type )
 						{
 							// 初期、更新
@@ -159,8 +157,6 @@ Contents.peeptimeline = function( cp )
 
 								badge.hide().html( '' );
 								$( '#panellist' ).find( '> .lists > div[panel_id=' + cp.id + ']' ).find( 'span.badge' ).hide().html( '' );
-
-								items = timeline_list.find( 'div.item' );
 
 								break;
 							// 新着
@@ -184,7 +180,6 @@ Contents.peeptimeline = function( cp )
 
 									timeline_list.find( '> div.item:lt(' + addcnt + ')' ).addClass( 'new' );
 									newitems = $( timeline_list.find( '> div.item.new' ).get() );
-									items = newitems;
 
 									// 新着件数
 									badge.html( ( newitems.length > 999 ) ? '999+' : newitems.length ).show();
@@ -225,7 +220,6 @@ Contents.peeptimeline = function( cp )
 								timeline_list.find( '.readmore' ).first().remove();
 								$( '#tooltip' ).hide();
 
-								items = timeline_list.find( '> div.item:not(".res"):gt(' + ( itemcnt - 1 ) + ')' );
 								break;
 						}
 					}
@@ -658,6 +652,31 @@ Contents.peeptimeline = function( cp )
 			else
 			{
 				$( '#tooltip' ).hide();
+			}
+		} );
+
+		////////////////////////////////////////
+		// リンクにカーソルを乗せたとき
+		////////////////////////////////////////
+		timeline_list.on( 'mouseenter mouseleave', '> div.item div.toot_text a.anchor.url', function( e ) {
+			var anchor = $( this );
+			var url = anchor.attr( 'href' );
+
+			if ( e.type == 'mouseenter' )
+			{
+				// t.coを展開する
+				if ( url.match( /^https:\/\/t\.co/ ) )
+				{
+					var _xhr = new XMLHttpRequest();
+					_xhr.open( 'GET', url );
+					_xhr.responseType = 'document';
+
+					_xhr.onload = function( e ) {
+						anchor.attr( 'href', _xhr.response.title ).html( _xhr.response.title );
+					};
+
+					_xhr.send();
+				}
 			}
 		} );
 

@@ -379,8 +379,6 @@ Contents.timeline = function( cp )
 
 						UserInfoUpdate( users );
 
-						var items = null;
-
 						switch ( type )
 						{
 							// 初期、更新
@@ -393,8 +391,6 @@ Contents.timeline = function( cp )
 
 								badge.hide().html( '' );
 								$( '#panellist' ).find( '> .lists > div[panel_id=' + cp.id + ']' ).find( 'span.badge' ).hide().html( '' );
-
-								items = timeline_list.find( 'div.item' );
 
 								if ( cp.param.timeline_type == 'expand' )
 								{
@@ -423,7 +419,6 @@ Contents.timeline = function( cp )
 
 									timeline_list.find( '> div.item:lt(' + addcnt + ')' ).addClass( 'new' );
 									newitems = $( timeline_list.find( '> div.item.new' ).get() );
-									items = newitems;
 
 									// 新着件数
 									badge.html( ( newitems.length > 999 ) ? '999+' : newitems.length ).show();
@@ -451,8 +446,6 @@ Contents.timeline = function( cp )
 								break;
 							// もっと読む
 							case 'old':
-								var itemcnt = timeline_list.find( '> div.item:not(".res")' ).length;
-
 								if ( addcnt > 0 )
 								{
 									timeline_list.append( s );
@@ -463,7 +456,6 @@ Contents.timeline = function( cp )
 								timeline_list.find( '.readmore' ).first().remove();
 								$( '#tooltip' ).hide();
 
-								items = timeline_list.find( '> div.item:not(".res"):gt(' + ( itemcnt - 1 ) + ')' );
 								break;
 						}
 					}
@@ -910,82 +902,117 @@ Contents.timeline = function( cp )
 			{
 				return;
 			}
-			
-			// 開始
-			if ( lines.find( '.streamctl > a' ).hasClass( 'off' ) )
-			{
-				SetStreamStatus( 'try' );
 
-				cp.param.streaming = true;
-
-				// mstdn.jp、qiitadon.com対策
-				var streaming_url = {
-					'qiitadon.com': 'streaming.qiitadon.com:4000',
-				};
-
-				var _host = streaming_url[account.instance] || account.instance;
-
-				var api = 'wss://' + _host + '/api/v1/streaming/?access_token=' + account.access_token + '&stream=';
-
-				switch( cp.param.timeline_type )
+			var StreamingConnect = function() {
+				// 開始
+				if ( lines.find( '.streamctl > a' ).hasClass( 'off' ) )
 				{
-					case 'home':
-					case 'notifications':
-						api += 'user';
-						break;
-					case 'local':
-						api += 'public:local';
-						break;
-					case 'media':
-						api += 'public:local';
-						break;
-					case 'federated':
-						api += 'public';
-						break;
-					case 'hashtag':
-						api += 'hashtag&tag=' + encodeURIComponent( cp.param['hashtag'] );
-						break;
-				}
+					SetStreamStatus( 'try' );
 
-				socket = new WebSocket( api );
+					cp.param.streaming = true;
 
-				socket.onopen = function( e ) {
-					SetStreamStatus( 'on' );
-				};
+					var api = g_cmn.notsave.instances[account.instance].streaming_api + '/api/v1/streaming/?access_token=' + account.access_token + '&stream=';
 
-				socket.onmessage = function( e ) {
-					var _json = JSON.parse( e.data );
-
-					var json = {
-						event: _json.event,
-					};
-
-					if ( _json.payload )
+					switch( cp.param.timeline_type )
 					{
-						Object.assign( json, JSON.parse( _json.payload ) );
+						case 'home':
+						case 'notifications':
+							api += 'user';
+							break;
+						case 'local':
+							api += 'public:local';
+							break;
+						case 'media':
+							api += 'public:local';
+							break;
+						case 'federated':
+							api += 'public';
+							break;
+						case 'hashtag':
+							api += 'hashtag&tag=' + encodeURIComponent( cp.param['hashtag'] );
+							break;
 					}
 
-					cont.trigger( 'streaming', [{ action: 'stream_recieved', json: json }] );
-				};
+					socket = new WebSocket( api );
 
-				socket.onerror = function( e ) {
-					console.log( 'socket error' );
-					console.log( e );
-					socket = null;
-					SetStreamStatus( 'off' );
-				};
+					socket.onopen = function( e ) {
+						SetStreamStatus( 'on' );
+					};
 
-				socket.onclose = function( e ) {
-					socket = null;
-					SetStreamStatus( 'off' );
-				};
-			}
-			// 停止
-			else if( $( this ).hasClass( 'on' ) )
+					socket.onmessage = function( e ) {
+						var _json = JSON.parse( e.data );
+
+						var json = {
+							event: _json.event,
+						};
+
+						if ( _json.payload )
+						{
+							if ( json.event == 'update' || json.event == 'notification' )
+							{
+								Object.assign( json, JSON.parse( _json.payload ) );
+							}
+							else if ( json.event == 'delete' )
+							{
+								json.id = _json.payload;
+							}
+						}
+
+						cont.trigger( 'streaming', [{ action: 'stream_recieved', json: json }] );
+					};
+
+					socket.onerror = function( e ) {
+						console.log( 'socket error' );
+						console.log( e );
+						socket = null;
+						SetStreamStatus( 'off' );
+					};
+
+					socket.onclose = function( e ) {
+						socket = null;
+						SetStreamStatus( 'off' );
+					};
+				}
+				// 停止
+				else if( $( this ).hasClass( 'on' ) )
+				{
+					SetStreamStatus( 'try' );
+					cp.param.streaming = false;
+					socket.close();
+				}
+			};
+			
+			// Streamingの接続先をAPIで取得する
+			if ( g_cmn.notsave.instances[account.instance] )
 			{
-				SetStreamStatus( 'try' );
-				cp.param.streaming = false;
-				socket.close();
+				StreamingConnect();
+			}
+			else
+			{
+				SendRequest(
+					{
+						method: 'GET',
+						action: 'api_call',
+						instance: account.instance,
+						api: 'instance',
+					},
+					function( res )
+					{
+						g_cmn.notsave.instances[account.instance] = {
+							streaming_api: 'wss://' + account.instance
+						};
+
+						if ( res.status === undefined )
+						{
+							if ( res.urls )
+							{
+								g_cmn.notsave.instances[account.instance].streaming_api = res.urls.streaming_api;
+							}
+						}
+
+						StreamingConnect();
+					}
+				);
 			}
 		} );
 
@@ -1066,6 +1093,10 @@ Contents.timeline = function( cp )
 					}
 
 					last_status_id = data.json.id;
+				}
+				// トゥート削除
+				else if ( data.json.event == 'delete' )
+				{
 				}
 
 				if ( addcnt > 0 )

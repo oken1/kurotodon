@@ -71,7 +71,7 @@ div.contents.timeline .lines div.item {
 
 /* 詳細表示の元Toot */
 div.contents.timeline .lines div.item.source {
-	filter: brightness(130%);
+	filter: contrast(110%);
 }
 
 /* 新着 */
