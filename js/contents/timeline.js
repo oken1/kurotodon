@@ -974,7 +974,7 @@ Contents.timeline = function( cp )
 					};
 				}
 				// 停止
-				else if( $( this ).hasClass( 'on' ) )
+				else if( lines.find( '.streamctl > a' ).hasClass( 'on' ) )
 				{
 					SetStreamStatus( 'try' );
 					cp.param.streaming = false;
