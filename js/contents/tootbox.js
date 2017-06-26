@@ -29,8 +29,13 @@ Contents.tootbox = function( cp )
 		cont.find( '.nsfw' ).hide();
 		cont.find( '.pvselect' ).hide();
 
-		SetPrivacy( g_cmn.account[cp.param.account_id].privacy );
+		if ( cp.param.account_id == '' )
+		{
+			cp.param.account_id = g_cmn.account_order[0];
+		}
 		
+		SetPrivacy( g_cmn.account[cp.param.account_id].privacy );
+
 		////////////////////////////////////////
 		// ファイルドロップ時の処理
 		////////////////////////////////////////
