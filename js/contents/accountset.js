@@ -250,9 +250,10 @@ Contents.accountset = function( cp )
 		// アカウント情報更新
 		////////////////////////////////////////
 		cont.on( 'account_update', function() {
-			AccountAliveCheck();
-
-			SetTitle();
+			if ( AccountAliveCheck() )
+			{
+				SetTitle();
+			}
 		} );
 
 		////////////////////////////////////////
