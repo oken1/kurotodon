@@ -1059,11 +1059,13 @@ Contents.timeline = function( cp )
 					if ( data.json.event == 'notification' )
 					{
 						var options = {};
+						var show_notification = false;
 
 						if ( data.json.type == 'follow' && cp.param.dn_new_followers )
 						{
 							options.title = data.json.account.display_name + i18nGetMessage( 'i18n_0372' );
 							options.body = '';
+							show_notification = true;
 						}
 						else
 						{
@@ -1074,23 +1076,29 @@ Contents.timeline = function( cp )
 							if ( data.json.type == 'favourite' && cp.param.dn_favourites )
 							{
 								options.title = data.json.account.display_name + i18nGetMessage( 'i18n_0373' );
+								show_notification = true;
 							}
 
 							if ( data.json.type == 'mention' && cp.param.dn_mentions )
 							{
 								options.title = data.json.account.display_name;
+								show_notification = true;
 							}
 
 							if ( data.json.type == 'reblog' && cp.param.dn_boosts )
 							{
 								options.title = data.json.account.display_name + i18nGetMessage( 'i18n_0374' );
+								show_notification = true;
 							}
 						}
 
-						var dn = new Notification( options.title, {
-							body: options.body,
-							icon: ImageURLConvert( data.json.account.avatar, data.json.account.acct, g_cmn.account[cp.param.account_id].instance ),
-						} );
+						if ( show_notification )
+						{
+							var dn = new Notification( options.title, {
+								body: options.body,
+								icon: ImageURLConvert( data.json.account.avatar, data.json.account.acct, g_cmn.account[cp.param.account_id].instance ),
+							} );
+						}
 					}
 
 					last_status_id = data.json.id;
