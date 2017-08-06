@@ -696,8 +696,8 @@ Contents.timeline = function( cp )
 			} ).done( function( data ) {
 				var _j = $( data );
 
-				lines.find( '.instance_info_window .users' ).html( _j.find( '.information-board > .section' ).eq(0).find( '> strong' ).text() );
-				lines.find( '.instance_info_window .statuses' ).html( _j.find( '.information-board > .section' ).eq(1).find( '> strong' ).text() );
+				lines.find( '.instance_info_window .users' ).html( _j.find( '.information-board .section' ).eq(0).find( '> strong' ).text() );
+				lines.find( '.instance_info_window .statuses' ).html( _j.find( '.information-board .section' ).eq(1).find( '> strong' ).text() );
 
 				SendRequest(
 					{
