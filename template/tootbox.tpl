@@ -11,6 +11,7 @@
 		</div>
 		<div class='buttons'>
 			<span class='nsfw'><input type='checkbox'>NSFW</span>
+			<a class='btn tooltip eventbtn' tooltip='(i18n_9997)'>(i18n_9998)</a>
 			<a class='btn img icon-camera tooltip imageattach' tooltip='(i18n_0201)'></a>
 			<a class='btn img icon-earth tooltip privacy' tooltip='(i18n_0377)'></a>
 			<div class='pvselect'>

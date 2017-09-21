@@ -1979,6 +1979,17 @@ function i18nGetMessage( id, options )
 ////////////////////////////////////////////////////////////////////////////////
 function ConvertContent( content, json )
 {
+	// カスタム絵文字（仮）
+	if ( json.emojis )
+	{
+		for ( var i = 0 ; i < json.emojis.length ; i++ )
+		{
+			var shortcode = ':' + json.emojis[i].shortcode + ':';
+			content = content.replace( new RegExp( shortcode, 'g' ),
+						'<img class="customemoji" alt="' + shortcode + '" title="' + shortcode + '" src="' + json.emojis[i].url + '">' );
+		}
+	}
+
 	var _jq = $( '<div>' + content + '</div>' );
 
 	// @userを置き換える

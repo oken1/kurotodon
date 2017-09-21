@@ -2,6 +2,9 @@
 	<div class='avatar'>
 		<img src='{$avatar}'>
 	</div>
+	<div class='followed_by'>
+		<span>(i18n_0410)</span>
+	</div>
 	<div class='display_name'>
 		<span>{$display_name}</span>
 	</div>

@@ -34,6 +34,11 @@ div.contents.profile .profilebase > div.avatar img {
 	width: 30%;
 }
 
+div.contents.profile .profilebase > div.followed_by {
+	background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8));
+	display: block;
+}
+
 div.contents.profile .profilebase > div.display_name {
 	line-height: 2rem;
 	-webkit-user-select: auto;

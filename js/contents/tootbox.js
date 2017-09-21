@@ -500,6 +500,89 @@ Contents.tootbox = function( cp )
 			e.stopPropagation();
 		} );
 
+		////////////////////////////////////////
+		// イベント用ボタン処理
+		////////////////////////////////////////
+		cont.find( '.eventbtn' ).hide();
+
+		var laputa_check = function() {
+			var dt = new Date();
+
+			var stdt = new Date( '2017/09/29 21:00:00' );
+			var eddt = new Date( '2017/09/29 23:34:00' );
+
+			if ( i18nGetMessage( 'i18n_9998' ) == "" )
+			{
+				return;
+			}
+
+			if ( dt.getTime() >= stdt.getTime() && dt.getTime() <= eddt.getTime() )
+			{
+				cont.find( '.eventbtn' ).show();
+			}
+			else
+			{
+				cont.find( '.eventbtn' ).hide();
+			}
+
+			if ( dt.getTime() <= eddt.getTime() )
+			{
+				setTimeout( laputa_check, 60 * 1000 );
+			}
+		};
+
+		laputa_check();
+
+		cont.find( '.eventbtn' ).click( function( e ) {
+
+			// disabledなら処理しない
+			if ( $( this ).hasClass( 'disabled' ) || i18nGetMessage( 'i18n_9998' ) == '' )
+			{
+				return;
+			}
+
+			$( this ).addClass( 'disabled' );
+
+			var data = {};
+			var status = i18nGetMessage( 'i18n_9998' );
+
+			data['status'] = status;
+
+			var param = {
+				status: i18nGetMessage( 'i18n_9998' ),
+				media_ids: [],
+				visibility: 'public',
+			}
+
+			Loading( true, 'eventtoot' );
+
+			SendRequest(
+				{
+					method: 'POST',
+					action: 'api_call',
+					instance: g_cmn.account[cp.param['account_id']].instance,
+					api: 'statuses',
+					access_token: g_cmn.account[cp.param['account_id']].access_token,
+					param: param
+				},
+				function( res )
+				{
+					if ( res.status === undefined )
+					{
+						StatusesCountUpdate( cp.param['account_id'], 1 );
+					}
+					else
+					{
+						ApiError( res );
+					}
+					
+					Loading( false, 'eventtoot' );
+				}
+			);
+
+			e.stopPropagation();
+		} );
+
 		var tootbox_text = cont.find( '.text' );
 
 		////////////////////////////////////////
@@ -511,6 +594,7 @@ Contents.tootbox = function( cp )
 
 
 //////// 仮 /////////////////////////////////////////////////////////////////
+
 			var val = tootbox_text.val();
 			var slen = val.length;
 

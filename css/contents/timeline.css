@@ -348,6 +348,11 @@ div.contents.timeline .lines div.item > .toot > .toot_text.notification img {
 	display: none;
 }
 
+/* カスタム絵文字 */
+div.contents.timeline .lines div.item > .toot > .toot_text img.customemoji {
+	width: 1rem;
+	height: 1rem;
+}
 
 /* トゥート内リンク */
 div.contents.timeline .lines div.item > .toot > .toot_text .anchor {

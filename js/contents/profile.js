@@ -230,6 +230,11 @@ Contents.profile = function( cp )
 						{
 							if ( res.status === undefined )
 							{
+								if ( !res[0].followed_by )
+								{
+									cont.find( '.profilebase' ).find( '.followed_by' ).hide();
+								}
+								
 								cont.find( '.profilebase' ).append( OutputTPL( 'profile_relationships',
 									{
 										following: res[0].following,
