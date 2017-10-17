@@ -96,8 +96,7 @@ function Init()
 	} ).done( function( data ) {
 		manifest = data;
 
-		$( '#main' ).append( '<div id="version"><a class="anchor" href="http://www.jstwi.com/kurotodon/" rel="nofollow noopener noreferrer" target="_blank">' +
-			manifest.name + ' version ' + manifest.version + '</a></div>' );
+		$( '#main' ).append( '<div id="version">' + manifest.name + ' version ' + manifest.version + '</div>' );
 	} );
 
 	Blackout( true );
@@ -199,10 +198,7 @@ function Init()
 				{
 					if ( g_cmn.current_version != manifest.version )
 					{
-						MessageBox( i18nGetMessage( 'i18n_0345', [g_cmn.current_version, manifest.version] ) +
-							'<br><br>' +
-							'<a class="anchor" href="http://www.jstwi.com/kurotodon/update.html" rel="nofollow noopener noreferrer" target="_blank">http://www.jstwi.com/kurotodon/update.html</a>',
-							5 * 1000 );
+						MessageBox( i18nGetMessage( 'i18n_0345', [g_cmn.current_version, manifest.version] ), 5 * 1000 );
 					}
 				}
 
@@ -354,24 +350,35 @@ function Init()
 		}
 		else
 		{
-			g_loaded = true;
-
 			// 初回起動
 
-			// 言語ファイル設定
-			SetLocaleFile();
-
-			// ツールバー
-			$( '#head' ).html( OutputTPL( 'header', {} ) );
-			$( '#head' ).find( '.header_sub' ).hide();
+			Blackout( false );
+			Loading( false, 'loaddata' );
 
 			// フォントサイズ
 			SetFont();
 
-			// アカウント画面を開く
-			Blackout( false );
-			Loading( false, 'loaddata' );
-			$( '#head_account' ).trigger( 'click' );
+			// 言語選択
+			$( '#main' ).html( OutputTPL( 'select_locale', {} ) );
+			$( '#select_locale' ).find( 'select' ).val( g_cmn.cmn_param['locale'] );
+
+			$( '#select_locale' ).find( '.btn' ).on( 'click', function() {
+				g_cmn.cmn_param['locale'] = $( '#select_locale' ).find( 'select' ).val();
+
+				g_loaded = true;
+
+				// 言語ファイル設定
+				SetLocaleFile();
+
+				$( '#select_locale' ).remove();
+
+				// ツールバー
+				$( '#head' ).html( OutputTPL( 'header', {} ) );
+				$( '#head' ).find( '.header_sub' ).hide();
+
+				// アカウント画面を開く
+				$( '#head_account' ).trigger( 'click' );
+			} );
 		}
 
 		// 設定/状態保存の定期実行
@@ -676,7 +683,7 @@ function Init()
 			{
 				
 				$( 'panel' ).find( 'div.contents.image' ).trigger( 'keyevent', [e] );
-				return false;
+				return;
 			}
 		}
 
@@ -1987,6 +1994,17 @@ function ConvertContent( content, json )
 			var shortcode = ':' + json.emojis[i].shortcode + ':';
 			content = content.replace( new RegExp( shortcode, 'g' ),
 						'<img class="customemoji" alt="' + shortcode + '" title="' + shortcode + '" src="' + json.emojis[i].url + '">' );
+		}
+	}
+
+	// friends.nicoのユーザープロフィール絵文字（仮）
+	if ( json.profile_emojis )
+	{
+		for ( var i = 0 ; i < json.profile_emojis.length ; i++ )
+		{
+			var shortcode = ':@' + json.profile_emojis[i].shortcode + ':';
+			content = content.replace( new RegExp( shortcode, 'g' ),
+						'<img class="customemoji" alt="' + shortcode + '" title="' + shortcode + '" src="' + json.profile_emojis[i].url + '">' );
 		}
 	}
 

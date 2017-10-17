@@ -902,3 +902,18 @@ img.ui-draggable {
 	width: 32px;
 	height: 32px;
 }
+
+/* 初回言語選択 */
+
+#select_locale {
+	display: table;
+	position: relative;
+	margin: 0 auto;
+	top: 50%;
+}
+
+#select_locale > div {
+	display: table-cell;
+	vertical-align: middle;
+	padding: 0 4px;
+}
