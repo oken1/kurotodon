@@ -1388,7 +1388,7 @@ Contents.timeline = function( cp )
 					_cp.SetType( 'tootbox' );
 					_cp.SetParam( { account_id: cp.param['account_id'] } );
 					_cp.Start( function() {
-						$( '#' + pid ).find( 'div.contents' ).trigger( 'setreply', [ cp.param['account_id'], item.attr( 'status_id' ) ] );
+						$( '#' + _cp.id ).find( 'div.contents' ).trigger( 'setreply', [ cp.param['account_id'], item.attr( 'status_id' ) ] );
 					} );
 				}
 				else
