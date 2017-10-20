@@ -60,7 +60,7 @@ div.contents.users {
 
 .users_list div.item .container .names .display_name,
 .users_list div.item .container .names .username {
-	-webkit-user-select: auto;
+	user-select: text;
 }
 
 .users_list div.item .container .names .display_name {

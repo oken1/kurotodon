@@ -13,7 +13,7 @@ body {
 	height: 100%;
 	line-height: 1.2rem;
 	overflow: auto;
-	-webkit-user-select: none;
+	user-select: none;
 
 	background-color: #303434;	/* color set: 全体のBG */
 	color: #ffffff;	/* color set: 全体のフォント */

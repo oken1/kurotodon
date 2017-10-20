@@ -42,7 +42,7 @@ div.contents.rss .rss_list .item .title {
 
 div.contents.rss .rss_list .item .title .anchor {
 	font-weight: bold;
-	-webkit-user-select: auto;
+	user-select: text;
 	color: #ffffff;	/* color set: 全体のフォント */
 }
 
