@@ -48,6 +48,11 @@ div.contents.profile .profilebase > div.display_name span {
 	font-size: 2rem;
 }
 
+div.contents.profile .profilebase > div.display_name img {
+	width: 2rem;
+	height: 2rem;
+}
+
 div.contents.profile .profilebase > div.acct {
 	user-select: text;
 }

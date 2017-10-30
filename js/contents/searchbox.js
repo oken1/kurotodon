@@ -90,10 +90,11 @@ Contents.searchbox = function( cp )
 						for ( var i = 0 ; i < res.accounts.length ; i++ )
 						{
 							var instance = GetInstanceFromAcct( res.accounts[i].acct, g_cmn.account[cp.param.account_id].instance );
-							
+
 							items.push( {
 								avatar: ImageURLConvert( res.accounts[i].avatar, res.accounts[i].acct, g_cmn.account[cp.param.account_id].instance ),
-								display_name: ( res.accounts[i].display_name ) ? res.accounts[i].display_name : res.accounts[i].username,
+								display_name_disp: ConvertDisplayName( res.accounts[i].display_name, res.accounts[i].username ),
+								display_name: res.accounts[i].display_name,
 								username: res.accounts[i].username,
 								instance: instance,
 								id: res.accounts[i].id,

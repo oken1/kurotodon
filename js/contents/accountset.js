@@ -15,9 +15,10 @@ Contents.accountset = function( cp )
 	////////////////////////////////////////////////////////////
 	var SetTitle = function() {
 		var account = g_cmn.account[cp.param.account_id];
-		cp.SetTitle( i18nGetMessage( 'i18n_0047' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
+		var open_acc = ConvertDisplayName( account.display_name, account.username );
+		cp.SetTitle( i18nGetMessage( 'i18n_0047' ) + ' (' + open_acc + '@' + account.instance + ')', false );
 	};
-	
+
 	////////////////////////////////////////////////////////////
 	// 初期入力値設定
 	////////////////////////////////////////////////////////////

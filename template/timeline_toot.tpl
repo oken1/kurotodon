@@ -11,6 +11,7 @@
 				<img src='{$bt_avatar}' class='bt_avatar'>
 				</div>
 			{/if}
+			{if $visibility=='unlisted'}<span class='icon-unlocked'></span>{/if}
 			{if $visibility=='private'}<span class='icon-lock'></span>{/if}
 			{if $visibility=='direct'}<span class='icon-envelope'></span>{/if}
 		{/if}
@@ -18,13 +19,13 @@
 	<div class='toot'>
 		{if $notification->type=='favourite'||$notification->type=='reblog'}
 			<div class='notification' id='{$notification->id}' username='{$notification->username}' display_name='{$notification->display_name}' instance='{$notification->instance}'>
-				{if $notification->type=='favourite'}<span class='display_name'>{$notification->display_name}</span>(i18n_0373){/if}
-				{if $notification->type=='reblog'}<span class='display_name'>{$notification->display_name}</span>(i18n_0374){/if}
+				{if $notification->type=='favourite'}<span class='display_name'>{$notification->display_name_disp}</span>(i18n_0373){/if}
+				{if $notification->type=='reblog'}<span class='display_name'>{$notification->display_name_disp}</span>(i18n_0374){/if}
 			</div>
 		{else}
 			<div class='headcontainer'>
 				<div class='namedate'>
-					<span class='display_name'>{if $display_name}{$display_name}{else}{$username}{/if}</span> <span class='username'>@{$acct}</span>
+					<span class='display_name'>{$display_name_disp}</span> <span class='username'>@{$acct}</span>
 
 					<br>
 					<span class='date tooltip' tooltip='{$date}'><a href='{$url}' rel="nofollow noopener noreferrer" target='_blank' class='anchor'>{$dispdate}</a></span>

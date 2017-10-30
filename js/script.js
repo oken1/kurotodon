@@ -773,7 +773,7 @@ $( document ).on( 'mouseenter mouseleave', '.tooltip', function( e ) {
 			return;
 		}
 
-		$( '#tooltip' ).css( { left: 0, top: 0, width: 'auto' } ).text( tip );
+		$( '#tooltip' ).css( { left: 0, top: 0, width: 'auto' } ).html( tip );
 
 		var l, t, w;
 		l = $( this ).offset().left + $( this ).outerWidth();
@@ -937,6 +937,7 @@ function AccountSelectMake( cp )
 	var item = {
 		account_id: cp.param['account_id'],
 		avatar: g_cmn.account[cp.param['account_id']].avatar,
+		display_name_disp: ConvertDisplayName( g_cmn.account[cp.param['account_id']].display_name, g_cmn.account[cp.param['account_id']].username ),
 		display_name: g_cmn.account[cp.param['account_id']].display_name,
 		instance: g_cmn.account[cp.param['account_id']].instance,
 	};
@@ -965,6 +966,7 @@ function AccountSelectMake( cp )
 		id = g_cmn.account_order[i];
 
 		items.push( {
+			display_name_disp: ConvertDisplayName( g_cmn.account[id]['display_name'], g_cmn.account[id]['username'] ),
 			display_name: g_cmn.account[id]['display_name'],
 			avatar: g_cmn.account[id]['avatar'],
 			account_id: id,
@@ -1080,7 +1082,8 @@ function MakeTimeline( json, cp )
 			type: json.type,
 			id: json.account.id,
 			username: json.account.username,
-			display_name: ( json.account.display_name ) ? json.account.display_name : json.account.username,
+			display_name: json.account.display_name,
+			display_name_disp: ConvertDisplayName( json.account.display_name, json.account.username ),
 			instance: GetInstanceFromAcct( json.account.acct, g_cmn.account[account_id].instance ),
 		};
 
@@ -1091,6 +1094,7 @@ function MakeTimeline( json, cp )
 				instance: GetInstanceFromAcct( json.account.acct, g_cmn.account[account_id].instance ),
 				id: json.account.id,
 				display_name: json.account.display_name,
+				display_name_disp: ConvertDisplayName( json.account.display_name, json.account.username ),
 				avatar: ImageURLConvert( json.account.avatar, json.account.acct, g_cmn.account[account_id].instance ),
 				username: json.account.username,
 				status_id: json.id,
@@ -1110,6 +1114,7 @@ function MakeTimeline( json, cp )
 	var bt_id = json.account.id;
 	var bt_instance = GetInstanceFromAcct( json.account.acct, g_cmn.account[account_id].instance );
 	var bt_display_name = json.account.display_name;
+	var bt_display_name_disp = ConvertDisplayName( json.account.display_name, json.account.username );
 	var bt_username = json.account.username;
 	var bt_avatar = ImageURLConvert( json.account.avatar, json.account.acct, g_cmn.account[account_id].instance );
 
@@ -1131,6 +1136,17 @@ function MakeTimeline( json, cp )
 		json.sensitive = false;
 	}
 
+	// CWのカスタム絵文字
+	if ( json.emojis )
+	{
+		for ( var i = 0 ; i < json.emojis.length ; i++ )
+		{
+			var shortcode = ':' + json.emojis[i].shortcode + ':';
+			json.spoiler_text = json.spoiler_text.replace( new RegExp( shortcode, 'g' ),
+						'<img class="emoji" alt="' + shortcode + '" title="' + shortcode + '" src="' + json.emojis[i].url + '">' );
+		}
+	}
+
 	var assign = {
 		id: json.account.id,
 		status_id: json.id,
@@ -1146,13 +1162,15 @@ function MakeTimeline( json, cp )
 		bt_id: bt_id,
 		bt_instance: bt_instance,
 		bt_display_name: bt_display_name,
+		bt_display_name_disp: bt_display_name_disp,
 		bt_username: bt_username,
 		bt_avatar: bt_avatar,
 
 		mytoot: ( !bt_flg && instance == g_cmn.account[account_id].instance && json.account.id == g_cmn.account[account_id].id ),
 		visibility: json.visibility,
-		
+
 		display_name: json.account.display_name,
+		display_name_disp : ConvertDisplayName( json.account.display_name, json.account.username ),
 		username: json.account.username,
 		instance: instance,
 		acct: json.account.acct,
@@ -1164,8 +1182,8 @@ function MakeTimeline( json, cp )
 		date: DateConv( json.created_at, 0 ),
 		dispdate: DateConv( json.created_at, 3 ),
 
-		spoiler_text: json.spoiler_text,
-		text: ConvertContent( json.content, json ),
+		spoiler_text: twemoji.parse( json.spoiler_text ),
+		text: twemoji.parse( ConvertContent( json.content, json ) ),
 
 		url : json.url,
 
@@ -1701,6 +1719,7 @@ function UpdateToolbarUser()
 			avatar: g_cmn.toolbar_user[i].avatar,
 			display_name: g_cmn.toolbar_user[i].display_name,
 			username: g_cmn.toolbar_user[i].username,
+			display_name_disp: ConvertDisplayName( g_cmn.toolbar_user[i].display_name, g_cmn.toolbar_user[i].username ),
 			id: g_cmn.toolbar_user[i].id,
 			instance: g_cmn.toolbar_user[i].instance,
 			type: g_cmn.toolbar_user[i].type,
@@ -1885,7 +1904,7 @@ $( document ).on( 'panellist_changed', function( e ) {
 
 		items.push( {
 			icon: icon,
-			title: g_cmn.panel[i].title,
+			title: twemoji.parse( g_cmn.panel[i].title ),
 			panel_id: g_cmn.panel[i].id,
 			badge: badge
 		} );
@@ -1993,7 +2012,7 @@ function ConvertContent( content, json )
 		{
 			var shortcode = ':' + json.emojis[i].shortcode + ':';
 			content = content.replace( new RegExp( shortcode, 'g' ),
-						'<img class="customemoji" alt="' + shortcode + '" title="' + shortcode + '" src="' + json.emojis[i].url + '">' );
+						'<img class="emoji" alt="' + shortcode + '" title="' + shortcode + '" src="' + json.emojis[i].url + '">' );
 		}
 	}
 
@@ -2004,7 +2023,7 @@ function ConvertContent( content, json )
 		{
 			var shortcode = ':@' + json.profile_emojis[i].shortcode + ':';
 			content = content.replace( new RegExp( shortcode, 'g' ),
-						'<img class="customemoji" alt="' + shortcode + '" title="' + shortcode + '" src="' + json.profile_emojis[i].url + '">' );
+						'<img class="emoji" alt="' + shortcode + '" title="' + shortcode + '" src="' + json.profile_emojis[i].url + '">' );
 		}
 	}
 
@@ -2270,6 +2289,23 @@ function OpenUserProfile( id, instance, account_id )
 	}
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// display_nameを表示用に変換
+////////////////////////////////////////////////////////////////////////////////
+function ConvertDisplayName( display_name, username )
+{
+	if ( display_name )
+	{
+		return twemoji.parse( escapeHTML( display_name ) );
+	}
+	else
+	{
+		return username;
+	}
+}
+
+var loading_queue = {};
 
 ////////////////////////////////////////////////////////////////////////////////
 // トゥート数表示の更新

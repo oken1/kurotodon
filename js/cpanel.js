@@ -443,7 +443,7 @@ var CPanel = function ( x, y, w, h, id, minimum, zindex, status, startflg )
 		var titlebar = p.find( 'div.titlebar' );
 		var titlediv = titlebar.find( '.title .name' );
 
-		titlediv.text( title );
+		titlediv.html( title );
 
 		// バッジを隠す"
 		titlebar.find( '.badge' ).hide();

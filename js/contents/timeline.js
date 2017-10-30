@@ -30,36 +30,37 @@ Contents.timeline = function( cp )
 	///////////////////////////////////////////////////////////////////
 	var SetTitle = function( users ) {
 		var account = g_cmn.account[cp.param['account_id']];
+		var open_acc = ConvertDisplayName( account.display_name, account.username );
 
 		switch ( cp.param['timeline_type'] )
 		{
 			case 'home':
-				cp.SetTitle( i18nGetMessage( 'i18n_0152' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetTitle( i18nGetMessage( 'i18n_0152' ) + ' (' + open_acc + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-home' );
 				break;
 			case 'local':
-				cp.SetTitle( i18nGetMessage( 'i18n_0365' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetTitle( i18nGetMessage( 'i18n_0365' ) + ' (' + open_acc + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-users2' );
 				cont.find( '.panel_btns' ).find( '.instance_info' ).show();
 				break;
 			case 'media':
-				cp.SetTitle( i18nGetMessage( 'i18n_0007' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetTitle( i18nGetMessage( 'i18n_0007' ) + ' (' + open_acc + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-image2' );
 				break;
 			case 'federated':
-				cp.SetTitle( i18nGetMessage( 'i18n_0366' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetTitle( i18nGetMessage( 'i18n_0366' ) + ' (' + open_acc + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-earth' );
 				break;
 			case 'user':
-				cp.param['display_name'] = ( cp.param['display_name'] == '' ) ? cp.param['username'] : cp.param['display_name'];
-				
+				var display_name_disp = ConvertDisplayName( cp.param.display_name, cp.param.username );
+
 				if ( cp.param['instance'] == account.instance )
 				{
-					cp.SetTitle( cp.param['display_name'] + ' (' + account.display_name + '@' + account.instance + ')', true );
+					cp.SetTitle( display_name_disp + ' (' + open_acc + '@' + account.instance + ')', true );
 				}
 				else
 				{
-					cp.SetTitle( cp.param['display_name'] + '@' + cp.param['instance'] + ' (' + account.display_name + '@' + account.instance + ')', true );
+					cp.SetTitle( display_name_disp + '@' + cp.param['instance'] + ' (' + open_acc + '@' + account.instance + ')', true );
 				}
 
 				cp.SetIcon( 'icon-user' );
@@ -67,24 +68,24 @@ Contents.timeline = function( cp )
 				
 				break;
 			case 'hashtag':
-				cp.SetTitle( cp.param['hashtag'] + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetTitle( cp.param['hashtag'] + ' (' + open_acc + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-hash' );
 				break;
 			case 'notifications':
-				cp.SetTitle( i18nGetMessage( 'i18n_0093' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetTitle( i18nGetMessage( 'i18n_0093' ) + ' (' + open_acc + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-bell' );
 
 				cont.find( '.panel_btns' ).find( '.clear_notification' ).show();
 				break;
 
 			case 'favourites':
-				cp.SetTitle( i18nGetMessage( 'i18n_0403' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetTitle( i18nGetMessage( 'i18n_0403' ) + ' (' + open_acc + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-star' );
 				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
 				break;
 
 			case 'expand':
-				cp.SetTitle( i18nGetMessage( 'i18n_0404' ) + ' (' + account.display_name + '@' + account.instance + ')', true );
+				cp.SetTitle( i18nGetMessage( 'i18n_0404' ) + ' (' + open_acc + '@' + account.instance + ')', true );
 				cp.SetIcon( 'icon-bubbles2' );
 				cont.find( '.panel_btns' ).find( '.streamctl' ).hide();
 				break;
@@ -1106,6 +1107,7 @@ Contents.timeline = function( cp )
 				// トゥート削除
 				else if ( data.json.event == 'delete' )
 				{
+					$( '.timeline_list' ).find( '.item[status_id=' + data.json.id +']' ).addClass( 'deleted' );
 				}
 
 				if ( addcnt > 0 )
@@ -1164,20 +1166,12 @@ Contents.timeline = function( cp )
 			////////////////////////////////////////
 			// 名前クリック
 			////////////////////////////////////////
-			if ( targ.hasClass( 'username' ) || targ.hasClass( 'display_name' ) )
+			if ( targ.hasClass( 'username' ) || targ.hasClass( 'display_name' ) || ptarg.hasClass( 'display_name' ) )
 			{
-				if ( ptarg.hasClass( 'notification' ) )
-				{
-					OpenUserTimeline( cp.param['account_id'], ptarg.attr( 'id' ), ptarg.attr( 'username' ),
-						ptarg.attr( 'display_name' ), ptarg.attr( 'instance' ) );
-				}
-				else
-				{
-					var item = targ.closest( '.item' );
+				var item = targ.closest( ( ptarg.hasClass( 'notification' ) || ptarg.parent().hasClass( 'notification' ) ) ? '.notification' : '.item' );
 
-					OpenUserTimeline( cp.param['account_id'], item.attr( 'id' ), item.attr( 'username' ),
-						item.attr( 'display_name' ), item.attr( 'instance' ) );
-				}
+				OpenUserTimeline( cp.param['account_id'], item.attr( 'id' ), item.attr( 'username' ),
+					item.attr( 'display_name' ), item.attr( 'instance' ) );
 			}
 			////////////////////////////////////////
 			// アイコンクリック

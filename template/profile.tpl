@@ -6,7 +6,7 @@
 		<span>(i18n_0410)</span>
 	</div>
 	<div class='display_name'>
-		<span>{$display_name}</span>
+		<span>{$display_name_disp}</span>
 	</div>
 	<div class='acct'>
 		<span>@{$username}</span><span class='instance' instance='{$instance}'>@{$instance}</span><span> (ID:{$id})</span>

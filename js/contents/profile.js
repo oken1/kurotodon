@@ -15,15 +15,19 @@ Contents.profile = function( cp )
 	// タイトル設定
 	////////////////////////////////////////////////////////////
 	var SetTitle = function() {
+		var open_acc = ConvertDisplayName( g_cmn.account[cp.param['account_id']].display_name, g_cmn.account[cp.param['account_id']].username );
+
 		if ( profile != null )
 		{
-			cp.SetTitle( profile.display_name + ' ' + i18nGetMessage( 'i18n_0107' ) + 
-				'(' + g_cmn.account[cp.param['account_id']].display_name + '@' + g_cmn.account[cp.param['account_id']].instance + ')', false );
+			var display_name = ConvertDisplayName( profile.display_name, profile.username );
+
+			cp.SetTitle( display_name + ' ' + i18nGetMessage( 'i18n_0107' ) + 
+				'(' + open_acc + '@' + g_cmn.account[cp.param['account_id']].instance + ')', false );
 		}
 		else
 		{
 			cp.SetTitle( i18nGetMessage( 'i18n_0107' ) + 
-				'(' + g_cmn.account[cp.param['account_id']].display_name + '@' + g_cmn.account[cp.param['account_id']].instance + ')', false );
+				'(' + open_acc + '@' + g_cmn.account[cp.param['account_id']].instance + ')', false );
 		}
 	};
 
@@ -61,13 +65,15 @@ Contents.profile = function( cp )
 									cr.substring( 0, 4 ), cr.substring( 5, 7 ), cr.substring( 8, 10 ) ) );
 
 					var myaccount = ( g_cmn.account[cp.param.account_id].id == res.id );
-
+					var display_name_disp = ConvertDisplayName( res.display_name, res.username );
+					
 					cont.html( OutputTPL( 'profile',
 						{
 							id: res.id,
 							avatar: ImageURLConvert( res.avatar, res.acct, g_cmn.account[cp.param.account_id].instance ),
 							display_name: res.display_name,
 							username: res.username,
+							display_name_disp: display_name_disp,
 							instance: GetInstanceFromAcct( res.acct, g_cmn.account[cp.param.account_id].instance ),
 							note: res.note,
 							day: compdate,
@@ -198,14 +204,14 @@ Contents.profile = function( cp )
 							var _cp = new CPanel( null, null, g_defwidth, g_defheight_l );
 							_cp.SetType( 'users' );
 
-							var display_name = ( res.display_name ) ? res.display_name : res.username;
+							var display_name_disp = ConvertDisplayName( res.display_name, res.username );
 
 							_cp.SetParam( {
 								account_id: cp.param.account_id,
 								users_type: users_type,
 								id: res.id,
 								instance: GetInstanceFromAcct( res.acct, g_cmn.account[cp.param.account_id].instance ),
-								display_name: display_name,
+								display_name: display_name_disp,
 							} );
 							_cp.Start();
 						}

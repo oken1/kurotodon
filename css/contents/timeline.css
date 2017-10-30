@@ -328,7 +328,9 @@ div.contents.timeline .lines div.item > .toot > .spoiler_text > .showmore_button
 
 /* トゥート */
 div.contents.timeline .lines div.item > .toot > .toot_text {
-	line-height: 1.4rem;
+	--toot-text-line-height: 1.3rem;
+
+	line-height: var(--toot-text-line-height);
 	user-select: text;
 	word-break: break-word;
 	white-space: pre-wrap;
@@ -340,18 +342,18 @@ div.contents.timeline .lines div.item > .toot > .toot_text.off {
 
 div.contents.timeline .lines div.item > .toot > .toot_text.notification {
 	opacity: 0.5;
-	font-size: 0.9rem;
-	line-height: 1.3rem;
 }
 
-div.contents.timeline .lines div.item > .toot > .toot_text.notification img {
+div.contents.timeline .lines div.item > .toot > .toot_text.notification img:not(.emoji) {
 	display: none;
 }
 
-/* カスタム絵文字 */
-div.contents.timeline .lines div.item > .toot > .toot_text img.customemoji {
-	width: 1rem;
-	height: 1rem;
+/* 絵文字 */
+div.contents.timeline .lines div.item > .toot > .toot_text img.emoji {
+	width: var(--toot-text-line-height);
+	height: var(--toot-text-line-height);
+	margin: 0 0;
+	vertical-align: bottom;
 }
 
 /* トゥート内リンク */
@@ -376,7 +378,7 @@ div.contents.timeline .lines div.item > .toot > .toot_text code.inline {
 }
 
 div.contents.timeline .lines div.item > .toot > .toot_text.notification p {
-	padding: 0.2rem 0;
+	padding: 0.3rem 0;
 }
 
 div.contents.timeline .lines div.item > .toot > .toot_text p:last-child {

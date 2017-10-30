@@ -61,6 +61,7 @@ Contents.account = function( cp )
 			items.push( {
 				id: g_cmn.account[id].id,
 				instance: g_cmn.account[id].instance,
+				display_name_disp: ConvertDisplayName( g_cmn.account[id].display_name, g_cmn.account[id].username ),
 				display_name: g_cmn.account[id].display_name,
 				avatar: g_cmn.account[id].avatar,
 				statuses_count: g_cmn.account[id].notsave.statuses_count,

@@ -4,7 +4,7 @@
 	},
 
 	"i18n_0001": {
-		"message": "{$$bt_display_name} boosted"
+		"message": "{$$bt_display_name_disp} boosted"
 	},
 
 	"i18n_0002": {

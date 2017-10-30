@@ -4,7 +4,7 @@
 			<img src='{$item->avatar}'>
 		</div>
 		<div class='name'>
-			<div><span class='account_display_name'>{$item->display_name}</span></div>
+			<div><span class='account_display_name'>{$item->display_name_disp}</span></div>
 			<div><span class='account_instance'>@{$item->instance}</span></div>
 		</div>
 		<div class='buttons'>

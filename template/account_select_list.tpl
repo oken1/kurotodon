@@ -4,7 +4,7 @@
 			<img src='{$item->avatar}'>
 		</div>
 		<div class='display_name'>
-			{$item->display_name}@{$item->instance}
+			{$item->display_name_disp}@{$item->instance}
 		</div>
 	</div>
 	{/foreach}

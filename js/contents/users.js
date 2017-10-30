@@ -19,23 +19,24 @@ Contents.users = function( cp )
 	var SetTitle = function()
 	{
 		var account = g_cmn.account[cp.param['account_id']];
+		var open_acc = ConvertDisplayName( account.display_name, account.username );
 
 		switch ( cp.param['users_type'] )
 		{
 			case 'follows':
-				cp.SetTitle( cp.param.display_name + ' ' + i18nGetMessage( 'i18n_0399' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
+				cp.SetTitle( cp.param.display_name + ' ' + i18nGetMessage( 'i18n_0399' ) + ' (' + open_acc + '@' + account.instance + ')', false );
 				cp.SetIcon( 'icon-user-plus' );
 				break;
 			case 'followers':
-				cp.SetTitle( cp.param.display_name + ' ' + i18nGetMessage( 'i18n_0400' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
+				cp.SetTitle( cp.param.display_name + ' ' + i18nGetMessage( 'i18n_0400' ) + ' (' + open_acc + '@' + account.instance + ')', false );
 				cp.SetIcon( 'icon-user-plus' );
 				break;
 			case 'muteusers':
-				cp.SetTitle( i18nGetMessage( 'i18n_0401' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
+				cp.SetTitle( i18nGetMessage( 'i18n_0401' ) + ' (' + open_acc + '@' + account.instance + ')', false );
 				cp.SetIcon( 'icon-volume-mute2' );
 				break;
 			case 'blockusers':
-				cp.SetTitle( i18nGetMessage( 'i18n_0402' ) + ' (' + account.display_name + '@' + account.instance + ')', false );
+				cp.SetTitle( i18nGetMessage( 'i18n_0402' ) + ' (' + open_acc + '@' + account.instance + ')', false );
 				cp.SetIcon( 'icon-eye-blocked' );
 				break;
 		}
@@ -128,9 +129,12 @@ Contents.users = function( cp )
 						users[res[i].id + '@' + instance] = true;
 						ids.push( res[i].id );
 
+						var display_name = ( res[i].display_name ) ? res[i].display_name : res[i].username;
+						
 						items.push( {
 							avatar: ImageURLConvert( res[i].avatar, res[i].acct, g_cmn.account[cp.param.account_id].instance ),
-							display_name: ( res[i].display_name ) ? res[i].display_name : res[i].username,
+							display_name_disp: ConvertDisplayName( res[i].display_name, res[i].username ),
+							display_name: res[i].display_name,
 							username: res[i].username,
 							instance: instance,
 							id: res[i].id,

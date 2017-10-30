@@ -568,7 +568,7 @@ Contents.peeptimeline = function( cp )
 								var id = g_cmn.account_order[i];
 
 								s += '<div class="remote_account">' +
-									 '<span>' + g_cmn.account[id].display_name + '</span>' +
+									 '<span>' + ConvertDisplayName( g_cmn.account[id].display_name, g_cmn.account[id].username ) + '</span>' +
 									 '<span>@' + g_cmn.account[id].instance + '</span>' +
 									 '</div>';
 							}
@@ -807,6 +807,7 @@ Contents.peeptimeline = function( cp )
 		var bt_id = json.account.id;
 		var bt_instance = GetInstanceFromAcct( json.account.acct, cp.param.instance );
 		var bt_display_name = json.account.display_name;
+		var bt_display_name_disp = ConvertDisplayName( json.account.display_name, json.account.username );
 		var bt_username = json.account.username;
 		var bt_avatar = ImageURLConvert( json.account.avatar, json.account.acct, cp.param.instance );
 
@@ -817,6 +818,17 @@ Contents.peeptimeline = function( cp )
 		}
 
 		var instance = GetInstanceFromAcct( json.account.acct, cp.param.instance );
+
+		// CWのカスタム絵文字
+		if ( json.emojis )
+		{
+			for ( var i = 0 ; i < json.emojis.length ; i++ )
+			{
+				var shortcode = ':' + json.emojis[i].shortcode + ':';
+				json.spoiler_text = json.spoiler_text.replace( new RegExp( shortcode, 'g' ),
+							'<img class="emoji" alt="' + shortcode + '" title="' + shortcode + '" src="' + json.emojis[i].url + '">' );
+			}
+		}
 
 		var assign = {
 			id: json.account.id,
@@ -833,12 +845,14 @@ Contents.peeptimeline = function( cp )
 			bt_id: bt_id,
 			bt_instance: bt_instance,
 			bt_display_name: bt_display_name,
+			bt_display_name_disp: bt_display_name_disp,
 			bt_username: bt_username,
 			bt_avatar: bt_avatar,
 
 			visibility: json.visibility,
 
 			display_name: json.account.display_name,
+			display_name_disp : ConvertDisplayName( json.account.display_name, json.account.username ),
 			username: json.account.username,
 			instance: instance,
 			acct: json.account.acct,

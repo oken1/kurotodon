@@ -5,7 +5,7 @@
 		</div>
 		<div class='container'>
 			<div class='names'>
-				<span class='display_name'>{$item->display_name}</span> 
+				<span class='display_name'>{$item->display_name_disp}</span> 
 				<span class='username'>@{$item->username}@{$item->instance}</span>
 			</div>
 			<div class='counts'>
