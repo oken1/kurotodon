@@ -34,3 +34,7 @@ div.contents.searchbox {
 #peep_box > span:last-child {
 	width: 4rem;
 }
+
+#peep_box > span:last-child > .btn {
+	padding: 6px;
+}

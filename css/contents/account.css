@@ -71,7 +71,7 @@ div.contents.account {
 }
 
 #account_list div.item.select {
-	background: #204060;
+	background: var(--general-highlight);
 }
 
 /* ログインウィンドウ */
@@ -84,7 +84,7 @@ div.contents.account {
 	z-index: 8900;
 	border: 1px solid #101010;
 	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
-	background: #2e2e2e;
+	background: var(--panel-background);
 	overflow-x: hidden;
 	overflow-y: auto;
 	padding: 4px;

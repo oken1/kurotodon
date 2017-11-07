@@ -30,11 +30,11 @@ div.contents.nowbrowsing {
 #nowbrowsing_list .title {
 	white-space: normal;
 	font-weight: bold;
-	color: #ffffff;
+	color: var(--panel-text);
 	padding: 4px;
 }
 
 #nowbrowsing_list .title > span:hover {
 	cursor: pointer;
-	color: #dddddd;
+	opacity: 0.8;
 }

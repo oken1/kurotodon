@@ -15,7 +15,7 @@ div.contents.timeline .lines .panel_btns .instance_info_window {
 	z-index: 8900;
 	border: 1px solid #101010;
 	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
-	background: #2e2e2e;
+	background: var(--panel-background);
 	overflow-x: hidden;
 	overflow-y: auto;
 	padding: 8px;
@@ -65,8 +65,8 @@ div.contents.timeline .lines div.item {
 	width: 100%;
 	border-bottom: 1px solid rgba( 0, 0, 0, 0.4 );
 	padding: 2px;
-	background: #282828;	/* color set:ツイートのBG */
-	color: #ffffff;
+	background: var(--toot-background);
+	color: var(--toot-text);
 }
 
 /* 詳細表示の元Toot */
@@ -76,7 +76,7 @@ div.contents.timeline .lines div.item.source {
 
 /* 新着 */
 div.contents.timeline .lines div.item.new {
-	background: #204060;	/* color set:新着ツイートのBG */
+	background: var(--general-highlight);
 }
 
 div.contents.timeline .lines div.item.resopen {
@@ -155,6 +155,7 @@ div.contents.timeline .lines div.item > .toot .headcontainer .namedate {
 }
 
 div.contents.timeline .lines div.item > .toot .headcontainer .namedate .anchor {
+	color: var(--toot-text);
 	opacity: 0.6;
 }
 
@@ -234,11 +235,11 @@ div.contents.timeline .lines div.item > .toot .headcontainer .options {
 	padding: 4px;
 	border-radius: 0 6px 0 0;
 
-	background: #282828;	/* color set:ツイートのBG */
+	background: var(--toot-background);
 }
 
 div.contents.timeline .lines div.item.new > .toot .headcontainer .options {
-	background: #204060;	/* color set:新着ツイートのBG */
+	background: var(--general-highlight);
 }
 
 /* アカウント選択 */
@@ -252,7 +253,7 @@ div.contents.timeline .lines div.item > .toot .headcontainer .options .accsel {
 	z-index: 8900;
 	border: 1px solid #101010;
 	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
-	background: #2e2e2e;
+	background: #fe2e2e;
 	white-space: normal;
 }
 
@@ -275,7 +276,7 @@ div.contents.timeline .lines div.item > .toot .headcontainer .options .timeline_
 }
 
 div.contents.timeline .lines div.item > .toot .headcontainer .options .timeline_boost.off {
-	color: #ffffff;
+	color: var(--toot-text);
 	display: none;
 }
 
@@ -358,7 +359,7 @@ div.contents.timeline .lines div.item > .toot > .toot_text img.emoji {
 
 /* トゥート内リンク */
 div.contents.timeline .lines div.item > .toot > .toot_text .anchor {
-	color: #add4f2;
+	color: var(--toot-link);
 }
 
 div.contents.timeline .lines div.item > .toot > .toot_text p {
@@ -444,7 +445,7 @@ div.contents.timeline .lines div.item > .toot .menubox .btn {
 	margin: 2px;
 }
 
-/* リモートフォローアカウント一覧 */
+/* 別アカウント選択 */
 div.contents.timeline .lines div.item > .toot .menubox .remote_account_list {
 	display: none;
 	position: absolute;
@@ -453,7 +454,8 @@ div.contents.timeline .lines div.item > .toot .menubox .remote_account_list {
 	z-index: 8900;
 	border: 1px solid #101010;
 	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
-	background: #2e2e2e;
+	background: var(--panel-background);
+	color: var(--panel-text);
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -464,7 +466,7 @@ div.contents.timeline .lines div.item > .toot .menubox .remote_account_list .rem
 
 div.contents.timeline .lines div.item > .toot .menubox .remote_account_list .remote_account:hover {
 	cursor: pointer;
-	background: #204060;
+	background: var(--general-hilight);
 }
 
 div.contents.timeline .lines .readmore {
@@ -536,83 +538,4 @@ div.contents.timeline .setting .set_get_count {
 /* タイムラインに表示する最大ツイート数設定 */
 div.contents.timeline .setting .set_max_count {
 	width: 50%;
-}
-
-/* メンバー数 */
-div.contents.timeline .setting .member {
-	display: table;
-	width: 100%;
-	margin-bottom: 4px;
-}
-
-div.contents.timeline .setting .member div:first-child {
-	display: table-cell;
-	text-align: left;
-}
-
-div.contents.timeline .setting .member div:last-child {
-	display: table-cell;
-	text-align: right;
-}
-
-/* メンバーリスト */
-div.contents.timeline .setting .member_list {
-	overflow-y: auto;
-	height: 180px;
-	border: 1px solid #101010;
-}
-
-div.contents.timeline .setting .member_list > span {
-	display: inline-block;
-	color: #c0c0c0;
-	margin: 4px;
-}
-
-div.contents.timeline .setting .member_list > div {
-	display: inline-block;
-	text-align: center;
-	vertical-align: middle;
-	padding: 2px;
-}
-
-div.contents.timeline .setting .member_list > div img {
-	width: 32px;
-	height: 32px;
-}
-
-div.contents.timeline .setting .member_list > div:hover {
-	cursor: pointer;
-}
-
-
-/* アカウント選択 */
-div.contents.timeline .setting .accsel {
-	margin-bottom: 4px;
-}
-
-div.contents.timeline .setting .acclist {
-	overflow-y: auto;
-	padding: 2px;
-	height: 39px;
-	border: 1px solid #101010;
-}
-
-div.contents.timeline .setting .acclist > div {
-	display: inline-block;
-	text-align: center;
-	vertical-align: middle;
-	padding: 2px;
-}
-
-div.contents.timeline .setting .acclist > div img {
-	width: 32px;
-	height: 32px;
-}
-
-div.contents.timeline .setting .acclist > div.selected {
-	background: #204060;
-}
-
-div.contents.timeline .setting .acclist > div:hover {
-	cursor: pointer;
 }

@@ -51,6 +51,96 @@
 		</div>
 	</div>
 
+	<div class='kind'><span class='icon-arrow_down'></span>(i18n_0413)</div>
+	<div class='kinditems'>
+		<div class='group'>
+			<div class='title'>
+				(i18n_0414)
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0418)</span>
+				<span><input type='text' value='{$param->color->panel->background}'></span>
+				<span><input type='color' id='cset_color_panel_background' value='{$param->color->panel->background}'></span>
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0419)</span>
+				<span><input type='text' value='{$param->color->panel->text}'></span>
+				<span><input type='color' id='cset_color_panel_text' value='{$param->color->panel->text}'></span>
+			</div>
+		</div>
+		<div class='group'>
+			<div class='title'>
+				(i18n_0415)
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0418)</span>
+				<span><input type='text' value='{$param->color->toot->background}'></span>
+				<span><input type='color' id='cset_color_toot_background' value='{$param->color->toot->background}'></span>
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0419)</span>
+				<span><input type='text' value='{$param->color->toot->text}'></span>
+				<span><input type='color' id='cset_color_toot_text' value='{$param->color->toot->text}'></span>
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0420)</span>
+				<span><input type='text' value='{$param->color->toot->link}'></span>
+				<span><input type='color' id='cset_color_toot_link' value='{$param->color->toot->link}'></span>
+			</div>
+		</div>
+		<div class='group'>
+			<div class='title'>
+				(i18n_0416)
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0418)</span>
+				<span><input type='text' value='{$param->color->titlebar->background}'></span>
+				<span><input type='color' id='cset_color_titlebar_background' value='{$param->color->titlebar->background}'></span>
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0419)</span>
+				<span><input type='text' value='{$param->color->titlebar->text}'></span>
+				<span><input type='color' id='cset_color_titlebar_text' value='{$param->color->titlebar->text}'></span>
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0421)</span>
+				<span><input type='text' value='{$param->color->titlebar->fixed}'></span>
+				<span><input type='color' id='cset_color_titlebar_fixed' value='{$param->color->titlebar->fixed}'></span>
+			</div>
+		</div>
+		<div class='group'>
+			<div class='title'>
+				(i18n_0417)
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0418)</span>
+				<span><input type='text' value='{$param->color->button->background}'></span>
+				<span><input type='color' id='cset_color_button_background' value='{$param->color->button->background}'></span>
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0419)</span>
+				<span><input type='text' value='{$param->color->button->text}'></span>
+				<span><input type='color' id='cset_color_button_text' value='{$param->color->button->text}'></span>
+			</div>
+		</div>
+	</div>
+	
+	<div class='kind'><span class='icon-arrow_down'></span>(i18n_0093)</div>
+	<div class='kinditems'>
+		<div class='group'>
+			<div class='title'>
+				(i18n_0198)
+			</div>
+			<div class='slidercontainer'>
+				<span><a class='btn tooltip' id='cset_audition' tooltip='(i18n_0226)'>♪</a></span>
+				<span class='slidestr'></span>
+				<span id='cset_notify_sound_volume'></span>
+				<span class='slidestr'></span>
+				<span id='cset_notify_sound_volume_disp' class='value_disp'>{$param->notify_sound_volume}</span>
+			</div>
+		</div>
+	</div>
+
 	<div class='kind'><span class='icon-arrow_down'></span>(i18n_0367)</div>
 	<div class='kinditems'>
 		<div class='group'>

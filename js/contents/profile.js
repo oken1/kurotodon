@@ -245,7 +245,7 @@ Contents.profile = function( cp )
 									{
 										following: res[0].following,
 										muting: res[0].muting,
-										blocking: res[0].blockinbg,
+										blocking: res[0].blocking,
 									}
 								) );
 							}

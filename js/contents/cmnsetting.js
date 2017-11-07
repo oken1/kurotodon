@@ -70,6 +70,46 @@ Contents.cmnsetting = function( cp )
 			},
 		} );
 
+		$( '#cset_notify_sound_volume' ).slider( {
+			min: 0.0,
+			max: 1.0,
+			step: 0.1,
+			value: g_cmn.cmn_param['notify_sound_volume'],
+			animate: 'fast',
+			slide: function( e, ui ) {
+				$( '#cmnsetting_apply' ).removeClass( 'disabled' );
+				$( '#cset_notify_sound_volume_disp' ).html( ui.value );
+			},
+		} );
+
+		////////////////////////////////////////
+		// 色入力変更処理
+		////////////////////////////////////////
+		cont.find( '.colorcontainer' ).find( 'input[type="text"]' ).on( 'change', function() {
+			var col = $( this ).val();
+
+			$( this ).closest( '.colorcontainer' ).find( 'input[type="color"]' ).val( col );
+		} );
+
+		////////////////////////////////////////
+		// 色選択変更処理
+		////////////////////////////////////////
+		cont.find( '.colorcontainer' ).find( 'input[type="color"]' ).on( 'change', function() {
+			var col = $( this ).val();
+
+			$( this ).closest( '.colorcontainer' ).find( 'input[type="text"]' ).val( col );
+		} );
+
+		////////////////////////////////////////
+		// 試聴ボタンクリック処理
+		////////////////////////////////////////
+		$( '#cset_audition' ).click( function( e ) {
+			$( '#notify_sound' ).get( 0 ).volume = $( '#cset_notify_sound_volume' ).slider( 'value' );
+			$( '#notify_sound' ).get( 0 ).play();
+
+			e.stopPropagation();
+		} );
+
 		////////////////////////////////////////
 		// 設定変更時処理
 		////////////////////////////////////////
@@ -137,6 +177,33 @@ Contents.cmnsetting = function( cp )
 			{
 				setTimeout( function() { $( 'body' ).hide(); setTimeout( function() { $( 'body' ).show(); }, 0 ) }, 0 );
 			}
+
+			// 色の設定
+			g_cmn.cmn_param.color = {
+				panel: {
+					background: $( '#cset_color_panel_background' ).val(),
+					text: $( '#cset_color_panel_text' ).val(),
+				},
+				toot: {
+					background: $( '#cset_color_toot_background' ).val(),
+					text: $( '#cset_color_toot_text' ).val(),
+					link: $( '#cset_color_toot_link' ).val(),
+				},
+				titlebar: {
+					background: $( '#cset_color_titlebar_background' ).val(),
+					text: $( '#cset_color_titlebar_text' ).val(),
+					fixed: $( '#cset_color_titlebar_fixed' ).val(),
+				},
+				button: {
+					background: $( '#cset_color_button_background' ).val(),
+					text: $( '#cset_color_button_text' ).val(),
+				}
+			};
+
+			SetColorSettings();
+
+			// 音量
+			g_cmn.cmn_param['notify_sound_volume'] = $( '#cset_notify_sound_volume' ).slider( 'value' );
 
 			// トゥートショートカットキー
 			g_cmn.cmn_param['tootkey'] = $( 'input[name=cset_tootkey]:checked' ).val();

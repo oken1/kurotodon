@@ -9,6 +9,8 @@ var g_cmn = {
 		scroll_horizontal:	1,								// - ページ全体のスクロールバー(横)
 		locale:				'ja',							// - 言語
 
+		notify_sound_volume:1.0,							// - 通知音量
+
 		tootkey:			0,								// - トゥートショートカットキー
 
 		reload_time:		30,								// - 新着読み込み
@@ -18,6 +20,27 @@ var g_cmn = {
 		follow_mark:		1,								// - 相互フォロー表示
 
 		nowbrowsing_text:	'Now Browsing: ',				// - Now Browsingテキスト
+
+		color: {											// - 色の設定
+			panel: {
+				background: '#282828',
+				text: '#ffffff',
+			},
+			toot: {
+				background: '#282828',
+				text: '#ffffff',
+				link: '#add4f2',
+			},
+			titlebar: {
+				background: '#606060',
+				text: '#ffffff',
+				fixed: '#404040',
+			},
+			button: {
+				background: '#404040',
+				text: '#ffffff',
+			}
+		},
 	},
 	panel:			null,			// パネル
 	account:		null,			// アカウント
@@ -227,6 +250,9 @@ function Init()
 					cp.SetParam( _g_cmn.panel[i].param );
 					cp.Start();
 				}
+
+				// 色の設定
+				SetColorSettings();
 
 				g_loaded = true;
 			};
@@ -2439,6 +2465,28 @@ function Loading( flg, id )
 		$( '#loading' ).show();
 		loading_queue[id] = true;
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 色の設定をCSSに反映する
+////////////////////////////////////////////////////////////////////////////////
+function SetColorSettings()
+{
+	$( ':root' ).css( {
+		'--panel-background': g_cmn.cmn_param.color.panel.background,
+		'--panel-text': g_cmn.cmn_param.color.panel.text,
+
+		'--toot-background': g_cmn.cmn_param.color.toot.background,
+		'--toot-text': g_cmn.cmn_param.color.toot.text,
+		'--toot-link': g_cmn.cmn_param.color.toot.link,
+
+		'--titlebar-background': g_cmn.cmn_param.color.titlebar.background,
+		'--titlebar-text': g_cmn.cmn_param.color.titlebar.text,
+		'--titlebar-fixed-background': g_cmn.cmn_param.color.titlebar.fixed,
+
+		'--button-background': g_cmn.cmn_param.color.button.background,
+		'--button-text': g_cmn.cmn_param.color.button.text,
+	} );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -252,6 +252,10 @@
 		"message": "To top"
 	},
 
+	"i18n_0198": {
+		"message": "Notification sound volume"
+	},
+
 	"i18n_0199": {
 		"message": "Image"
 	},
@@ -282,6 +286,10 @@
 
 	"i18n_0224": {
 		"message": "Are you sure you want to delete this status?"
+	},
+
+	"i18n_0226": {
+		"message": "Listen"
 	},
 
 	"i18n_0228": {
@@ -636,6 +644,49 @@
 		"message": "Follows you"
 	},
 
+	"i18n_0411": {
+		"message": "Boost with other account"
+	},
+
+	"i18n_0412": {
+		"message": "Favorite with other account"
+	},
+
+	"i18n_0413": {
+		"message": "Color settings"
+	},
+
+	"i18n_0414": {
+		"message": "Panel"
+	},
+
+	"i18n_0415": {
+		"message": "Toot"
+	},
+
+	"i18n_0416": {
+		"message": "Titlebar"
+	},
+
+	"i18n_0417": {
+		"message": "Button"
+	},
+
+	"i18n_0418": {
+		"message": "Background"
+	},
+
+	"i18n_0419": {
+		"message": "Text"
+	},
+
+	"i18n_0420": {
+		"message": "Link"
+	},
+
+	"i18n_0421": {
+		"message": "Fixed panel"
+	},
 
 
 

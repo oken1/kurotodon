@@ -45,19 +45,20 @@ div.contents.cmnsetting {
 	margin: 2px;
 }
 
-#cmnsetting_items .name_large {
-	color: #ffffff;
-	font-weight: bold;
-}
-
-#cmnsetting_items .name_small {
-	color: #c0c0c0;
-	font-size: 0.8rem;
-}
-
 /* フォントサイズ設定 */
 #cset_font_size {
 	width: 50%;
+}
+
+/* 通知音の音量 */
+#cset_notify_sound_volume {
+	width: 30%;
+}
+
+/* 試聴ボタン */
+#cset_audition {
+	padding: 4px 8px 2px 8px;
+	margin-right: 4px;
 }
 
 /* Now Browsing */
@@ -65,3 +66,20 @@ div.contents.cmnsetting {
 	width: 90%;
 }
 
+/* 色の設定 */
+.colorcontainer {
+	display: table;
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0 1px;
+}
+
+.colorcontainer span:first-child {
+	display: table-cell;
+	width: 10rem;
+	padding-left: 1rem;
+}
+
+.colorcontainer input[type='text'] {
+	width: 6rem;
+}

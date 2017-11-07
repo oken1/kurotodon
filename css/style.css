@@ -5,6 +5,25 @@
 	box-sizing: border-box;
 }
 
+:root {
+	--panel-background: #282828;
+	--panel-text: #ffffff;
+	--panel-border: #101010;
+
+	--toot-background: #282828;
+	--toot-text: #ffffff;
+	--toot-link: #add4f2;
+
+	--titlebar-background: #606060;
+	--titlebar-text: #ffffff;
+	--titlebar-fixed-background: #404040;
+
+	--button-background: #404040;
+	--button-text: #ffffff;
+
+	--general-highlight: #2d94b2;
+}
+
 html {
 	height: 100%;
 }
@@ -36,8 +55,6 @@ img {
 .anchor {
 	cursor: pointer;
 	text-decoration: none;
-
-	color: #ffffff;	/* color set: 全体のフォント */
 }
 
 /* 絵文字 */
@@ -78,9 +95,9 @@ img.emoji {
 	border-width: 1px 0;
 	border-style: solid;
 
-	border-color: #101010;	/* color set: 固定(toolbar) */
-	background-color: #242424;	/* color set: ツールバーのBG */
-	color: #ffffff;	/* color set: ツールバーのフォント */
+	border-color: var(--panel-border);
+	background-color: var(--panel-background);
+	color: var(--panel-text);
 }
 
 /* パネルリスト表示ボタン */
@@ -111,8 +128,8 @@ img.emoji {
 
 	border: 1px solid #101010;	/* color set: 固定(popup-menu) */
 	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );	/* color set: 固定(popup-menu) */
-	background-color: #3e3e3e;	/* color set: 固定(popup-menu) */
-	color: #ffffff;			/* color set: 固定(popup-menu) */
+	background-color: var(--panel-background);
+	color: var(--panel-text);
 }
 
 #head .header_sub span {
@@ -124,7 +141,7 @@ img.emoji {
 #head .header_sub span:hover {
 	cursor: pointer;
 
-	background-color: #4e4e4e;	/* color set: 固定(popup-menu) */
+	background-color: var(--general-highlight);
 }
 
 /* ツールバーユーザ */
@@ -278,9 +295,9 @@ panel {
 	display: block;
 	z-index: 100;
 
-	border: 2px solid #101010;	/* color set: 固定(panel) */
-	background-color: #282828;	/* color set: パネルのBG */
-	color: #ffffff;	/* color set:パネルのフォント */
+	border: 2px solid var(--panel-border);
+	background-color: var(--panel-background);
+	color: var(--panel-text);
 }
 
 /* パネルのタイトルバー */
@@ -289,9 +306,9 @@ panel div.titlebar {
 	width: 100%;
 	border-collapse: separate;
 	border-spacing: 4px 0px;
-	border-bottom: 1px solid #101010;	/* color set: 固定(titlebar) */
-	background-color: #606060;	/* color set: タイトルバーのBG */
-	color: #ffffff;			/* color set: タイトルバーのフォント */
+	border-bottom: 1px solid var(--panel-border);
+	background-color: var(--titlebar-background);
+	color: var(--titlebar-text);
 	table-layout: fixed;
 	cursor: move;
 }
@@ -325,7 +342,6 @@ panel div.titlebar .title {
 panel div.titlebar > .ctlbtn {
 	width: 1.5rem;
 	opacity: 0.5;
-	
 }
 
 panel div.titlebar > .ctlbtn:hover {
@@ -334,12 +350,12 @@ panel div.titlebar > .ctlbtn:hover {
 }
 
 panel div.titlebar > .ctlbtn:active {
-	opacity: 0.3;
+	opacity: 0.5;
 }
 
 /* 位置固定パネル */
 panel.fixed div.titlebar {
-	background-color: #404040;	/* color set: タイトルバー(位置固定)のBG */
+	background-color: var(--titlebar-fixed-background);
 }
 
 /* 位置固定メニュー */
@@ -352,8 +368,8 @@ panel div.titlebar .titlesetting {
 
 	border: 1px solid #101010;	/* color set: 固定(popup-menu) */
 	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );	/* color set: 固定(popup-menu) */
-	background-color: #3e3e3e;	/* color set: 固定(popup-menu) */
-	color: #ffffff;			/* color set: 固定(popup-menu) */
+	background-color: var(--panel-background);
+	color: var(--panel-text);
 }
 
 panel div.titlebar .titlesetting span
@@ -391,8 +407,8 @@ panel div.contents > .setting {
 	font-size: 1.0rem;
 
 	border: 1px solid #101010;	/* color set:固定(button) */
-	color: #ffffff;	/* color set:ボタンのフォント */
-	background-color: #404040;	/* color set:ボタンのBG */
+	color: var(--button-text);
+	background-color: var(--button-background);
 }
 
 .btn.img {
@@ -402,11 +418,11 @@ panel div.contents > .setting {
 .btn:not(.disabled):hover {
 	cursor: pointer;
 
-	background-color: #4db4d2;	/* color set:ボタンのBG(hover) */
+	background-color: var(--general-highlight);
 }
 
 .btn:not(.disabled):active {
-	background-color: #2d94b2;	/* color set:ボタンのBG(active) */
+	opacity: 0.5;
 }
 
 .btn.disabled {
@@ -513,7 +529,7 @@ input[type=file] {
 /* アカウントセレクト-アカウント一覧 */
 
 .selectlist {
-	background: #2e2e2e;
+	background: var(--panel-background);
 	width: 90%;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -556,7 +572,7 @@ input[type=file] {
 }
 
 .selectlist .item.select {
-	background-color: #204060;
+	background-color: var(--general-highlight);
 	cursor: pointer;
 }
 
@@ -644,13 +660,13 @@ panel.fixed div.titlebar .badge {
 	width: 400px;
 	height: auto;
 	padding: 4px;
-	border: 4px solid #101010;
+	border: 4px solid var(--panel-border);
 	word-break:break-all;
 	word-wrap: break-word;
 	left: -1000px;
 	top: 0;
 	z-index: 10000;
-	background-color: #2e2e2e;
+	background-color: var(--panel-background);
 }
 
 #messagebox_body {
@@ -675,8 +691,8 @@ panel.fixed div.titlebar .badge {
 	display: none;
 	position: absolute;
 	border: 1px solid #101010;
-	color: #000000;
-	background-color: #e7e7d4;
+	color: var(--panel-text);
+	background-color: var(--panel-background);
 	z-index: 9001;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -689,16 +705,7 @@ panel.fixed div.titlebar .badge {
 
 .pulldown > .item:hover {
 	cursor: pointer;
-	background: #afaf9c;
-}
-
-.pulldown > .item.disabled {
-	color: #808080;
-}
-
-.pulldown > .item.disabled:hover {
-	cursor: default;
-	background: none;
+	background: var(--general-highlight);
 }
 
 /* スクロールバー */
@@ -764,64 +771,7 @@ span.info {
 }
 
 .sctbl > a:active {
-	opacity: 0.3;
-}
-
-/* セレクトボックス */
-div.selectbox {
-	width: 100%;
-}
-
-div.selectbox:hover {
-	cursor: pointer;
-}
-
-div.selectbox > div {
-	display: table;
-}
-
-div.selectbox > div > .selitem {
-	display: table-cell;
-	width: 100%;
-	padding: 0 4px;
-}
-
-div.selectbox > div > div:last-child {
-	display: table-cell;
-	text-align: right;
-	padding: 0 4px;
-	font-size: 0.8rem;
-}
-
-div.selectbox .selectitems {
-	display: block;
-	position: absolute;
-	border: 1px solid #101010;
-	box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
-	background: #2e2e2e;
-	z-index: 9001;
-	overflow-y: auto !important;
-	overflow-x: hidden !important;
-	max-height: 150px;
-	left: -1px;
-	width: 80%;
-}
-
-div.selectbox .selectitems .selectitem {
-	padding: 4px;
-}
-
-div.selectbox .selectitems .selectitem.bold {
-	font-weight: bold;
-}
-
-div.selectbox .selectitems .selectitem.selected {
-	background-color: #204060;
-}
-
-div.mapdiv {
-	width: 100%;
-	height: 100%;
+	opacity: 0.5;
 }
 
 /* パネルリスト */
@@ -836,13 +786,9 @@ div.mapdiv {
 	border-width: 1px 2px 1px 1px;
 	border-style: solid;
 
-	border-color: #101010;	/* color set: 固定(panellist) */
-	background-color: #242424;	/* color set: パネルリストのBG */
-	color: #ffffff;	/* color set: パネルリストのフォント */
-}
-
-#panellist:hover {
-	background-color: rgba( 36, 36, 36, 1.0 );
+	border-color: var(--panel-border);
+	background-color: var(--panel-background);
+	color: var(--panel-text);
 }
 
 #panellist > div.lists {
@@ -860,7 +806,7 @@ div.mapdiv {
 	display: table;
 	width: 100%;
 
-	border-bottom: 1px solid #101010;	/* color set: 固定(panellist) */
+	border-bottom: 1px solid var(--panel-border);
 }
 
 #panellist > div.lists > div > span {
@@ -872,13 +818,12 @@ div.mapdiv {
 #panellist > div.lists > div:hover {
 	cursor: pointer;
 
-	background-color: #4db4d2;	/* color set:パネルリストのBG(hover) */
+	background-color: var(--general-highlight);
 }
 
 #panellist > div.lists > div:active {
 	cursor: pointer;
-
-	background-color: #2d94b2;	/* color set:パネルリストのBG(hover) */
+	opacity: 0.5;
 }
 
 #panellist > div.lists > div > .icon {

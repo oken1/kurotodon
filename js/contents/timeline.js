@@ -1061,10 +1061,11 @@ Contents.timeline = function( cp )
 					{
 						var options = {};
 						var show_notification = false;
+						var display_name_disp = ( data.json.account.display_name ) ? data.json.account.display_name : data.json.account.username;
 
 						if ( data.json.type == 'follow' && cp.param.dn_new_followers )
 						{
-							options.title = data.json.account.display_name + i18nGetMessage( 'i18n_0372' );
+							options.title = display_name_disp + i18nGetMessage( 'i18n_0372' );
 							options.body = '';
 							show_notification = true;
 						}
@@ -1076,19 +1077,19 @@ Contents.timeline = function( cp )
 
 							if ( data.json.type == 'favourite' && cp.param.dn_favourites )
 							{
-								options.title = data.json.account.display_name + i18nGetMessage( 'i18n_0373' );
+								options.title = display_name_disp + i18nGetMessage( 'i18n_0373' );
 								show_notification = true;
 							}
 
 							if ( data.json.type == 'mention' && cp.param.dn_mentions )
 							{
-								options.title = data.json.account.display_name;
+								options.title = display_name_disp;
 								show_notification = true;
 							}
 
 							if ( data.json.type == 'reblog' && cp.param.dn_boosts )
 							{
-								options.title = data.json.account.display_name + i18nGetMessage( 'i18n_0374' );
+								options.title = display_name_disp + i18nGetMessage( 'i18n_0374' );
 								show_notification = true;
 							}
 						}
@@ -1099,6 +1100,9 @@ Contents.timeline = function( cp )
 								body: options.body,
 								icon: ImageURLConvert( data.json.account.avatar, data.json.account.acct, g_cmn.account[cp.param.account_id].instance ),
 							} );
+
+							$( '#notify_sound' ).get( 0 ).volume = g_cmn.cmn_param.notify_sound_volume;
+							$( '#notify_sound' ).get( 0 ).play();
 						}
 					}
 
@@ -1326,6 +1330,7 @@ Contents.timeline = function( cp )
 						e.stopPropagation();
 					} );
 
+					// 詳細表示
 					menubox.find( '> a.expandstatus' ).on( 'click', function( e ) {
 						var dupchk = DuplicateCheck( {
 							type: 'timeline',
@@ -1354,6 +1359,7 @@ Contents.timeline = function( cp )
 						e.stopPropagation();
 					} );
 
+					// 読み上げ
 					menubox.find( '> a.speech' ).on( 'click', function( e ) {
 						var text = item.find( '.toot' ).find( '.toot_text' ).text();
 						var uttr = new SpeechSynthesisUtterance( text );
@@ -1361,6 +1367,186 @@ Contents.timeline = function( cp )
 
 						speechSynthesis.cancel();
 						speechSynthesis.speak( uttr );
+						e.stopPropagation();
+					} );
+
+					// 別アカウントでブースト
+					menubox.find( '> a.boost_other' ).on( 'click', function( e ) {
+						var account_list = item.find( '.menubox .remote_account_list.boost_account' );
+
+						if ( account_list.css( 'display' ) == 'none' )
+						{
+							var s = '';
+
+							for ( var i = 0 ; i < g_cmn.account_order.length ; i++ )
+							{
+								var id = g_cmn.account_order[i];
+
+								if ( id != cp.param.account_id )
+								{
+									s += '<div class="remote_account" account_id="' + id + '">' +
+										 '<span>' + ConvertDisplayName( g_cmn.account[id].display_name, g_cmn.account[id].username ) + '</span>' +
+										 '<span>@' + g_cmn.account[id].instance + '</span>' +
+										 '</div>';
+								}
+							}
+							account_list.show().html( s );
+						}
+						else
+						{
+							account_list.hide();
+						}
+
+						e.stopPropagation();
+					} );
+
+					menubox.on( 'click', '> .remote_account_list.boost_account .remote_account', function( e ) {
+						var account = g_cmn.account[$( this ).attr( 'account_id' )];
+
+						var url = 'https://' + item.attr( 'instance' ) + '/@' + item.attr( 'username' ) + '/' + item.attr( 'status_id' );
+
+						SendRequest(
+							{
+								method: 'GET',
+								action: 'api_call',
+								instance: account.instance,
+								access_token: account.access_token,
+								api: 'search',
+								param: {
+									q: url,
+								}
+							},
+							function( res )
+							{
+								if ( res.status === undefined )
+								{
+									if ( res.statuses.length > 0 )
+									{
+										Loading( true, 'remote_boost' );
+
+										SendRequest(
+											{
+												method: 'POST',
+												action: 'api_call',
+												instance: account.instance,
+												access_token: account.access_token,
+												api: 'statuses/' + res.statuses[0].id + '/reblog',
+											},
+											function( res )
+											{
+												if ( res.status === undefined )
+												{
+												}
+												else
+												{
+													ApiError( res );
+												}
+
+												Loading( false, 'remote_boost' );
+											}
+										);
+									}
+								}
+								else
+								{
+									ApiError( res );
+								}
+
+								item.find( '.menubox .remote_account_list.boost_account' ).hide();
+								Loading( false, 'remote_boost_search' );
+							}
+						);
+
+						e.stopPropagation();
+					} );
+
+					// 別アカウントでお気に入り
+					menubox.find( '> a.favorite_other' ).on( 'click', function( e ) {
+						var account_list = item.find( '.menubox .remote_account_list.favorite_account' );
+
+						if ( account_list.css( 'display' ) == 'none' )
+						{
+							var s = '';
+
+							for ( var i = 0 ; i < g_cmn.account_order.length ; i++ )
+							{
+								var id = g_cmn.account_order[i];
+
+								if ( id != cp.param.account_id )
+								{
+									s += '<div class="remote_account" account_id="' + id + '">' +
+										 '<span>' + ConvertDisplayName( g_cmn.account[id].display_name, g_cmn.account[id].username ) + '</span>' +
+										 '<span>@' + g_cmn.account[id].instance + '</span>' +
+										 '</div>';
+								}
+							}
+							account_list.show().html( s );
+						}
+						else
+						{
+							account_list.hide();
+						}
+
+						e.stopPropagation();
+					} );
+
+					menubox.on( 'click', '> .remote_account_list.favorite_account .remote_account', function( e ) {
+						var account = g_cmn.account[$( this ).attr( 'account_id' )];
+
+						var url = 'https://' + item.attr( 'instance' ) + '/@' + item.attr( 'username' ) + '/' + item.attr( 'status_id' );
+
+						SendRequest(
+							{
+								method: 'GET',
+								action: 'api_call',
+								instance: account.instance,
+								access_token: account.access_token,
+								api: 'search',
+								param: {
+									q: url,
+								}
+							},
+							function( res )
+							{
+								if ( res.status === undefined )
+								{
+									if ( res.statuses.length > 0 )
+									{
+										Loading( true, 'remote_favorite' );
+
+										SendRequest(
+											{
+												method: 'POST',
+												action: 'api_call',
+												instance: account.instance,
+												access_token: account.access_token,
+												api: 'statuses/' + res.statuses[0].id + '/favourite',
+											},
+											function( res )
+											{
+												if ( res.status === undefined )
+												{
+												}
+												else
+												{
+													ApiError( res );
+												}
+
+												Loading( false, 'remote_favorite' );
+											}
+										);
+									}
+								}
+								else
+								{
+									ApiError( res );
+								}
+
+								item.find( '.menubox .remote_account_list.favorite_account' ).hide();
+								Loading( false, 'remote_favorite_search' );
+							}
+						);
+						
 						e.stopPropagation();
 					} );
 				}
