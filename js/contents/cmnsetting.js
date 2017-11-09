@@ -101,6 +101,88 @@ Contents.cmnsetting = function( cp )
 		} );
 
 		////////////////////////////////////////
+		// 色の設定をリセット
+		////////////////////////////////////////
+		$( '#cset_reset_color' ).on( 'click', function( e ) {
+			var colors = new Array(
+				$( ':root' ).css( '--default-panel-background' ),
+				$( ':root' ).css( '--default-panel-text' ),
+				$( ':root' ).css( '--default-tweet-background' ),
+				$( ':root' ).css( '--default-tweet-text' ),
+				$( ':root' ).css( '--default-tweet-link' ),
+				$( ':root' ).css( '--default-titlebar-background' ),
+				$( ':root' ).css( '--default-titlebar-text' ),
+				$( ':root' ).css( '--default-titlebar-fixed-background' ),
+				$( ':root' ).css( '--default-button-background' ),
+				$( ':root' ).css( '--default-button-text' )
+			);
+
+			cont.find( '.colorcontainer' ).find( 'input[type="text"]' ).each( function( index ) {
+				$( this ).val( colors[index] ).trigger( 'change' );
+			} );
+
+			e.stopPropagation();
+		} );
+
+		////////////////////////////////////////
+		// 色の設定をトゥート
+		////////////////////////////////////////
+		$( '#cset_toot_color' ).on( 'click', function( e ) {
+			var text = '[Kurotodon_color_v1.0]';
+
+			text += $( '#cset_color_panel_background' ).val() + ',' +
+					$( '#cset_color_panel_text' ).val() + ',' +
+					$( '#cset_color_toot_background' ).val() + ',' +
+					$( '#cset_color_toot_text' ).val() + ',' +
+					$( '#cset_color_toot_link' ).val() + ',' +
+					$( '#cset_color_titlebar_background' ).val() + ',' +
+					$( '#cset_color_titlebar_text' ).val() + ',' +
+					$( '#cset_color_titlebar_fixed' ).val() + ',' +
+					$( '#cset_color_button_background' ).val() + ',' +
+					$( '#cset_color_button_text' ).val();
+
+			text = text.replace( /#/g, '' );
+
+			var pid = IsUnique( 'tootbox' );
+			var left = null;
+			var top = null;
+
+			var SetText = function() {
+				$( '.tootbox .text' ).each( function( e ) {
+					var textbox = $( this );
+
+					var areatext = textbox.val();
+					var pos = textbox.get( 0 ).selectionStart;
+					var bef = areatext.substr( 0, pos );
+					var aft = areatext.substr( pos, areatext.length );
+
+					textbox.val( bef + text + aft )
+						.focus()
+						.trigger( 'keyup' );
+
+					return false;
+				} );
+			};
+
+			if ( pid == null )
+			{
+				var _cp = new CPanel( left, top, g_defwidth, g_defheight_s );
+				_cp.SetType( 'tootbox' );
+				_cp.SetParam( { account_id: '' } );
+				_cp.Start( function() {
+					SetText();
+					$( '.tootbox .text' ).SetPos( 'start' );
+				} );
+			}
+			else
+			{
+				SetText();
+			}
+
+			e.stopPropagation();
+		} );
+
+		////////////////////////////////////////
 		// 試聴ボタンクリック処理
 		////////////////////////////////////////
 		$( '#cset_audition' ).click( function( e ) {

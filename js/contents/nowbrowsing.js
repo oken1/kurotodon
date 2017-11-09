@@ -66,7 +66,7 @@ Contents.nowbrowsing = function( cp )
 					} );
 				};
 				
-				// ツイートパネルが開いていない場合は開く
+				// トゥートパネルが開いていない場合は開く
 				if ( pid == null )
 				{
 					var _cp = new CPanel( left, top, g_defwidth, g_defheight_s );

@@ -1283,6 +1283,79 @@ Contents.timeline = function( cp )
 
 					var menubox = item.find( 'div.toot' ).find( 'div.menubox' );
 
+					// 色の設定をインポート
+					var _tag = '[Kurotodon_color_v1.0]';
+					var color_setting = item.find( '.toot_text' ).text().indexOf( _tag );
+
+					if ( color_setting == -1 )
+					{
+						menubox.find( '> a.import_color' ).hide();
+					}
+					else
+					{
+						// 正しい形式かチェック
+						var chk = true;
+						var colors = item.find( '.toot_text' ).text().substr( color_setting + _tag.length, 69 );
+						var col;
+
+						if ( colors.length == 69 )
+						{
+							col = colors.split( ',' );
+
+							if ( col.length == 10 )
+							{
+								for ( var i = 0 ; i < col.length ; i++ )
+								{
+									if ( !col[i].match( /[0-9,a-z]{6}/i ) )
+									{
+										chk = false;
+										break;
+									}
+								}
+							}
+							else
+							{
+								chk = false;
+							}
+						}
+						else
+						{
+							chk = false;
+						}
+
+						if ( chk == false )
+						{
+							menubox.find( '> a.import_color' ).hide();
+						}
+						else
+						{
+							menubox.find( '> a.import_color' ).on( 'click', function( e ) {
+								g_cmn.cmn_param.color = {
+									panel: {
+										background: '#' + col[0],
+										text: '#' + col[1],
+									},
+									toot: {
+										background: '#' + col[2],
+										text: '#' + col[3],
+										link: '#' + col[4],
+									},
+									titlebar: {
+										background: '#' + col[5],
+										text: '#' + col[6],
+										fixed: '#' + col[7],
+									},
+									button: {
+										background: '#' + col[8],
+										text: '#' + col[9],
+									}
+								};
+
+								SetColorSettings();
+							} );
+						}
+					}
+
 					// ツールバーに登録ボタンクリック処理
 					menubox.find( '> a.toolbaruser' ).on( 'click', function( e ) {
 						// disabledなら処理しない

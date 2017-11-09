@@ -123,6 +123,12 @@
 				<span><input type='color' id='cset_color_button_text' value='{$param->color->button->text}'></span>
 			</div>
 		</div>
+		<div class='group'>
+			<div class='textboxcontainer'>
+				<span><a class='btn' id='cset_reset_color'>(i18n_0422)</a></span>
+				<span><a class='btn' id='cset_toot_color'>(i18n_0423)</a></span>
+			</div>
+		</div>
 	</div>
 	
 	<div class='kind'><span class='icon-arrow_down'></span>(i18n_0093)</div>

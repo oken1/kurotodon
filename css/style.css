@@ -6,22 +6,39 @@
 }
 
 :root {
-	--panel-background: #282828;
-	--panel-text: #ffffff;
-	--panel-border: #101010;
+	--default-panel-background:#282828;
+	--default-panel-text:#ffffff;
+	--default-panel-border:#101010;
 
-	--toot-background: #282828;
-	--toot-text: #ffffff;
-	--toot-link: #add4f2;
+	--default-tweet-background:#282828;
+	--default-tweet-text:#ffffff;
+	--default-tweet-link:#b0d0f0;
 
-	--titlebar-background: #606060;
-	--titlebar-text: #ffffff;
-	--titlebar-fixed-background: #404040;
+	--default-titlebar-background:#606060;
+	--default-titlebar-text:#ffffff;
+	--default-titlebar-fixed-background:#404040;
 
-	--button-background: #404040;
-	--button-text: #ffffff;
+	--default-button-background:#404040;
+	--default-button-text:#ffffff;
 
-	--general-highlight: #2d94b2;
+	--default-general-highlight:#2080a0;
+
+	--panel-background: var(--default-panel-background);
+	--panel-text: var(--default-panel-text);
+	--panel-border: var(--default-panel-border);
+
+	--tweet-background: var(--default-tweet-background);
+	--tweet-text: var(--default-tweet-text);
+	--tweet-link: var(--default-tweet-link);
+
+	--titlebar-background: var(--default-titlebar-background);
+	--titlebar-text: var(--default-titlebar-text);
+	--titlebar-fixed-background: var(--default-titlebar-fixed-background);
+
+	--button-background: var(--default-button-background);
+	--button-text: var(--default-button-text);
+
+	--general-highlight: var(--default-general-highlight);
 }
 
 html {

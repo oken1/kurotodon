@@ -23,22 +23,22 @@ var g_cmn = {
 
 		color: {											// - 色の設定
 			panel: {
-				background: '#282828',
-				text: '#ffffff',
+				background: $( ':root' ).css( '--default-panel-background' ),
+				text: $( ':root' ).css( '--default-panel-text' ),
 			},
-			toot: {
-				background: '#282828',
-				text: '#ffffff',
-				link: '#add4f2',
+			tweet: {
+				background: $( ':root' ).css( '--default-tweet-background' ),
+				text: $( ':root' ).css( '--default-tweet-text' ),
+				link: $( ':root' ).css( '--default-tweet-link' ),
 			},
 			titlebar: {
-				background: '#606060',
-				text: '#ffffff',
-				fixed: '#404040',
+				background: $( ':root' ).css( '--default-titlebar-background' ),
+				text: $( ':root' ).css( '--default-titlebar-text' ),
+				fixed: $( ':root' ).css( '--default-titlebar-fixed-background' ),
 			},
 			button: {
-				background: '#404040',
-				text: '#ffffff',
+				background: $( ':root' ).css( '--default-button-background' ),
+				text: $( ':root' ).css( '--default-button-text' ),
 			}
 		},
 	},

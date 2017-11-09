@@ -688,6 +688,17 @@
 		"message": "Fixed panel"
 	},
 
+	"i18n_0422": {
+		"message": "Reset"
+	},
+
+	"i18n_0423": {
+		"message": "Toot color settings"
+	},
+
+	"i18n_0424": {
+		"message": "Import color settings"
+	},
 
 
 

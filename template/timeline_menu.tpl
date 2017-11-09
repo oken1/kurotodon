@@ -14,4 +14,5 @@
 				<a class='btn favorite_other'>(i18n_0412)</a>
 				<div class='remote_account_list favorite_account'>
 				</div>
+				<a class='btn import_color'>(i18n_0424)</a>
 			</div>
