@@ -107,14 +107,16 @@ Contents.cmnsetting = function( cp )
 			var colors = new Array(
 				$( ':root' ).css( '--default-panel-background' ),
 				$( ':root' ).css( '--default-panel-text' ),
-				$( ':root' ).css( '--default-tweet-background' ),
-				$( ':root' ).css( '--default-tweet-text' ),
-				$( ':root' ).css( '--default-tweet-link' ),
+				$( ':root' ).css( '--default-toot-background' ),
+				$( ':root' ).css( '--default-toot-text' ),
+				$( ':root' ).css( '--default-toot-link' ),
 				$( ':root' ).css( '--default-titlebar-background' ),
 				$( ':root' ).css( '--default-titlebar-text' ),
 				$( ':root' ).css( '--default-titlebar-fixed-background' ),
 				$( ':root' ).css( '--default-button-background' ),
-				$( ':root' ).css( '--default-button-text' )
+				$( ':root' ).css( '--default-button-text' ),
+				$( ':root' ).css( '--default-scrollbar-background' ),
+				$( ':root' ).css( '--default-scrollbar-thumb' )
 			);
 
 			cont.find( '.colorcontainer' ).find( 'input[type="text"]' ).each( function( index ) {
@@ -128,7 +130,7 @@ Contents.cmnsetting = function( cp )
 		// 色の設定をトゥート
 		////////////////////////////////////////
 		$( '#cset_toot_color' ).on( 'click', function( e ) {
-			var text = '[Kurotodon_color_v1.0]';
+			var text = '[Kurotodon_color_v1.1]';
 
 			text += $( '#cset_color_panel_background' ).val() + ',' +
 					$( '#cset_color_panel_text' ).val() + ',' +
@@ -139,7 +141,9 @@ Contents.cmnsetting = function( cp )
 					$( '#cset_color_titlebar_text' ).val() + ',' +
 					$( '#cset_color_titlebar_fixed' ).val() + ',' +
 					$( '#cset_color_button_background' ).val() + ',' +
-					$( '#cset_color_button_text' ).val();
+					$( '#cset_color_button_text' ).val() + ',' +
+					$( '#cset_color_scrollbar_background' ).val() + ',' +
+					$( '#cset_color_scrollbar_thumb' ).val();
 
 			text = text.replace( /#/g, '' );
 
@@ -279,7 +283,11 @@ Contents.cmnsetting = function( cp )
 				button: {
 					background: $( '#cset_color_button_background' ).val(),
 					text: $( '#cset_color_button_text' ).val(),
-				}
+				},
+				scrollbar: {
+					background: $( '#cset_color_scrollbar_background' ).val(),
+					thumb: $( '#cset_color_scrollbar_thumb' ).val(),
+				},
 			};
 
 			SetColorSettings();

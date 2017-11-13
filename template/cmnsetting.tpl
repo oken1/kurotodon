@@ -124,6 +124,21 @@
 			</div>
 		</div>
 		<div class='group'>
+			<div class='title'>
+				(i18n_0425)
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0418)</span>
+				<span><input type='text' value='{$param->color->scrollbar->background}'></span>
+				<span><input type='color' id='cset_color_scrollbar_background' value='{$param->color->scrollbar->background}'></span>
+			</div>
+			<div class='colorcontainer'>
+				<span>(i18n_0426)</span>
+				<span><input type='text' value='{$param->color->scrollbar->thumb}'></span>
+				<span><input type='color' id='cset_color_scrollbar_thumb' value='{$param->color->scrollbar->thumb}'></span>
+			</div>
+		</div>
+		<div class='group'>
 			<div class='textboxcontainer'>
 				<span><a class='btn' id='cset_reset_color'>(i18n_0422)</a></span>
 				<span><a class='btn' id='cset_toot_color'>(i18n_0423)</a></span>

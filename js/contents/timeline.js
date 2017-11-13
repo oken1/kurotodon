@@ -1284,8 +1284,9 @@ Contents.timeline = function( cp )
 					var menubox = item.find( 'div.toot' ).find( 'div.menubox' );
 
 					// 色の設定をインポート
-					var _tag = '[Kurotodon_color_v1.0]';
+					var _tag = '[Kurotodon_color_v1.1]';
 					var color_setting = item.find( '.toot_text' ).text().indexOf( _tag );
+					var colorcnt = 12;
 
 					if ( color_setting == -1 )
 					{
@@ -1295,14 +1296,14 @@ Contents.timeline = function( cp )
 					{
 						// 正しい形式かチェック
 						var chk = true;
-						var colors = item.find( '.toot_text' ).text().substr( color_setting + _tag.length, 69 );
+						var colors = item.find( '.toot_text' ).text().substr( color_setting + _tag.length, colorcnt * 7 - 1 );
 						var col;
 
-						if ( colors.length == 69 )
+						if ( colors.length == colorcnt * 7 - 1 )
 						{
 							col = colors.split( ',' );
 
-							if ( col.length == 10 )
+							if ( col.length == colorcnt )
 							{
 								for ( var i = 0 ; i < col.length ; i++ )
 								{
@@ -1348,6 +1349,10 @@ Contents.timeline = function( cp )
 									button: {
 										background: '#' + col[8],
 										text: '#' + col[9],
+									},
+									scrollbar: {
+										background: '#' + col[10],
+										thumb: '#' + col[11],
 									}
 								};
 
@@ -1476,8 +1481,8 @@ Contents.timeline = function( cp )
 					menubox.on( 'click', '> .remote_account_list.boost_account .remote_account', function( e ) {
 						var account = g_cmn.account[$( this ).attr( 'account_id' )];
 
-						var url = 'https://' + item.attr( 'instance' ) + '/@' + item.attr( 'username' ) + '/' + item.attr( 'status_id' );
-
+						var url = item.find( '.status_url' ).attr( 'href' );
+						
 						SendRequest(
 							{
 								method: 'GET',
@@ -1566,7 +1571,7 @@ Contents.timeline = function( cp )
 					menubox.on( 'click', '> .remote_account_list.favorite_account .remote_account', function( e ) {
 						var account = g_cmn.account[$( this ).attr( 'account_id' )];
 
-						var url = 'https://' + item.attr( 'instance' ) + '/@' + item.attr( 'username' ) + '/' + item.attr( 'status_id' );
+						var url = item.find( '.status_url' ).attr( 'href' );
 
 						SendRequest(
 							{

@@ -10,9 +10,9 @@
 	--default-panel-text:#ffffff;
 	--default-panel-border:#101010;
 
-	--default-tweet-background:#282828;
-	--default-tweet-text:#ffffff;
-	--default-tweet-link:#b0d0f0;
+	--default-toot-background:#282828;
+	--default-toot-text:#ffffff;
+	--default-toot-link:#b0d0f0;
 
 	--default-titlebar-background:#606060;
 	--default-titlebar-text:#ffffff;
@@ -21,15 +21,18 @@
 	--default-button-background:#404040;
 	--default-button-text:#ffffff;
 
+	--default-scrollbar-background:#242424;
+	--default-scrollbar-thumb:#777777;
+
 	--default-general-highlight:#2080a0;
 
 	--panel-background: var(--default-panel-background);
 	--panel-text: var(--default-panel-text);
 	--panel-border: var(--default-panel-border);
 
-	--tweet-background: var(--default-tweet-background);
-	--tweet-text: var(--default-tweet-text);
-	--tweet-link: var(--default-tweet-link);
+	--toot-background: var(--default-toot-background);
+	--toot-text: var(--default-toot-text);
+	--toot-link: var(--default-toot-link);
 
 	--titlebar-background: var(--default-titlebar-background);
 	--titlebar-text: var(--default-titlebar-text);
@@ -37,6 +40,9 @@
 
 	--button-background: var(--default-button-background);
 	--button-text: var(--default-button-text);
+
+	--scrollbar-background: var(--default-scrollbar-background);
+	--scrollbar-thumb: var(--default-scrollbar-thumb);
 
 	--general-highlight: var(--default-general-highlight);
 }
@@ -727,40 +733,32 @@ panel.fixed div.titlebar .badge {
 
 /* スクロールバー */
 ::-webkit-scrollbar {
-	background: #242424;
+	background: var(--scrollbar-background);
 }
 
 ::-webkit-scrollbar:vertical {
 	width: 12px;
-	border-left: 1px solid #101010;
+	border-left: 1px solid var(--panel-border);
 }
 
 ::-webkit-scrollbar:horizontal {
 	height: 12px;
-	border-top: 1px solid #101010;
+	border-top: 1px solid var(--panel-border);
 }
 
 ::-webkit-scrollbar-thumb:vertical {
-	background: #777777;
-	border-left: 1px solid #101010;
+	background: var(--scrollbar-thumb);
+	border-left: 1px solid var(--panel-border);
 }
 
 ::-webkit-scrollbar-thumb:horizontal {
-	background: #777777;
-	border-top: 1px solid #101010;
-}
-
-::-webkit-scrollbar-thumb:active:vertical {
-	background: #666666;
-}
-
-::-webkit-scrollbar-thumb:active:horizontal {
-	background: #666666;
+	background: var(--scrollbar-thumb);
+	border-top: 1px solid var(--panel-border);
 }
 
 ::-webkit-scrollbar-corner {
-	background: #242424;
-	border: solid #101010;
+	background: var(--scrollbar-background);
+	border: solid var(--panel-border);
 	border-width: 1px 0 0 1px;
 }
 

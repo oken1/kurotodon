@@ -28,7 +28,7 @@
 					<span class='display_name'>{$display_name_disp}</span> <span class='username'>@{$acct}</span>
 
 					<br>
-					<span class='date tooltip' tooltip='{$date}'><a href='{$url}' rel="nofollow noopener noreferrer" target='_blank' class='anchor'>{$dispdate}</a></span>
+					<span class='date tooltip' tooltip='{$date}'><a href='{$url}' rel="nofollow noopener noreferrer" target='_blank' class='anchor status_url'>{$dispdate}</a></span>
 					<span>{if $application->website}<a href='{$application->website}' rel="nofollow noopener noreferrer" target='_blank' class='anchor'>{$application->name}</a>{else}<span class='source'>{$application->name}</span>{/if}</span>
 					<br>
 
