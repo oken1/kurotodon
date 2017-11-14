@@ -2,18 +2,15 @@
 	<div>
 		<a id='account_add' class='btn panel_btn'>(i18n_0253)</a>
 		<div id='login_window'>
-			<div>
+			<div id='instance_input'>
 				<span>(i18n_0359)</span><span><input id='login_instance' type='text'></span>
 				<div class='pulldown'></div>
-			</div>
-			<div>
-				<span>(i18n_0360)</span><span><input id='login_email' type='text'></span>
-			</div>
-			<div>
-				<span>(i18n_0361)</span><span><input id='login_password' type='password'></span>
-			</div>
-			<div>
 				<a id='login_button' class='btn disabled'>(i18n_0362)</a>
+			</div>
+			<div id='code_input'>
+				<span>(i18n_0428)</span><span><input id='auth_code' type='text'></span>
+				<a id='code_ok' class='btn'>OK</a>
+				<a id='code_cancel' class='btn'>Cancel</a>
 			</div>
 		</div>
 		<a id='account_del' class='btn panel_btn disabled'>(i18n_0223)</a>

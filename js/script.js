@@ -1593,8 +1593,7 @@ function SendRequest( req, callback )
 		// req : instance
 		//       client_id
 		//       client_secret
-		//       username
-		//       password
+		//       code
 		case 'get_access_token':
 			$.ajax( {
 				url: 'https://' + req.instance + '/oauth/token',
@@ -1603,9 +1602,9 @@ function SendRequest( req, callback )
 				data: {
 					client_id: req.client_id,
 					client_secret: req.client_secret,
-					grant_type: 'password',
-					username: req.username,
-					password: req.password,
+					redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+					grant_type: 'authorization_code',
+					code: req.code,
 					scope: 'read write follow',
 				}
 			} ).done( function( data ) {

@@ -8,6 +8,7 @@ Contents.account = function( cp )
 	var p = $( '#' + cp.id );
 	var cont = p.find( 'div.contents' );
 	var scrollPos = null;
+	var _account;
 
 	cp.SetIcon( 'icon-user' );
 
@@ -459,13 +460,10 @@ Contents.account = function( cp )
 		} );
 
 		////////////////////////////////////////
-		// 入力文字数によるボタン制御
+		// 入力文字数によるボタン制御(インスタンス)
 		////////////////////////////////////////
-		$( '#login_instance,#login_email,#login_password' ).on( 'keyup change', function() {
-
-			if ( $( '#login_instance' ).val().length &&
-				 $( '#login_email' ).val().length &&
-				 $( '#login_password' ).val().length )
+		$( '#login_instance' ).on( 'keyup change', function() {
+			if ( $( '#login_instance' ).val().length )
 			{
 				$( '#login_button' ).removeClass( 'disabled' );
 			}
@@ -524,7 +522,7 @@ Contents.account = function( cp )
 				return;
 			}
 
-			var _account = {
+			_account = {
 				client_id: '',
 				client_secret: '',
 				instance: '',
@@ -541,8 +539,6 @@ Contents.account = function( cp )
 			Loading( true, 'login' );
 
 			var instance = $( '#login_instance' ).val();
-			var email = $( '#login_email' ).val();
-			var password = $( '#login_password' ).val();
 
 			// ClientIDを取得済みなら再利用
 			for ( var account_id in g_cmn.account )
@@ -557,7 +553,7 @@ Contents.account = function( cp )
 
 			if ( _account.client_id != '' && _account.client_secret != '' )
 			{
-				GetAccessToken();
+				OpenOauth();
 			}
 			else
 			{
@@ -573,7 +569,7 @@ Contents.account = function( cp )
 						{
 							_account.client_id = res.client_id;
 							_account.client_secret = res.client_secret;
-							GetAccessToken();
+							OpenOauth();
 						}
 						else
 						{
@@ -585,6 +581,55 @@ Contents.account = function( cp )
 				);
 			}
 
+			// 認証ウィンドウを開く
+			function OpenOauth()
+			{
+				Blackout( false );
+				Loading( false, 'login' );
+
+				$( '#instance_input' ).find( '.pulldown' ).hide();
+
+				window.open( 'https://' + instance + '/oauth/authorize' +
+							 '?scope=read%20write%20follow&response_type=code' +
+							 '&redirect_uri=urn:ietf:wg:oauth:2.0:oob' +
+							 '&client_id=' + _account.client_id );
+
+				$( '#code_input' ).show();
+				$( '#auth_code' ).val( '' );
+				$( '#code_ok' ).addClass( 'disabled' );
+				$( '#login_button' ).addClass( 'disabled' );
+				$( '#login_instance' ).attr( 'disabled', 'disabled' );
+			}
+		} );
+
+		////////////////////////////////////////
+		// 入力文字数によるボタン制御(コード)
+		////////////////////////////////////////
+		$( '#auth_code' ).on( 'keyup change', function() {
+			if ( $( '#auth_code' ).val().length )
+			{
+				$( '#code_ok' ).removeClass( 'disabled' );
+			}
+			else
+			{
+				$( '#code_ok' ).addClass( 'disabled' );
+			}
+		} );
+
+		////////////////////////////////////////////////////////////
+		// OKボタンクリック処理
+		////////////////////////////////////////////////////////////
+		$( '#code_ok' ).on( 'click', function() {
+			// disabledなら処理しない
+			if ( $( this ).hasClass( 'disabled' ) )
+			{
+				return;
+			}
+
+			var instance = $( '#login_instance' ).val();
+			var auth_code = $( '#auth_code' ).val();
+			GetAccessToken();
+
 			// アクセストークン取得→アカウント情報取得
 			function GetAccessToken()
 			{
@@ -594,11 +639,12 @@ Contents.account = function( cp )
 						instance: instance,
 						client_id: _account.client_id,
 						client_secret: _account.client_secret,
-						username: email,
-						password: password,
+						code: auth_code,
 					},
 					function( res )
 					{
+						$( '#code_cancel' ).trigger( 'click' );
+
 						if ( res.access_token )
 						{
 							_account.access_token = res.access_token;
@@ -658,6 +704,23 @@ Contents.account = function( cp )
 					}
 				);
 			}
+		} );
+
+		////////////////////////////////////////////////////////////
+		// Cancelボタンクリック処理
+		////////////////////////////////////////////////////////////
+		$( '#code_cancel' ).on( 'click', function() {
+			// disabledなら処理しない
+			if ( $( this ).hasClass( 'disabled' ) )
+			{
+				return;
+			}
+
+			$( '#code_input' ).hide();
+			$( '#auth_code' ).val( '' );
+			$( '#code_ok' ).addClass( 'disabled' );
+			$( '#login_button' ).removeClass( 'disabled' );
+			$( '#login_instance' ).removeAttr( 'disabled' );
 		} );
 
 		// リスト部作成処理

@@ -78,7 +78,7 @@ div.contents.account {
 #login_window {
 	display: none;
 	position: absolute;
-	width: 25rem;
+	width: 32rem;
 	height: 15rem;
 	left: 1rem;
 	z-index: 8900;
@@ -98,4 +98,8 @@ div.contents.account {
 #login_window > div > span:first-child {
 	display: inline-block;
 	width: 9rem;
+}
+
+#code_input {
+	display: none;
 }
