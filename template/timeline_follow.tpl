@@ -4,7 +4,7 @@
 	</div>
 	<div class='toot'>
 		<div class='notification' id='{$notification->id}' username='{$notification->username}' display_name='{$notification->display_name}' instance='{$notification->instance}'>
-			<span class='display_name'>{$notification->display_name}</span>(i18n_0372)<br>
+			<span class='display_name'>{$notification->display_name_disp}</span>(i18n_0372)<br>
 			<span class='acct'>{$notification->username}@{$notification->instance}</span>
 		</div>
 	</div>

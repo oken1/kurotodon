@@ -324,6 +324,11 @@ Contents.timeline = function( cp )
 
 						for ( var i = 0 ; i < len ; i++ )
 						{
+							if ( !res[i].account )
+							{
+								continue;
+							}
+
 							var instance = GetInstanceFromAcct( res[i].account.acct, g_cmn.account[cp.param['account_id']].instance );
 
 							if ( status_ids[res[i].id + '@' + instance] == undefined )
@@ -1038,6 +1043,11 @@ Contents.timeline = function( cp )
 					 ( cp.param.timeline_type == 'notifications' && data.json.event == 'notification' ) )
 				{
 					timeline_list.prepend( MakeTimeline( data.json, cp ) ).children().first().hide().fadeIn();;
+
+					if ( !data.json.account )
+					{
+						return false;
+					}
 
 					var instance = GetInstanceFromAcct( data.json.account.acct, g_cmn.account[cp.param.account_id].instance );
 					
